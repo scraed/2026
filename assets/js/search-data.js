@@ -94,6 +94,17 @@ ninja.data = [{
             window.location.href = "/2026/blog/2026/sac-massive-sim/";
           
         },
+      },{id: "post-rethinking-the-diffusion-model-from-a-langevin-perspective",
+        
+          title: "Rethinking the diffusion model from a Langevin perspective",
+        
+        description: "Your blog post&#39;s abstract. Please add your abstract or summary here and not in the main body of your text. Do not include math/latex or hyperlinks.",
+        section: "Posts",
+        handler: () => {
+          
+            window.location.href = "/2026/blog/2026/rethinking-diffusion-Langevin/";
+          
+        },
       },{id: "post-language-as-a-window-into-the-mind-how-nlp-and-llms-advance-human-sciences",
         
           title: "Language as a Window Into the Mind: How NLP and LLMs Advance Human...",
