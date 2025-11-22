@@ -98,7 +98,7 @@ ninja.data = [{
         
           title: "Rethinking the diffusion model from a Langevin perspective",
         
-        description: "Your blog post&#39;s abstract. Please add your abstract or summary here and not in the main body of your text. Do not include math/latex or hyperlinks.",
+        description: "This article presents a fresh perspective on the core theory of diffusion models, explaining the forward and backward processes—as well as the design of the training loss—through the lenses of Langevin dynamics and maximum likelihood estimation. By adopting this viewpoint, the article offers a simpler, more intuitive approach with strong pedagogical value. It demystifies the complex mathematics that often obscures the core logic of diffusion models, thereby providing helpful intuition for both learners and experienced researchers.",
         section: "Posts",
         handler: () => {
           
@@ -109,11 +109,22 @@ ninja.data = [{
         
           title: "Language as a Window Into the Mind: How NLP and LLMs Advance Human...",
         
-        description: "Can NLP predict heroin-addiction outcomes, uncover suicide risk, or simulate and even influence brain activity? Could LLMs one day contribute to research worthy of a Nobel Prize for advancing our understanding of human behavior? And what role do NLP and LLM scientists play in shaping this emerging reality? This post explores these questions, arguing that language technologies are not just tools that support scientific work (like literature-search agents, writing tools, coding assistants, and automatic scientific discovery), but that by treating language as a window into the human mind, models of language can actively help researchers uncover mechanisms of human behavior, cognition, and brain function.",
+        description: "Can NLP predict heroin-addiction outcomes, uncover suicide risk, or simulate (and even influence) brain activity? Could LLMs one day contribute to research worthy of a Nobel Prize for advancing our understanding of human behavior? And what role do NLP scientists play in shaping that possibility? This post explores these questions, arguing that language technologies are not just tools that support scientific work (like literature search agents, writing tools, or coding assistants), but that by treating language as a window into the human mind, NLP and LLMs can actively help researchers uncover mechanisms of human behavior, cognition, and brain function.",
         section: "Posts",
         handler: () => {
           
             window.location.href = "/2026/blog/2026/nlp-for-human-sciences/";
+          
+        },
+      },{id: "post-model-misspecification-in-simulation-based-inference-recent-advances-and-open-challenges",
+        
+          title: "Model Misspecification in Simulation-Based Inference - Recent Advances and Open Challenges",
+        
+        description: "Model misspecification is a critical challenge in simulation-based inference (SBI), particularly in neural SBI methods that use simulated data to train flexible neural density estimators. These methods typically assume that simulators faithfully represent the true data-generating process, an assumption that is often violated in practice. Resulting discrepancies can make observed data effectively out-of-distribution relative to the simulations, leading to biased posterior distributions and misleading uncertainty quantification. This post reviews recent work on model misspecification in neural SBI, covering formal definitions, methods for detection and mitigation, and their underlying assumptions. It also discusses practical implications for SBI workflows and outlines open challenges for developing robust SBI methods that remain reliable in realistic, imperfectly specified applications.",
+        section: "Posts",
+        handler: () => {
+          
+            window.location.href = "/2026/blog/2026/model-misspecification-in-sbi/";
           
         },
       },{id: "post-do-language-models-really-learn-to-mislead-humans-via-rlhf",
