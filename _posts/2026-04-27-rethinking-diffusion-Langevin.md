@@ -88,42 +88,12 @@ $$
 
 where $\mathbf{s}(\mathbf{x}) = \nabla_{\mathbf{x}} \log p(\mathbf{x})$ is the score function of $p(\mathbf{x})$. This dynamics is often used as a Monte Carlo sampler to draw samples from $p(\mathbf{x})$, since $p(\mathbf{x})$ is its stationary distribution—the distribution that $\mathbf{x}_t$ converges to and and remains at as $t \to \infty$, regardless of the initial distribution of $\mathbf{x}_0$. 
 
-:::note
-### Stationary distribution
-$p(\mathbf{x})$ is the stationary distribution of the Langevin dynamics. This means:
-If you start with particles whose initial positions $\{\mathbf{x}_0^{(1)}, \mathbf{x}_0^{(2)}, \ldots, \mathbf{x}_0^{(N)}\}$ already follow $p(\mathbf{x})$ (like sampling $\mathbf{x}_0$ from $p(\mathbf{x})$), then when you evolve those same particles using Langevin dynamics, their positions $\{\mathbf{x}_t^{(1)}, \mathbf{x}_t^{(2)}, \ldots, \mathbf{x}_t^{(N)}\}$ at any future time $t > 0$ will still follow $p(\mathbf{x})$. The distribution doesn't change over time.
-:::
+If you're comfortable simply assuming that $p(\mathbf{x})$ is the stationary distribution of the Langevin dynamics, you can skip this section. Otherwise, here is a short argument:
 
-If you're comfortable assuming that $p(\mathbf{x})$ is the stationary distribution for the Langevin dynamics, that's fine. If not, here's a short proof.
+1. For Langevin dynamics $d\mathbf{x}_t = -\nabla E(\mathbf{x})\,dt + \sqrt{2}\,d\mathbf{W}_t$, the randomness mixes states with the same energy, so at equilibrium the probability of a state depends only on its energy: $p(\mathbf{x}) = f(E(\mathbf{x}))$ for some function $f$.
+2. Consider $N$ independent copies $\mathbf{x}_1,\dots,\mathbf{x}_N$. Independence gives $p(\mathbf{x}_1,\dots,\mathbf{x}_N) = p(\mathbf{x}_1)\cdots p(\mathbf{x}_N)$, while the energy view gives $p(\mathbf{x}_1,\dots,\mathbf{x}_N) = g(E(\mathbf{x}_1)+\dots+E(\mathbf{x}_N))$. The only way for "sum of energies" to match "product of probabilities" for all $N$ is an exponential family: $p(\mathbf{x}) \propto e^{-\beta E(\mathbf{x})}$ for some constant $\beta$.
+3. To fix $\beta$, take $E(\mathbf{x}) = \frac{1}{2}\|\mathbf{x}\|^2$. The resulting dynamics is the Ornstein–Uhlenbeck process $d\mathbf{x}_t = -\mathbf{x}\,dt + \sqrt{2}\,d\mathbf{W}_t$, whose stationary distribution is $\mathcal{N}(0, I)$ with density $\propto e^{-\frac{1}{2}\|\mathbf{x}\|^2}$. Comparing this with $e^{-\beta \frac{1}{2}\|\mathbf{x}\|^2}$ gives $\beta = 1$.
 
-To check stationarity, we show that after a small time step from 0 to $\Delta t$, the distribution of $\mathbf{x}_{\Delta t}$ remains $p(\mathbf{x})$.
-
-Pick any smooth test function $f$. Start with initial points $\mathbf{x}_0$ drawn from $p(\mathbf{x})$. We track the change in the average value of $f$ at $\mathbf{x}_{\Delta t}$, i.e., $\mathbb{E}_{\mathbf{x}_0 \sim p(\mathbf{x})}[f(\mathbf{x}_{\Delta t})]$.
-
-Using $\ref{Itô's lemma}$ (substitute $dt$ with $\Delta t$) we have, to the first order accuracy,
-
-$$
-\begin{aligned}
-f(\mathbf{x}_{\Delta t}) - f(\mathbf{x}_0) &\approx  \underbrace{\partial_t f \, \Delta t}_{\text{ = 0}} + \nabla_\mathbf{x} f \cdot \left(\underbrace{\boldsymbol{\mu}}_{\boldsymbol{\mu} = \mathbf{s}(\mathbf{x})} \, \Delta t + \underbrace{\sigma \, d\mathbf{W}_t}_{\text{zero average}} \right) + \underbrace{\frac{\sigma^2}{2} \nabla^2_\mathbf{x} f \, \Delta t}_{\sigma = \sqrt{2}} \\ 
-&= \Delta t \left( \nabla_\mathbf{x} f \cdot \mathbf{s} + \nabla^2_\mathbf{x} f \right)+ \sqrt{2} \nabla_\mathbf{x} f \cdot d\mathbf{W}_t
-\end{aligned}
-$$
-
-and noting that the noise term averages to zero ($\mathbb{E}_{\mathbf{x}}[d\mathbf{W}] = \mathbf{0}$), we get:
-
-$$
-\begin{aligned}
-\mathbb{E}_{\mathbf{x}_0 \sim p(\mathbf{x})}\left[f(\mathbf{x}_{\Delta t}) - f(\mathbf{x}_0)\right] 
-&= \Delta t \int p(\mathbf{x}) \left(\nabla_\mathbf{x} f \cdot \mathbf{s} + \nabla^2_\mathbf{x} f\right) d\mathbf{x} \quad \text{(to first order)}\\
-&= \Delta t \int f(\mathbf{x}) \left(-\nabla_\mathbf{x}\cdot(p\mathbf{s}) + \nabla^2_\mathbf{x} p\right) d\mathbf{x} \quad \text{(integration by parts)} \\
-&= \Delta t \int f(\mathbf{x}) \nabla_\mathbf{x}\cdot\left(-p\mathbf{s} + \nabla_\mathbf{x} p\right) d\mathbf{x}\\
-&=0,
-\end{aligned}
-$$
-
-where the zero comes from plugging in $\mathbf{s} = \nabla_\mathbf{x} \log p$ (making the term inside the divergence vanish).
-
-Since this average change is zero for any test function $f$, the distribution must stay unchanged.
 
 
 
