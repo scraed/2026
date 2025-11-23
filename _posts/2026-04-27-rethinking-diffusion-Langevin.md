@@ -3,7 +3,6 @@ layout: distill
 title: Rethinking the diffusion model from a Langevin perspective
 description: Diffusion models are typically introduced through fragmented perspectives involving VAEs, score matching, or flow matching, with dense, technically demanding mathematical derivations. This article presents a fresh Langevin perspective on the core theory of diffusion models, offering a simpler, cleaner, and more intuitive approach to the following questions:
 1. Why are diffusion models more than just VAEs? 2. How can VAE, Score Matching, and Flow Matching be unified under Maximum Likelihood? 3. Why should neural networks model score functions (or their variants), and how can we generalize to discrete diffusion models where score functions don't exist? We demonstrate that the Langevin perspective provides strong pedagogical value for both learners and experienced researchers seeking deeper intuition.
-
 date: 2026-04-27
 future: true
 htmlwidgets: true
@@ -69,12 +68,6 @@ _styles: >
     font-size: 16px;
   }
 ---
-The Langevin perspective of view provide easy answering of the following questions:
-1. Why diffusion model is more than a VAE: the duality of the forward and reverse process that Decoder-Encoder persepctive cannot tell you.
-2. Are ELBO, Score Matching, and Flow Matching different training object? In fact, they are just Maximal Likelihood.
-3. Why neural network should model score function or its variant? How to generalize to Discrete Diffusion model where there is no score function?
-
-## The duality of the forward and reverse process from the Langevin perspective
 
 
 
@@ -90,9 +83,11 @@ where $\mathbf{s}(\mathbf{x}) = \nabla_{\mathbf{x}} \log p(\mathbf{x})$ is the s
 
 If you're comfortable simply assuming that $p(\mathbf{x})$ is the stationary distribution of the Langevin dynamics, you can skip this section. Otherwise, here is a short argument:
 
-1. For Langevin dynamics $d\mathbf{x}_t = -\nabla E(\mathbf{x})\,dt + \sqrt{2}\,d\mathbf{W}_t$, the randomness mixes states with the same energy, so at equilibrium the probability of a state depends only on its energy: $p(\mathbf{x}) = f(E(\mathbf{x}))$ for some function $f$.
-2. Consider $N$ independent copies $\mathbf{x}_1,\dots,\mathbf{x}_N$. Independence gives $p(\mathbf{x}_1,\dots,\mathbf{x}_N) = p(\mathbf{x}_1)\cdots p(\mathbf{x}_N)$, while the energy view gives $p(\mathbf{x}_1,\dots,\mathbf{x}_N) = g(E(\mathbf{x}_1)+\dots+E(\mathbf{x}_N))$. The only way for "sum of energies" to match "product of probabilities" for all $N$ is an exponential family: $p(\mathbf{x}) \propto e^{-\beta E(\mathbf{x})}$ for some constant $\beta$.
-3. To fix $\beta$, take $E(\mathbf{x}) = \frac{1}{2}\|\mathbf{x}\|^2$. The resulting dynamics is the Ornstein–Uhlenbeck process $d\mathbf{x}_t = -\mathbf{x}\,dt + \sqrt{2}\,d\mathbf{W}_t$, whose stationary distribution is $\mathcal{N}(0, I)$ with density $\propto e^{-\frac{1}{2}\|\mathbf{x}\|^2}$. Comparing this with $e^{-\beta \frac{1}{2}\|\mathbf{x}\|^2}$ gives $\beta = 1$.
+1. For Langevin dynamics $d\mathbf{x}_t = -\nabla E(\mathbf{x})\,dt + \sqrt{2}\,d\mathbf{W}_t$, the randomness ($d\mathbf{W}_t$) constantly perturbs the system. Over time, this leads the system to equilibrium, where the probability of being in a particular state only depends on its energy $E(\mathbf{x})$—states with the same energy should occur with the same probability. Thus, the stationary distribution has the general form $p(\mathbf{x}) = f(E(\mathbf{x}))$ for some function $f$.
+2. Consider $N$ independent copies $\mathbf{x}_1,\dots,\mathbf{x}_N$. Independence implies that $p(\mathbf{x}_1,\dots,\mathbf{x}_N) = p(\mathbf{x}_1)\cdots p(\mathbf{x}_N)$. However, if we analyze the joint system as a single Langevin process over the $N$ variables, the total energy is simply the sum: $E(\mathbf{x}_1, \dots, \mathbf{x}_N) = E(\mathbf{x}_1) + \dots + E(\mathbf{x}_N)$. Therefore, the stationary density must also take the form $g(E(\mathbf{x}_1)+\dots+E(\mathbf{x}_N))$ for some function $g$. The only way for both the product-form (from independence) and the sum-form (from additivity of energy) to be simultaneously true for all $N$ is if $f(E) = e^{-\beta E}$, i.e., an exponential function, which gives the exponential family: $p(\mathbf{x}) \propto e^{-\beta E(\mathbf{x})}$ for some constant $\beta$.
+3. To fix $\beta$, take $E(\mathbf{x}) = \frac{1}{2}\|\mathbf{x}\|^2$. The resulting dynamics is the Ornstein–Uhlenbeck process $d\mathbf{x}_t = -\mathbf{x}\,dt + \sqrt{2}\,d\mathbf{W}_t$, whose stationary distribution is $\mathcal{N}(0, I)$ with density $\propto e^{-\frac{1}{2}\|\mathbf{x}\|^2}$. Comparing this with $e^{-\beta \frac{1}{2}\|\mathbf{x}\|^2}$ gives $\beta = 1$. Therefore $d\mathbf{x}_t = -\nabla E(\mathbf{x})\,dt + \sqrt{2}\,d\mathbf{W}_t$ has stationary distribution $\propto e^{-E(\mathbf{x})}$.
+
+
 
 
 
