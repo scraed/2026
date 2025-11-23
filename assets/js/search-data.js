@@ -94,17 +94,6 @@ ninja.data = [{
             window.location.href = "/2026/blog/2026/sac-massive-sim/";
           
         },
-      },{id: "post-rethinking-the-diffusion-model-from-a-langevin-perspective",
-        
-          title: "Rethinking the diffusion model from a Langevin perspective",
-        
-        description: "This article presents a fresh perspective on the core theory of diffusion models, explaining the forward and backward processes—as well as the design of the training loss—through the lenses of Langevin dynamics and maximum likelihood estimation. By adopting this viewpoint, the article offers a simpler, more intuitive approach with strong pedagogical value. It demystifies the complex mathematics that often obscures the core logic of diffusion models, thereby providing helpful intuition for both learners and experienced researchers.",
-        section: "Posts",
-        handler: () => {
-          
-            window.location.href = "/2026/blog/2026/rethinking-diffusion-Langevin/";
-          
-        },
       },{id: "post-language-as-a-window-into-the-mind-how-nlp-and-llms-advance-human-sciences",
         
           title: "Language as a Window Into the Mind: How NLP and LLMs Advance Human...",
@@ -202,6 +191,17 @@ ninja.data = [{
         handler: () => {
           
             window.location.href = "/2026/blog/2026/chunked-tabpfn/";
+          
+        },
+      },{id: "post-",
+        
+          title: "",
+        
+        description: "",
+        section: "Posts",
+        handler: () => {
+          
+            window.location.href = "/2026/blog/2025/2026-04-27-rethinking-diffusion-Langevin/";
           
         },
       },{id: "books-the-godfather",
