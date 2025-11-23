@@ -1,7 +1,7 @@
 ---
 layout: distill
 title: Rethinking the diffusion model from a Langevin perspective
-description: Diffusion models are typically introduced through fragmented perspectives involving VAEs, score matching, or flow matching, with dense, technically demanding mathematical derivations. This article presents a fresh Langevin perspective on the core theory of diffusion models, offering a simpler, cleaner, and more intuitive approach to the following questions:
+description: Diffusion models are typically introduced through fragmented perspectives involving VAEs, score matching, or flow matching, with dense, technically demanding mathematical derivations. This article presents a fresh Langevin perspective on the core theory of diffusion models, offering a simpler, cleaner, and more intuitive approach to the following questions\:
 1. Why are diffusion models more than just VAEs? 2. How can VAE, Score Matching, and Flow Matching be unified under Maximum Likelihood? 3. Why should neural networks model score functions (or their variants), and how can we generalize to discrete diffusion models where score functions don't exist? We demonstrate that the Langevin perspective provides strong pedagogical value for both learners and experienced researchers seeking deeper intuition.
 date: 2026-04-27
 future: true
