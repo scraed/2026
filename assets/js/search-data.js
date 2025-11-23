@@ -94,6 +94,17 @@ ninja.data = [{
             window.location.href = "/2026/blog/2026/sac-massive-sim/";
           
         },
+      },{id: "post-rethinking-the-diffusion-model-from-a-langevin-perspective",
+        
+          title: "Rethinking the diffusion model from a Langevin perspective",
+        
+        description: "Diffusion models are typically introduced through fragmented perspectives involving VAEs, score matching, or flow matching, with dense, technically demanding mathematical derivations. This article presents a fresh Langevin perspective on the core theory of diffusion models, offering a simpler, cleaner, and more intuitive approach to the following questions: 1. Why are diffusion models more than just VAEs? 2. How can VAE, Score Matching, and Flow Matching be unified under Maximum Likelihood? 3. Why should neural networks model score functions (or their variants), and how can we generalize to discrete diffusion models where score functions don&#39;t exist? We demonstrate that the Langevin perspective provides strong pedagogical value for both learners and experienced researchers seeking deeper intuition.",
+        section: "Posts",
+        handler: () => {
+          
+            window.location.href = "/2026/blog/2026/rethinking-diffusion-Langevin/";
+          
+        },
       },{id: "post-language-as-a-window-into-the-mind-how-nlp-and-llms-advance-human-sciences",
         
           title: "Language as a Window Into the Mind: How NLP and LLMs Advance Human...",
@@ -191,17 +202,6 @@ ninja.data = [{
         handler: () => {
           
             window.location.href = "/2026/blog/2026/chunked-tabpfn/";
-          
-        },
-      },{id: "post-",
-        
-          title: "",
-        
-        description: "",
-        section: "Posts",
-        handler: () => {
-          
-            window.location.href = "/2026/blog/2025/2026-04-27-rethinking-diffusion-Langevin/";
           
         },
       },{id: "books-the-godfather",
