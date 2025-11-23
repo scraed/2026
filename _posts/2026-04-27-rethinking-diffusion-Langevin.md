@@ -1,7 +1,9 @@
 ---
 layout: distill
 title: Rethinking the diffusion model from a Langevin perspective
-description: This article presents a fresh perspective on the core theory of diffusion models, explaining the forward and backward processes—as well as the design of the training loss—through the lenses of Langevin dynamics and maximum likelihood estimation. By adopting this viewpoint, the article offers a simpler, more intuitive approach with strong pedagogical value. It demystifies the complex mathematics that often obscures the core logic of diffusion models, thereby providing helpful intuition for both learners and experienced researchers.
+description: Diffusion models are typically introduced through fragmented perspectives involving VAEs, score matching, or flow matching, with dense, technically demanding mathematical derivations. This article presents a fresh Langevin perspective on the core theory of diffusion models, offering a simpler, cleaner, and more intuitive approach to the following questions:
+1. Why are diffusion models more than just VAEs? 2. How can VAE, Score Matching, and Flow Matching be unified under Maximum Likelihood? 3. Why should neural networks model score functions (or their variants), and how can we generalize to discrete diffusion models where score functions don't exist? We demonstrate that the Langevin perspective provides strong pedagogical value for both learners and experienced researchers seeking deeper intuition.
+
 date: 2026-04-27
 future: true
 htmlwidgets: true
@@ -67,8 +69,13 @@ _styles: >
     font-size: 16px;
   }
 ---
+The Langevin perspective of view provide easy answering of the following questions:
+1. Why diffusion model is more than a VAE: the duality of the forward and reverse process that Decoder-Encoder persepctive cannot tell you.
+2. Are ELBO, Score Matching, and Flow Matching different training object? In fact, they are just Maximal Likelihood.
+3. Why neural network should model score function or its variant? How to generalize to Discrete Diffusion model where there is no score function?
 
-## Why Denoise from Scratch? From Langevin Dynamics to Diffusion Model
+## The duality of the forward and reverse process from the Langevin perspective
+
 
 
 ## Langevin Dynamics
