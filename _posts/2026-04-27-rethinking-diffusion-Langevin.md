@@ -95,7 +95,7 @@ If you're comfortable simply assuming that $p(\mathbf{x})$ is the stationary dis
 
 The stationary of $p(\mathbf{x})$ is very important: The Langevin dynamics for $p(\mathbf{x})$ acts as an "identity" operation on this distribution, transforming samples from $p(\mathbf{x})$ into new samples from the same distribution.
 
-{% include figure.liquid path="assets/img/2026-04-27-distill-example/2026-04-27-rethinking-diffusion-Langevin.png" class="img-fluid" %}
+{% include figure.liquid path="assets/img/2026-04-27-rethinking-diffusion-Langevin/langevin_id.png" class="img-fluid" %}
 
 Note: please use the table of contents as defined in the front matter rather than the traditional markdown styling.
 
