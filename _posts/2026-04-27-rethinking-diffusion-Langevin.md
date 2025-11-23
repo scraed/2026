@@ -75,7 +75,7 @@ _styles: >
 
 
 
-## Langevin Dynamics
+# Langevin Dynamics
 
 **Langevin Dynamics** is a special diffusion process that aims to generate samples from a probability distribution $p(\mathbf{x})$. It is defined as:
 
@@ -85,15 +85,22 @@ $$
 
 where $\mathbf{s}(\mathbf{x}) = \nabla_{\mathbf{x}} \log p(\mathbf{x})$ is the score function of $p(\mathbf{x})$. This dynamics is often used as a Monte Carlo sampler to draw samples from $p(\mathbf{x})$, since $p(\mathbf{x})$ is its stationary distribution—the distribution that $\mathbf{x}_t$ converges to and and remains at as $t \to \infty$, regardless of the initial distribution of $\mathbf{x}_0$. 
 
-If you're comfortable simply assuming that $p(\mathbf{x})$ is the stationary distribution of the Langevin dynamics, you can skip this section. Otherwise, here is an intuitive version of the standard argument:
 
-1. Write the dynamics in “energy” form as $d\mathbf{x}_t = -\nabla E(\mathbf{x})\,dt + \sqrt{2}\,d\mathbf{W}_t$. The noise term $d\mathbf{W}_t$ keeps nudging the system around, while $-\nabla E(\mathbf{x})$ pulls it toward lower-energy regions. In the long run, the system settles into an equilibrium where the chance of being at a particular state depends only on its energy $E(\mathbf{x})$: states with the same energy should be equally likely. So the stationary density must depend on $\mathbf{x}$ only through its energy, i.e., $p(\mathbf{x}) = f(E(\mathbf{x}))$ for some function $f$.
-2. Now imagine $N$ independent copies $\mathbf{x}_1,\dots,\mathbf{x}_N$ following the same dynamics. Independence means their joint density factors: $p(\mathbf{x}_1,\dots,\mathbf{x}_N) = p(\mathbf{x}_1)\cdots p(\mathbf{x}_N)$. On the other hand, if you view the $N$-tuple $(\mathbf{x}_1,\dots,\mathbf{x}_N)$ as one big system, its total energy is just the sum of the individual energies: $E(\mathbf{x}_1) + \dots + E(\mathbf{x}_N)$. By the same “only energy matters” reasoning, the stationary density of this big system must be some function $g$ of that total energy: $g(E(\mathbf{x}_1)+\dots+E(\mathbf{x}_N))$. The only way to reconcile a product over $i$ with a function of the sum over $i$, for all $N$, is if $f$ is an exponential, $f(E) = e^{-\beta E}$, which gives $p(\mathbf{x}) \propto e^{-\beta E(\mathbf{x})}$.
-3. To fix the constant $\beta$, pick a simple quadratic energy $E(\mathbf{x}) = \tfrac{1}{2}\|\mathbf{x}\|^2$. The corresponding dynamics is the well-known Ornstein–Uhlenbeck process $d\mathbf{x}_t = -\mathbf{x}\,dt + \sqrt{2}\,d\mathbf{W}_t$, whose stationary distribution is $\mathcal{N}(0, I)$ with density $\propto e^{-\tfrac{1}{2}\|\mathbf{x}\|^2}$. Comparing this with the general form $e^{-\beta \tfrac{1}{2}\|\mathbf{x}\|^2}$ shows that $\beta = 1$. Therefore, $d\mathbf{x}_t = -\nabla E(\mathbf{x})\,dt + \sqrt{2}\,d\mathbf{W}_t$ has stationary distribution $\propto e^{-E(\mathbf{x})}$, and in particular $d\mathbf{x}_t = \nabla_{\mathbf{x}} \log p(\mathbf{x})\, dt + \sqrt{2} d\mathbf{W}_t$ indeed has $p(\mathbf{x})$ as its stationary distribution.
+
+
+If you're comfortable simply assuming that $p(\mathbf{x})$ is the stationary distribution of the Langevin dynamics, you can skip this section. Otherwise, here is a short argument:
+
+1. Write the dynamics in “energy” form as $d\mathbf{x}_t = -\nabla E(\mathbf{x})\,dt + \sqrt{2}\,d\mathbf{W}_t$. randomness perturbs the system to equilibrium, where states with the same energy $E(\mathbf{x})$ have equal probability. Thus, the stationary distribution is $p(\mathbf{x}) = f(E(\mathbf{x}))$ for some function $f$.
+2. Consider $N$ independent copies $\mathbf{x}_1, \dots, \mathbf{x}_N$. Their joint density is the product $p(\mathbf{x}_1) \cdots p(\mathbf{x}_N)$. Treating them as a single system, the total energy is additive: $E(\mathbf{x}_1, \dots, \mathbf{x}_N) = \sum E(\mathbf{x}_i)$. So the joint stationary density must also be $g(\sum E(\mathbf{x}_i))$ for some $g$. The only function satisfying both the product (independence) and sum (additivity) forms for all $N$ is the exponential: $f(E) = e^{-\beta E}$, yielding $p(\mathbf{x}) \propto e^{-\beta E(\mathbf{x})}$.
+3. To find $\beta$, take $E(\mathbf{x}) = \frac{1}{2} \|\mathbf{x}\|^2$, giving the Ornstein–Uhlenbeck process $d\mathbf{x}_t = -\mathbf{x}\,dt + \sqrt{2}\,d\mathbf{W}_t$ with known stationary $\mathcal{N}(0, I)$, density $\propto e^{-\frac{1}{2} \|\mathbf{x}\|^2}$. Matching forms gives $\beta = 1$.
+
+Thus, the dynamics $d\mathbf{x}_t = -\nabla E(\mathbf{x})\,dt + \sqrt{2}\,d\mathbf{W}_t$ has stationary $\propto e^{-E(\mathbf{x})}$, and $d\mathbf{x}_t = \nabla_{\mathbf{x}} \log p(\mathbf{x}) \, dt + \sqrt{2} \, d\mathbf{W}_t$ has stationary $p(\mathbf{x})$. 
 
 ## Langevin Dynamics as 'Identity'
 
 The stationary of $p(\mathbf{x})$ is very important: The Langevin dynamics for $p(\mathbf{x})$ acts as an "identity" operation on this distribution, transforming samples from $p(\mathbf{x})$ into new samples from the same distribution.
+
+
 
 {% include figure.liquid path="assets/img/2026-04-27-rethinking-diffusion-Langevin/langevin_id.png" class="img-fluid" %}
 
