@@ -77,6 +77,12 @@ _styles: >
 
 # Langevin Dynamics
 
+The key to understanding diffusion models from the Langevin perspective lies in understanding the following triangle relation: 
+
+{% include figure.liquid path="assets/img/2026-04-27-rethinking-diffusion-Langevin/forward-backward-langevin.png" class="img-fluid" %}
+
+which illustrates the connection among the forward, backward diffusion process and the Langevin dynamics.
+
 **Langevin Dynamics** is a special diffusion process that aims to generate samples from a probability distribution $p(\mathbf{x})$. It is defined as:
 
 $$
