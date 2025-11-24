@@ -100,15 +100,136 @@ If you're comfortable simply assuming that $p(\mathbf{x})$ is the stationary dis
 2. Consider $N$ independent copies $\mathbf{x}_1, \dots, \mathbf{x}_N$. Their joint density is the product $p(\mathbf{x}_1) \cdots p(\mathbf{x}_N)$. Treating them as a single system, the total energy is additive: $E(\mathbf{x}_1, \dots, \mathbf{x}_N) = \sum E(\mathbf{x}_i)$. So the joint stationary density must also be $g(\sum E(\mathbf{x}_i))$ for some $g$. The only function satisfying both the product (independence) and sum (additivity) forms for all $N$ is the exponential: $f(E) = e^{-\beta E}$, yielding $p(\mathbf{x}) \propto e^{-\beta E(\mathbf{x})}$.
 3. To find $\beta$, take $E(\mathbf{x}) = \frac{1}{2} \|\mathbf{x}\|^2$, giving the Ornstein–Uhlenbeck process $d\mathbf{x}_t = -\mathbf{x}\,dt + \sqrt{2}\,d\mathbf{W}_t$ with known stationary $\mathcal{N}(0, I)$, density $\propto e^{-\frac{1}{2} \|\mathbf{x}\|^2}$. Matching forms gives $\beta = 1$.
 
-Thus, the dynamics $d\mathbf{x}_t = -\nabla E(\mathbf{x})\,dt + \sqrt{2}\,d\mathbf{W}_t$ has stationary $\propto e^{-E(\mathbf{x})}$, and $d\mathbf{x}_t = \nabla_{\mathbf{x}} \log p(\mathbf{x}) \, dt + \sqrt{2} \, d\mathbf{W}_t$ has stationary $p(\mathbf{x})$. 
+Thus, the dynamics $$d\mathbf{x}_t = -\nabla E(\mathbf{x})\,dt + \sqrt{2}\,d\mathbf{W}_t$$ has stationary distribution $$\propto e^{-E(\mathbf{x})}$$, and $$d\mathbf{x}_t = \nabla_{\mathbf{x}} \log p(\mathbf{x}) \, dt + \sqrt{2} \, d\mathbf{W}_t$$ has stationary distribution $$p(\mathbf{x})$$. 
 
-## Langevin Dynamics as 'Identity'
+### Langevin Dynamics as 'Identity'
 
 The stationary of $p(\mathbf{x})$ is very important: The Langevin dynamics for $p(\mathbf{x})$ acts as an "identity" operation on this distribution, transforming samples from $p(\mathbf{x})$ into new samples from the same distribution.
 
 
 
 {% include figure.liquid path="assets/img/2026-04-27-rethinking-diffusion-Langevin/langevin_id.png" class="img-fluid" %}
+
+
+
+# Spliting the Identity: Forward and Backward Processes in DDPM
+The Denoising Diffusion Probabilistic Models (DDPMs) [^Ho2020DenoisingDP] are models that generate high-quality images from noise via a sequence of denoising steps. Denoting images as random variable $\mathbf{x}$ of the probabilistic density distribution $p(\mathbf{x})$, the DDPM aims to learn a model distribution that mimics the image distribution $p(\mathbf{x})$ and draw samples from it. The training and sampling of the DDPM utilize two diffusion process: the forward and the backward diffusion process. 
+
+
+## The Forward Diffusion Process
+
+The forward diffusion process in DDPM generates the necessary training data: clean images and their progressively noised counterparts. It gradually adds noise to existing images $\mathbf{x}_0 \sim p(x)$ using the Ornstein-Uhlenbeck diffusion process (OU process) [^Uhlenbeck1930OnTT] within a finite time interval $t\in [0,T]$. The OU process is defined by the stochastic differential equation (SDE):
+
+$$
+d \mathbf{x}_t = - \frac{1}{2} \mathbf{x}_t dt + d\mathbf{W}_t, \label{Forward Process}
+$$
+
+in which $t$ is the forward time of the diffusion process, $\mathbf{x}_t$ is the noise contaminated image at time $t$, and $\mathbf{W}_t$ is a Brownian noise.
+
+Note that $-\mathbf{x}$ is just the score function of the standard Gaussian distribution $\mathcal{N}(\mathbf{0},I)$. Thus, the forward diffusion process corresponds to the Langevin dynamics of the standard Gaussian $\mathcal{N}(\mathbf{0},I)$.
+
+The forward diffusion process has $\mathcal{N}(\mathbf{0},I)$ as its stationary distribution. This means, for any initial distribution $p_0(\mathbf{x})$ of positions $\{\mathbf{x}_0^{(1)},...,\mathbf{x}_0^{(N)}\}$, their density $p_t(\mathbf{x})$ converges to $\mathcal{N}(\mathbf{0},I)$ as $t\to\infty$. When these positions represent vectors of clean images, the process describes a gradual noising operation that transforms clean images into Gaussian noise.
+
+One forward diffusion step with a step size of $\Delta t$ is displayed in the following picture.
+{% include figure.liquid path="assets/img/2026-04-27-rethinking-diffusion-Langevin/forward.png" class="img-fluid" %}
+
+## The Backward Diffusion Process
+
+The backward diffusion process is the conjugate of the forward process. While the forward process evolves $p_t(\mathbf{x})$ toward $\mathcal{N}(\mathbf{0},I)$, the backward process reverses this evolution, restoring $\mathcal{N}(\mathbf{0},I)$ to $p_t$.
+
+To derive it, we employ Langevin dynamics as a stepping stone, which provides a starightforward way to obtain the backward diffusion process: 
+
+
+$\ref{Langevin Dynamics}$ functions as an "identity" operation with respect to a distribution. Given that the backward process is the reverse of the forward process, the composition of the forward and backward process at time $t$ must therefore reproduce the Langevin dynamics for $p_t(\mathbf{x})$, as shown in the following picture
+
+{% include figure.liquid path="assets/img/2026-04-27-rethinking-diffusion-Langevin/forward-backward-langevin.png" class="img-fluid" %}
+
+
+To formalize this, consider the Langevin dynamics for $ p_t(\mathbf{x}) $ with a distinct time variable $ \tau $, distinguished from the forward diffusion time $ t $. This dynamics can be decomposed into forward and backward components as follows:  
+
+$$
+\begin{split}  
+d\mathbf{x}_\tau &= \mathbf{s}(\mathbf{x}_\tau, t) d\tau + \sqrt{2}\, d\mathbf{W}_\tau, \\
+&= \underbrace{-\frac{1}{2} \mathbf{x}_\tau d\tau + d\mathbf{W}_\tau^{(1)}}_{\text{Forward}} + \underbrace{ \left( \frac{1}{2} \mathbf{x}_\tau + \mathbf{s}(\mathbf{x}_\tau, t) \right)d\tau + d\mathbf{W}_\tau^{(2)}}_{\text{Backward} },  
+\end{split}  
+$$
+
+where $ \mathbf{s}(\mathbf{x}, t) = \nabla_{\mathbf{x}} \log p_t(\mathbf{x}) $ is the score function of $ p_t(\mathbf{x}) $. We have utilized the property that $\sqrt{2}\, d\mathbf{W}_\tau = \sqrt{2 dt} \boldsymbol{\epsilon} = \sqrt{dt} \boldsymbol{\epsilon}_1 + \sqrt{dt} \boldsymbol{\epsilon}_2 = d\mathbf{W}_\tau^{(1)} + d\mathbf{W}_\tau^{(2)}$. 
+
+The "Forward" part in this decomposition corresponds to the forward diffusion process, effectively **increasing the forward diffusion time $ t $ by $ d\tau $**, bringing the distribution to $p_{t + d\tau}(\mathbf{x})$. Since the forward and backward components combine to form an "identity" operation, the "Backward" part must reverse the forward process—**decreasing the forward diffusion time $ t $ by $ d\tau $** and restoring the distribution back to $ p_t(\mathbf{x}) $.
+
+
+
+Now we can define the backward process according to the backward part in the equation above, and a backward diffusion time $t'$ different from the forward diffusion time $t$:
+
+$$
+d\mathbf{x}_{t'} = \left( \frac{1}{2} \mathbf{x}_{t'}+ \mathbf{s}(\mathbf{x}_{t'}, t) \right) dt' + d\mathbf{W}_{t'}.
+$$
+
+One step of this backward diffusion process with $dt' = \Delta t$ acts as a reversal of the forward process.
+
+
+{% include figure.liquid path="assets/img/2026-04-27-rethinking-diffusion-Langevin/backward2.png" class="img-fluid" %}
+
+The backward diffusion process itself is also a standalone SDE that advances the backward diffusion time $t'$. If $\mathbf{x}_{t'} \sim q_{t'}(\mathbf{x})$, then one step of the backward diffusion process with $dt' = \Delta t'$ brings it to $\mathbf{x}_{t' + \Delta t'} \sim q_{t' + \Delta t'}(\mathbf{x})$.
+
+{% include figure.liquid path="assets/img/2026-04-27-rethinking-diffusion-Langevin/backward3.png" class="img-fluid" %}
+
+These two interpretations help us determine the relationship between the forward diffusion time $t$ and the backward diffusion time $t'$. Since $dt'$ is interpreted as a "decrease" in the forward diffusion time $t$, as well as a "increase" of the backward diffusion time $t'$, we have 
+
+$$
+dt = -dt'
+$$
+
+which means the backward diffusion time is the inverse of the forward. To make $t'$ lies in the same range $[0, T]$ of the forward diffusion time, we define $t = T - t'$. In this notation, the backward diffusion process [^Anderson1982ReversetimeDE] is
+
+$$
+d\mathbf{x}_{t'} = \left( \frac{1}{2} \mathbf{x}_{t'}+ \mathbf{s}(\mathbf{x}_{t'}, T-t') \right) dt' + d\mathbf{W}_{t'}, \label{Backward Process}
+$$
+
+in which $t' \in [0,T]$ is the backward time, $\mathbf{s}(\mathbf{x}, t) = \nabla_{\mathbf{x}} \log p_t(\mathbf{x})$ is the score function of the density of $\mathbf{x}_{t}$ in the forward process.
+
+### Forward-Backward Duality
+
+We have previously shown that a backward step is the reverse of a forward step: advancing time $t'$ in the backward process corresponds to receding time $t$ by the same amount in the forward process. What then occurs when we chain together a series of forward and backward steps? Consider the following process: start with $\mathbf{x}_0$, evolve it via the $\ref{Forward Process}$ to $\mathbf{x}_T$, then take $\mathbf{x}_T$ as the initial position $\mathbf{x}_{0'}$ of the $\ref{Backward Process}$ and evolve it to $\mathbf{x}_{T'}$. This sequence is illustrated in the figure below.
+
+{% include figure.liquid path="assets/img/2026-04-27-rethinking-diffusion-Langevin/FastestDiffusionTheory_08.jpg" class="img-fluid" %}
+
+The green arrows represent consecutive forward process steps that advance the forward diffusion time $t$, while the blue arrows indicate consecutive backward process steps that advance the backward diffusion time $t'$. 
+
+We examine the relationship between $\mathbf{x}_{t}$ in the forward diffusion process and $\mathbf{x}_{t'=T-t}$ in the backward diffusion process. The composition of a forward and a backward step constitutes a Langevin dynamics step. This allows us to connect $\mathbf{x}$ in the forward process with those in the backward process through Langevin dynamics steps, as illustrated below:
+
+{% include figure.liquid path="assets/img/2026-04-27-rethinking-diffusion-Langevin/FastestDiffusionTheory_09.jpg" class="img-fluid" %}
+
+**Each horizontal row in this picture corresponds to consecutive steps of Langevin dynamics, which alters the samples while maintaining the same probability density**. This illustrates the duality between the forward and backward diffusion processes: while $\mathbf{x}_t$ (forward) and $\mathbf{x}_{(T-t)'}$ (backward) are distinct samples, they obey the same probability distribution.
+
+:::tip
+It's important to note that the backward diffusion process does not generate identical samples to the forward process; rather, it produces samples according to the same probability distribution, due to the identity property of Langevin dynamics.
+:::
+
+To formalize the duality, we define the densities of $\mathbf{x}_t$ (forward) as $p_t(\mathbf{x})$, the densities of $\mathbf{x}_{t'}$ (backward) as $q_{t'}(\mathbf{x})$. If we initialize
+
+$$
+q_0(\mathbf{x}) = p_T(\mathbf{x}),  
+$$
+
+then their evolution are related by  
+
+$$
+q_{t'}(\mathbf{x}) = p_{T-t'}(\mathbf{x}) 
+$$
+
+For large $T$, $p_T(\mathbf{x})$ converges to $\mathcal{N}(\mathbf{x}|\mathbf{0},I)$. Thus, the backward process starts at $t'=0$ with $\mathcal{N}(\mathbf{0},I)$ and, after evolving to $t'=T$, generates samples from the data distribution:  
+
+$$
+q_T(\mathbf{x}) = p_0(\mathbf{x}) \quad \text{(data distribution)}.  
+$$
+This establishes an exact correspondence between the forward diffusion process and the backward diffusion process, indicating that the backward diffusion process can generate image data from pure Gaussian noise.
+
+
+
+
+
 
 Note: please use the table of contents as defined in the front matter rather than the traditional markdown styling.
 
