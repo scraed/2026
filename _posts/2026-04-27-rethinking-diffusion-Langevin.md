@@ -72,9 +72,22 @@ _styles: >
     text-align: center;
     font-size: 16px;
   }
+  details {
+    background: inherit;
+    border: 1px solid rgba(0, 0, 0, 0.08);
+    border-radius: 4px;
+    padding: 0.75rem 1rem;
+    margin: 1rem 0;
+  }
+  details > summary {
+    cursor: pointer;
+    font-weight: 500;
+    list-style: none;
+  }
+  details[open] {
+    background: inherit;
+  }
 ---
-
-# Langevin Dynamics Perspective of Diffusion Model
 
 The denoising diffusion probabilistic model (DDPM) is the most fundamental type of diffusion model, consisting of two primary processes: the forward and backward diffusion processes. Most explanations of these processes fall into three main frameworks: the Variational Autoencoder (VAE) perspective, the score-based perspective, and the flow-based perspective.
 
@@ -93,6 +106,8 @@ In this article, we offer a perspective that is both accessible and nuanced: the
 </div>
 
 which illustrates the connection among the forward, backward diffusion process and the Langevin dynamics.
+
+# Langevin Dynamics
 
 **Langevin Dynamics** is a special diffusion process that aims to generate samples from a probability distribution $$p(\mathbf{x})$$. It is defined as:
 
@@ -114,7 +129,7 @@ where $$\mathbf{s}(\mathbf{x}) = \nabla_{\mathbf{x}} \log p(\mathbf{x})$$ is the
 
 3. To find $\beta$, take $E(\mathbf{x}) = \frac{1}{2} \|\mathbf{x}\|^2$, giving the Ornstein–Uhlenbeck process $d\mathbf{x}_t = -\mathbf{x}\,dt + \sqrt{2}\,d\mathbf{W}_t$ with known stationary $\mathcal{N}(0, I)$, density $\propto e^{-\frac{1}{2} \|\mathbf{x}\|^2}$. Matching forms gives $\beta = 1$.
 
-Thus, the dynamics $d\mathbf{x}_t = -\nabla E(\mathbf{x})\,dt + \sqrt{2}\,d\mathbf{W}_t$ has stationary distribution $\propto e^{-E(\mathbf{x})}$, and $d\mathbf{x}_t = \nabla_{\mathbf{x}} \log p(\mathbf{x}) \, dt + \sqrt{2} \, d\mathbf{W}_t$ has stationary distribution $p(\mathbf{x})$. 
+Thus, the dynamics $$d\mathbf{x}_t = -\nabla E(\mathbf{x})\,dt + \sqrt{2}\,d\mathbf{W}_t$$ has stationary distribution $$\propto e^{-E(\mathbf{x})}$$, and $$d\mathbf{x}_t = \nabla_{\mathbf{x}} \log p(\mathbf{x}) \, dt + \sqrt{2} \, d\mathbf{W}_t$$ has stationary distribution $p(\mathbf{x})$. 
 
 </details>
 
