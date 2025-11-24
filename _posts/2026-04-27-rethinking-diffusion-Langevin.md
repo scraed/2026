@@ -99,9 +99,9 @@ where $$\mathbf{s}(\mathbf{x}) = \nabla_{\mathbf{x}} \log p(\mathbf{x})$$ is the
 
 
 <details>
-<summary><em>Why is $$p(\mathbf{x})$$ the stationary distribution of the Langevin dynamics?</em> (click to expand)</summary>
+<summary><em>If you're comfortable simply assuming that $p(\mathbf{x})$ is the stationary distribution of the Langevin dynamics, you can skip this section. Otherwise, here is a short argument:</em> (click to expand)</summary>
 
-If you're comfortable simply assuming that $$p(\mathbf{x})$$ is the stationary distribution of the Langevin dynamics, you can skip this section. Otherwise, here is a short argument:
+
 
 1. Write the dynamics in “energy” form as $$d\mathbf{x}_t = -\nabla E(\mathbf{x})\,dt + \sqrt{2}\,d\mathbf{W}_t$$. randomness perturbs the system to equilibrium, where states with the same energy $$E(\mathbf{x})$$ have equal probability. Thus, the stationary distribution is $$p(\mathbf{x}) = f(E(\mathbf{x}))$$ for some function $$f$$.
 2. Consider $$N$$ independent copies $$\mathbf{x}_1, \dots, \mathbf{x}_N$$. Their joint density is the product $$p(\mathbf{x}_1) \cdots p(\mathbf{x}_N)$$. Treating them as a single system, the total energy is additive: $$E(\mathbf{x}_1, \dots, \mathbf{x}_N) = \sum E(\mathbf{x}_i)$$. So the joint stationary density must also be $$g(\sum E(\mathbf{x}_i))$$ for some function $$g$$. The only function satisfying both the product (independence) and sum (additivity) forms for all $$N$$ is the exponential: $$f(E) = e^{-\beta E}$$, yielding $$p(\mathbf{x}) \propto e^{-\beta E(\mathbf{x})}$$.
@@ -230,7 +230,7 @@ $$
 q_{t'}(\mathbf{x}) = p_{T-t'}(\mathbf{x}) 
 $$
 
-For large $$T$$, $$p_T(\mathbf{x})$$ converges to $$\mathcal{N}(\mathbf{x}|\mathbf{0},I)$$. Thus, the backward process starts at $$t'=0$$ with $$\mathcal{N}(\mathbf{0},I)$$ and, after evolving to $$t'=T$$, generates samples from the data distribution:  
+For large $$T$$, $$p_T(\mathbf{x})$$ converges to $$\mathcal{N}(\mathbf{x}|\mathbf{0},I)$$. Thus, the backward process starts at $$t'=0$$ with $$\mathcal{N}(\mathbf{0},I)$$ and, after evolving to $$t'=T$$, generates samples from the data distribution:
 
 $$
 q_T(\mathbf{x}) = p_0(\mathbf{x}) \quad \text{(data distribution)}.  
