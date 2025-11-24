@@ -106,9 +106,11 @@ Thus, the dynamics $$d\mathbf{x}_t = -\nabla E(\mathbf{x})\,dt + \sqrt{2}\,d\mat
 
 The stationary of $p(\mathbf{x})$ is very important: The Langevin dynamics for $p(\mathbf{x})$ acts as an "identity" operation on this distribution, transforming samples from $p(\mathbf{x})$ into new samples from the same distribution.
 
-
-
-{% include figure.liquid path="assets/img/2026-04-27-rethinking-diffusion-Langevin/langevin_id.png" class="img-fluid" %}
+<div class="row mt-3">
+    <div class="col-md-10 offset-md-1 col-lg-8 offset-lg-2 mt-3 mt-md-0">
+        {% include figure.liquid path="assets/img/2026-04-27-rethinking-diffusion-Langevin/langevin_id.png" class="img-fluid rounded z-depth-1" %}
+    </div>
+</div>
 
 
 
