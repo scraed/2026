@@ -79,7 +79,11 @@ _styles: >
 
 The key to understanding diffusion models from the Langevin perspective lies in understanding the following triangle relation: 
 
-{% include figure.liquid path="assets/img/2026-04-27-rethinking-diffusion-Langevin/forward-backward-langevin.png" class="img-fluid" %}
+<div class="row mt-3">
+    <div class="col-md-12 col-lg-10 offset-lg-1 mt-3 mt-md-0">
+        {% include figure.liquid path="assets/img/2026-04-27-rethinking-diffusion-Langevin/forward-backward-langevin.png" class="img-fluid rounded z-depth-1" %}
+    </div>
+</div>
 
 which illustrates the connection among the forward, backward diffusion process and the Langevin dynamics.
 
