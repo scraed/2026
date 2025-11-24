@@ -105,6 +105,13 @@ In this article, we offer a perspective that is both accessible and nuanced: the
     </div>
 </div>
 
+```mermaid
+flowchart TB
+    A["\(x_t \sim p_t(x)\)"] -->|Langevin| B["\(x'_t \sim p_t(x)\)"]
+    A -->|Forward| C["\(x_{t+\Delta t} \sim p_{t+\Delta t}(x)\)"]
+    C -->|Backward| B
+```
+
 which illustrates the connection among the forward, backward diffusion process and the Langevin dynamics.
 
 # Langevin Dynamics
@@ -130,6 +137,8 @@ where $$\mathbf{s}(\mathbf{x}) = \nabla_{\mathbf{x}} \log p(\mathbf{x})$$ is the
 3. To find $\beta$, take $E(\mathbf{x}) = \frac{1}{2} \|\mathbf{x}\|^2$, giving the Ornstein–Uhlenbeck process $d\mathbf{x}_t = -\mathbf{x}\,dt + \sqrt{2}\,d\mathbf{W}_t$ with known stationary $\mathcal{N}(0, I)$, density $\propto e^{-\frac{1}{2} \|\mathbf{x}\|^2}$. Matching forms gives $\beta = 1$.
 
 Thus, the dynamics $$d\mathbf{x}_t = -\nabla E(\mathbf{x})\,dt + \sqrt{2}\,d\mathbf{W}_t$$ has stationary distribution $$\propto e^{-E(\mathbf{x})}$$, and $$d\mathbf{x}_t = \nabla_{\mathbf{x}} \log p(\mathbf{x}) \, dt + \sqrt{2} \, d\mathbf{W}_t$$ has stationary distribution $p(\mathbf{x})$. 
+
+
 
 </details>
 
