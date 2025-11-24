@@ -226,6 +226,7 @@ For large $$T$$, $$p_T(\mathbf{x})$$ converges to $$\mathcal{N}(\mathbf{x}|\math
 $$
 q_T(\mathbf{x}) = p_0(\mathbf{x}) \quad \text{(data distribution)}.  
 $$
+
 This establishes an exact correspondence between the forward diffusion process and the backward diffusion process, indicating that the backward diffusion process can generate image data from pure Gaussian noise.
 
 
