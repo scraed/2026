@@ -98,6 +98,9 @@ where $$\mathbf{s}(\mathbf{x}) = \nabla_{\mathbf{x}} \log p(\mathbf{x})$$ is the
 
 
 
+<details>
+<summary><em>Why is $$p(\mathbf{x})$$ the stationary distribution of the Langevin dynamics?</em> (click to expand)</summary>
+
 If you're comfortable simply assuming that $$p(\mathbf{x})$$ is the stationary distribution of the Langevin dynamics, you can skip this section. Otherwise, here is a short argument:
 
 1. Write the dynamics in “energy” form as $$d\mathbf{x}_t = -\nabla E(\mathbf{x})\,dt + \sqrt{2}\,d\mathbf{W}_t$$. randomness perturbs the system to equilibrium, where states with the same energy $$E(\mathbf{x})$$ have equal probability. Thus, the stationary distribution is $$p(\mathbf{x}) = f(E(\mathbf{x}))$$ for some function $$f$$.
@@ -105,6 +108,8 @@ If you're comfortable simply assuming that $$p(\mathbf{x})$$ is the stationary d
 3. To find $$\beta$$, take $$E(\mathbf{x}) = \frac{1}{2} \|\mathbf{x}\|^2$$, giving the Ornstein–Uhlenbeck process $$d\mathbf{x}_t = -\mathbf{x}\,dt + \sqrt{2}\,d\mathbf{W}_t$$ with known stationary $$\mathcal{N}(0, I)$$, density $$\propto e^{-\frac{1}{2} \|\mathbf{x}\|^2}$$. Matching forms gives $$\beta = 1$$.
 
 Thus, the dynamics $$d\mathbf{x}_t = -\nabla E(\mathbf{x})\,dt + \sqrt{2}\,d\mathbf{W}_t$$ has stationary distribution $$\propto e^{-E(\mathbf{x})}$$, and $$d\mathbf{x}_t = \nabla_{\mathbf{x}} \log p(\mathbf{x}) \, dt + \sqrt{2} \, d\mathbf{W}_t$$ has stationary distribution $$p(\mathbf{x})$$. 
+
+</details>
 
 ### Langevin Dynamics as 'Identity'
 
