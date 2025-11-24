@@ -72,7 +72,18 @@ ninja.data = [{
               handler: () => {
                 window.location.href = "https://iclr-blog-track.github.io/home/";
               },
-            },{id: "post-the-thermodynamic-implications-of-gpu-cooling-systems-on-transformer-model-training-efficiency-during-leap-years",
+            },{id: "post-wait-do-we-need-to-wait-revisiting-budget-forcing-for-sequential-test-time-scaling",
+        
+          title: "Wait, Do We Need to Wait? Revisiting Budget Forcing for Sequential Test-Time Scaling...",
+        
+        description: "This blog revisits budget forcing, a sequential test-time scaling technique for reasoning models by controlling when it continues thinking versus when it must answer. We evaluate how well the method transfers across model types, including non-reasoning models, and whether alternative keywords work. We provide practical guidelines for using the technique.",
+        section: "Posts",
+        handler: () => {
+          
+            window.location.href = "/2026/blog/2026/wait-do-we-need-to-wait/";
+          
+        },
+      },{id: "post-the-thermodynamic-implications-of-gpu-cooling-systems-on-transformer-model-training-efficiency-during-leap-years",
         
           title: "The Thermodynamic Implications of GPU Cooling Systems on Transformer Model Training Efficiency During...",
         
