@@ -73,7 +73,7 @@ _styles: >
     font-size: 16px;
   }
   details {
-    background: inherit;
+    background: transparent !important;
     border: 1px solid rgba(0, 0, 0, 0.08);
     border-radius: 4px;
     padding: 0.75rem 1rem;
@@ -83,9 +83,10 @@ _styles: >
     cursor: pointer;
     font-weight: 500;
     list-style: none;
+    background: transparent !important;
   }
   details[open] {
-    background: inherit;
+    background: transparent !important;
   }
 ---
 
@@ -104,13 +105,6 @@ In this article, we offer a perspective that is both accessible and nuanced: the
         {% include figure.liquid path="assets/img/2026-04-27-rethinking-diffusion-Langevin/forward-backward-langevin.png" class="img-fluid rounded z-depth-1" %}
     </div>
 </div>
-
-```mermaid
-flowchart TB
-    A["\(x_t \sim p_t(x)\)"] -->|Langevin| B["\(x'_t \sim p_t(x)\)"]
-    A -->|Forward| C["\(x_{t+\Delta t} \sim p_{t+\Delta t}(x)\)"]
-    C -->|Backward| B
-```
 
 which illustrates the connection among the forward, backward diffusion process and the Langevin dynamics.
 
@@ -172,7 +166,12 @@ Note that $$-\mathbf{x}$$ is just the score function of the standard Gaussian di
 The forward diffusion process has $$\mathcal{N}(\mathbf{0},I)$$ as its stationary distribution. This means, for any initial distribution $$p_0(\mathbf{x})$$ of positions $$\{\mathbf{x}_0^{(1)},...,\mathbf{x}_0^{(N)}\}$$, their density $$p_t(\mathbf{x})$$ converges to $$\mathcal{N}(\mathbf{0},I)$$ as $$t\to\infty$$. When these positions represent vectors of clean images, the process describes a gradual noising operation that transforms clean images into Gaussian noise.
 
 One forward diffusion step with a step size of $$\Delta t$$ is displayed in the following picture.
-{% include figure.liquid path="assets/img/2026-04-27-rethinking-diffusion-Langevin/forward.png" class="img-fluid" %}
+
+<div class="row mt-3">
+    <div class="col-md-10 offset-md-1 col-lg-8 offset-lg-2 mt-3 mt-md-0">
+        {% include figure.liquid path="assets/img/2026-04-27-rethinking-diffusion-Langevin/forward.png" class="img-fluid rounded z-depth-1" %}
+    </div>
+</div>
 
 ## The Backward Diffusion Process
 
@@ -183,7 +182,11 @@ To derive it, we employ Langevin dynamics as a stepping stone, which provides a 
 
 $$\ref{Langevin Dynamics}$$ functions as an "identity" operation with respect to a distribution. Given that the backward process is the reverse of the forward process, the composition of the forward and backward process at time $$t$$ must therefore reproduce the Langevin dynamics for $$p_t(\mathbf{x})$$, as shown in the following picture
 
-{% include figure.liquid path="assets/img/2026-04-27-rethinking-diffusion-Langevin/forward-backward-langevin.png" class="img-fluid" %}
+<div class="row mt-3">
+    <div class="col-md-12 col-lg-10 offset-lg-1 mt-3 mt-md-0">
+        {% include figure.liquid path="assets/img/2026-04-27-rethinking-diffusion-Langevin/forward-backward-langevin.png" class="img-fluid rounded z-depth-1" %}
+    </div>
+</div>
 
 
 To formalize this, consider the Langevin dynamics for $$ p_t(\mathbf{x}) $$ with a distinct time variable $$ \tau $$, distinguished from the forward diffusion time $$ t $$. This dynamics can be decomposed into forward and backward components as follows:  
@@ -209,12 +212,19 @@ $$
 
 One step of this backward diffusion process with $$dt' = \Delta t$$ acts as a reversal of the forward process.
 
-
-{% include figure.liquid path="assets/img/2026-04-27-rethinking-diffusion-Langevin/backward2.png" class="img-fluid" %}
+<div class="row mt-3">
+    <div class="col-md-10 offset-md-1 col-lg-8 offset-lg-2 mt-3 mt-md-0">
+        {% include figure.liquid path="assets/img/2026-04-27-rethinking-diffusion-Langevin/backward2.png" class="img-fluid rounded z-depth-1" %}
+    </div>
+</div>
 
 The backward diffusion process itself is also a standalone SDE that advances the backward diffusion time $$t'$$. If $$\mathbf{x}_{t'} \sim q_{t'}(\mathbf{x})$$, then one step of the backward diffusion process with $$dt' = \Delta t'$$ brings it to $$\mathbf{x}_{t' + \Delta t'} \sim q_{t' + \Delta t'}(\mathbf{x})$$.
 
-{% include figure.liquid path="assets/img/2026-04-27-rethinking-diffusion-Langevin/backward3.png" class="img-fluid" %}
+<div class="row mt-3">
+    <div class="col-md-10 offset-md-1 col-lg-8 offset-lg-2 mt-3 mt-md-0">
+        {% include figure.liquid path="assets/img/2026-04-27-rethinking-diffusion-Langevin/backward3.png" class="img-fluid rounded z-depth-1" %}
+    </div>
+</div>
 
 These two interpretations help us determine the relationship between the forward diffusion time $$t$$ and the backward diffusion time $$t'$$. Since $$dt'$$ is interpreted as a "decrease" in the forward diffusion time $$t$$, as well as a "increase" of the backward diffusion time $$t'$$, we have 
 
@@ -234,13 +244,21 @@ in which $$t' \in [0,T]$$ is the backward time, $$\mathbf{s}(\mathbf{x}, t) = \n
 
 We have previously shown that a backward step is the reverse of a forward step: advancing time $$t'$$ in the backward process corresponds to receding time $$t$$ by the same amount in the forward process. What then occurs when we chain together a series of forward and backward steps? Consider the following process: start with $$\mathbf{x}_0$$, evolve it via the $$\ref{Forward Process}$$ to $$\mathbf{x}_T$$, then take $$\mathbf{x}_T$$ as the initial position $$\mathbf{x}_{0'}$$ of the $$\ref{Backward Process}$$ and evolve it to $$\mathbf{x}_{T'}$$. This sequence is illustrated in the figure below.
 
-{% include figure.liquid path="assets/img/2026-04-27-rethinking-diffusion-Langevin/FastestDiffusionTheory_08.jpg" class="img-fluid" %}
+<div class="row mt-3">
+    <div class="col-md-10 offset-md-1 col-lg-8 offset-lg-2 mt-3 mt-md-0">
+        {% include figure.liquid path="assets/img/2026-04-27-rethinking-diffusion-Langevin/FastestDiffusionTheory_08.jpg" class="img-fluid rounded z-depth-1" %}
+    </div>
+</div>
 
 The green arrows represent consecutive forward process steps that advance the forward diffusion time $$t$$, while the blue arrows indicate consecutive backward process steps that advance the backward diffusion time $$t'$$. 
 
 We examine the relationship between $$\mathbf{x}_{t}$$ in the forward diffusion process and $$\mathbf{x}_{t'=T-t}$$ in the backward diffusion process. The composition of a forward and a backward step constitutes a Langevin dynamics step. This allows us to connect $$\mathbf{x}$$ in the forward process with those in the backward process through Langevin dynamics steps, as illustrated below:
 
-{% include figure.liquid path="assets/img/2026-04-27-rethinking-diffusion-Langevin/FastestDiffusionTheory_09.jpg" class="img-fluid" %}
+<div class="row mt-3">
+    <div class="col-md-10 offset-md-1 col-lg-8 offset-lg-2 mt-3 mt-md-0">
+        {% include figure.liquid path="assets/img/2026-04-27-rethinking-diffusion-Langevin/FastestDiffusionTheory_09.jpg" class="img-fluid rounded z-depth-1" %}
+    </div>
+</div>
 
 **Each horizontal row in this picture corresponds to consecutive steps of Langevin dynamics, which alters the samples while maintaining the same probability density**. This illustrates the duality between the forward and backward diffusion processes: while $$\mathbf{x}_t$$ (forward) and $$\mathbf{x}_{(T-t)'}$$ (backward) are distinct samples, they obey the same probability distribution.
 
@@ -260,7 +278,7 @@ $$
 q_{t'}(\mathbf{x}) = p_{T-t'}(\mathbf{x}) 
 $$
 
-For large $$T$$, $$p_T(\mathbf{x})$$ converges to $$\mathcal{N}(\mathbf{x}|\mathbf{0},I)$$. Thus, the backward process starts at $$t'=0$$ with $$\mathcal{N}(\mathbf{0},I)$$ and, after evolving to $$t'=T$$, generates samples from the data distribution:
+For large $T$, $p_T(\mathbf{x})$ converges to $$\mathcal{N}(\mathbf{x}|\mathbf{0},I)$$. Thus, the backward process starts at $t'=0$ with $$\mathcal{N}(\mathbf{0},I)$$ and, after evolving to $t'=T$, generates samples from the data distribution:
 
 $$
 q_T(\mathbf{x}) = p_0(\mathbf{x}) \quad \text{(data distribution)}.  
@@ -268,9 +286,34 @@ $$
 
 This establishes an exact correspondence between the forward diffusion process and the backward diffusion process, indicating that the backward diffusion process can generate image data from pure Gaussian noise.
 
+We demonstrated that **backward diffusion**—the dual of the forward process—can generate image data from noise. However, this requires access to the **score function** $\mathbf{s}(\mathbf{x}, t) = \nabla_{\mathbf{x}} \log p_t(\mathbf{x})$ at every timestep $t$. In practice, we approximate this function using a neural network.  In the next section, we will explain how to train such score networks.  
+
+## Training the Score Function
+
+Previous section introduced **Forward Process** and **Backward Process** of Denoising Diffusion Probabilistic Model (DDPM). 
+
+**Forward Process** 
+
+$$
+d \mathbf{x}_t = - \frac{1}{2} \mathbf{x}_t dt + d\mathbf{W}_t, \label{Forward Process}
+$$
+
+where $t \in [0,T]$ is the forward diffusion time. This process describes a gradual noising operation that transforms clean images into Gaussian noise.
+
+**Backward Process** 
+
+$$
+d\mathbf{x}_{t'} = \left( \frac{1}{2} \mathbf{x}_{t'}+ \mathbf{s}(\mathbf{x}_{t'}, T-t') \right) dt' + d\mathbf{W}_{t'}, \label{Backward Process}
+$$
+
+where $t' = T - t$ is the backward diffusion time, $\mathbf{s}(\mathbf{x}, t) = \nabla_{\mathbf{x}} \log p_t(\mathbf{x})$ is the score function of the density of $\mathbf{x}_{t}$ in the forward process.
 
 
+In this section, we will show how to train a neural network that models the score function $\mathbf{s}(\mathbf{x}, t)$.
 
+Training the backward requires a training objective. We will show that the score function could be trained with a denoising objective.
+
+DDPM is trained to removes the noise $\bar{\boldsymbol{\epsilon}}_i$ from $\mathbf{x}_i$ in the forward diffusion process, by training a denoising neural network $\boldsymbol{\epsilon}_\theta( \mathbf{x}, t_i  )$ to predict and remove the noise $\bar{\boldsymbol{\epsilon}}_i $. This means that DDPM minimizes the **denoising objective** [^Ho2020DenoisingDP]:
 
 
 Note: please use the table of contents as defined in the front matter rather than the traditional markdown styling.
