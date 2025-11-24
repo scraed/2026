@@ -74,17 +74,17 @@ _styles: >
   }
 ---
 
-
-
 # Langevin Dynamics Perspective of Diffusion Model
 
-The denoising diffusion probabilistic model (DDPM) is the most fundamental type of diffusion model, consisting of two primary processes: the forward and backward diffusion processes. Most explanations of these processes fall into two main frameworks: the Variational Autoencoder (VAE) perspective and the score-based perspective.
+The denoising diffusion probabilistic model (DDPM) is the most fundamental type of diffusion model, consisting of two primary processes: the forward and backward diffusion processes. Most explanations of these processes fall into three main frameworks: the Variational Autoencoder (VAE) perspective, the score-based perspective, and the flow-based perspective.
 
 The VAE perspective interprets the forward and backward diffusion processes as an encoder and decoder, respectively, applying Markov chain modeling, Bayes’ theorem, and using the Evidence Lower Bound (ELBO) as the training objective. While this approach is intuitive for much of the machine learning community, it involves lengthy mathematical derivations and often blurs a crucial distinction: in VAEs, both the prior and posterior are approximations, whereas in diffusion models, the prior and posterior are duals—they are exact in theory.
 
 The score-based perspective emphasizes the mathematical duality between the forward and backward processes. It usually introduces the forward process first and treats the backward process as an oracle, often citing Anderson (1982). However, grasping the full SDE or ODE formulation of the backward process requires familiarity with advanced concepts like the Kolmogorov equations and the continuity equation, making this approach less accessible. The strong focus on denoising score matching can also obscure its connection to maximum likelihood, further limiting its intuitive appeal.
 
-In this article, we propose a more accessible viewpoint: the Langevin perspective. This perspective retains the emphasis on the duality of the forward and backward processes while relying only on elementary concepts from stochastic differential equations (SDEs). The central insight is encapsulated in the following triangle relationship:
+A third valuable perspective is the flow-based viewpoint, which has become increasingly popular in modern diffusion models. This approach is theoretically equivalent to both the VAE and score-based frameworks, but it distinguishes itself by emphasizing an intuitive and visually accessible straight-line interpolation between data and noise. While this simplicity makes the flow-based perspective appealing and approachable, it also carries the risk of oversimplification. Interpreting the forward and backward diffusion paths as mere straight-line interpolations may overlook the intricately paired relationship required for these processes to form an exact dual pair—an essential aspect underpinning the theoretical foundation of diffusion models.
+
+In this article, we offer a perspective that is both accessible and nuanced: the Langevin viewpoint. This approach maintains a focus on the dual nature of the forward and backward processes, while relying only on fundamental techinques of stochastic differential equations (SDEs). The central insight is encapsulated in the following triangle relationship:
 
 <div class="row mt-3">
     <div class="col-md-12 col-lg-10 offset-lg-1 mt-3 mt-md-0">
@@ -105,7 +105,7 @@ where $$\mathbf{s}(\mathbf{x}) = \nabla_{\mathbf{x}} \log p(\mathbf{x})$$ is the
 
 
 
-<details>
+<details markdown="1">
 <summary><em>If you're comfortable simply assuming that $p(\mathbf{x})$ is the stationary distribution of the Langevin dynamics, you can skip this section. Otherwise, here is a short argument:</em> (click to expand)</summary>
 
 1. Write the dynamics in “energy” form as $$d\mathbf{x}_t = -\nabla E(\mathbf{x})\,dt + \sqrt{2}\,d\mathbf{W}_t$$. The randomness $d\mathbf{W}_t$ perturbs the system to equilibrium, where states with the same energy $E(\mathbf{x})$ have equal probability. Thus, the stationary distribution is $p(\mathbf{x}) = f(E(\mathbf{x}))$ for some function $f$.
@@ -127,7 +127,6 @@ The stationary of $$p(\mathbf{x})$$ is very important: The Langevin dynamics for
         {% include figure.liquid path="assets/img/2026-04-27-rethinking-diffusion-Langevin/langevin_id.png" class="img-fluid rounded z-depth-1" %}
     </div>
 </div>
-
 
 
 # Spliting the Identity: Forward and Backward Processes in DDPM
