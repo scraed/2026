@@ -1,11 +1,12 @@
 ---
 layout: distill
-title: Rethinking the diffusion model from a Langevin perspective
+title: Rethinking the Diffusion Model from a Langevin Perspective
 description: >
   Diffusion models are typically introduced through fragmented perspectives involving VAEs, score matching, or flow matching, with dense, technically demanding mathematical derivations. This article presents a fresh Langevin perspective on the core theory of diffusion models, offering a simpler, cleaner, and more intuitive approach to the following questions:
   1. Why are diffusion models more than just VAEs?
-  2. How can VAE, Score Matching, and Flow Matching be unified under Maximum Likelihood?
-  3. Why should neural networks model score functions (or their variants), and how can we generalize to discrete diffusion models where score functions don't exist?
+  2. What is the difference between ODE and SDE framework?
+  3. How can VAE, Score Matching, and Flow Matching be unified under Maximum Likelihood?
+  4. Why should neural networks model score functions (or their variants), and how can we generalize to discrete diffusion models where score functions don't exist?
   We demonstrate that the Langevin perspective provides strong pedagogical value for both learners and experienced researchers seeking deeper intuition.
 date: 2026-04-27
 future: true
@@ -75,9 +76,15 @@ _styles: >
 
 
 
-# Langevin Dynamics
+# Langevin Dynamics Perspective of Diffusion Model
 
-The key to understanding diffusion models from the Langevin perspective lies in understanding the following triangle relation: 
+The denoising diffusion probabilistic model (DDPM) is the most fundamental type of diffusion model, consisting of two primary processes: the forward and backward diffusion processes. Most explanations of these processes fall into two main frameworks: the Variational Autoencoder (VAE) perspective and the score-based perspective.
+
+The VAE perspective interprets the forward and backward diffusion processes as an encoder and decoder, respectively, applying Markov chain modeling, Bayes’ theorem, and using the Evidence Lower Bound (ELBO) as the training objective. While this approach is intuitive for much of the machine learning community, it involves lengthy mathematical derivations and often blurs a crucial distinction: in VAEs, both the prior and posterior are approximations, whereas in diffusion models, the prior and posterior are duals—they are exact in theory.
+
+The score-based perspective emphasizes the mathematical duality between the forward and backward processes. It usually introduces the forward process first and treats the backward process as an oracle, often citing Anderson (1982). However, grasping the full SDE or ODE formulation of the backward process requires familiarity with advanced concepts like the Kolmogorov equations and the continuity equation, making this approach less accessible. The strong focus on denoising score matching can also obscure its connection to maximum likelihood, further limiting its intuitive appeal.
+
+In this article, we propose a more accessible viewpoint: the Langevin perspective. This perspective retains the emphasis on the duality of the forward and backward processes while relying only on elementary concepts from stochastic differential equations (SDEs). The central insight is encapsulated in the following triangle relationship:
 
 <div class="row mt-3">
     <div class="col-md-12 col-lg-10 offset-lg-1 mt-3 mt-md-0">
@@ -101,8 +108,10 @@ where $$\mathbf{s}(\mathbf{x}) = \nabla_{\mathbf{x}} \log p(\mathbf{x})$$ is the
 <details>
 <summary><em>If you're comfortable simply assuming that $p(\mathbf{x})$ is the stationary distribution of the Langevin dynamics, you can skip this section. Otherwise, here is a short argument:</em> (click to expand)</summary>
 
-1. Write the dynamics in “energy” form as $d\mathbf{x}_t = -\nabla E(\mathbf{x})\,dt + \sqrt{2}\,d\mathbf{W}_t$. randomness perturbs the system to equilibrium, where states with the same energy $E(\mathbf{x})$ have equal probability. Thus, the stationary distribution is $p(\mathbf{x}) = f(E(\mathbf{x}))$ for some function $f$.
+1. Write the dynamics in “energy” form as $$d\mathbf{x}_t = -\nabla E(\mathbf{x})\,dt + \sqrt{2}\,d\mathbf{W}_t$$. The randomness $d\mathbf{W}_t$ perturbs the system to equilibrium, where states with the same energy $E(\mathbf{x})$ have equal probability. Thus, the stationary distribution is $p(\mathbf{x}) = f(E(\mathbf{x}))$ for some function $f$.
+
 2. Consider $N$ independent copies $\mathbf{x}_1, \dots, \mathbf{x}_N$. Their joint density is the product $p(\mathbf{x}_1) \cdots p(\mathbf{x}_N)$. Treating them as a single system, the total energy is additive: $E(\mathbf{x}_1, \dots, \mathbf{x}_N) = \sum E(\mathbf{x}_i)$. So the joint stationary density must also be $g(\sum E(\mathbf{x}_i))$ for some function $g$. The only function satisfying both the product (independence) and sum (additivity) forms for all $N$ is the exponential: $f(E) = e^{-\beta E}$, yielding $p(\mathbf{x}) \propto e^{-\beta E(\mathbf{x})}$.
+
 3. To find $\beta$, take $E(\mathbf{x}) = \frac{1}{2} \|\mathbf{x}\|^2$, giving the Ornstein–Uhlenbeck process $d\mathbf{x}_t = -\mathbf{x}\,dt + \sqrt{2}\,d\mathbf{W}_t$ with known stationary $\mathcal{N}(0, I)$, density $\propto e^{-\frac{1}{2} \|\mathbf{x}\|^2}$. Matching forms gives $\beta = 1$.
 
 Thus, the dynamics $d\mathbf{x}_t = -\nabla E(\mathbf{x})\,dt + \sqrt{2}\,d\mathbf{W}_t$ has stationary distribution $\propto e^{-E(\mathbf{x})}$, and $d\mathbf{x}_t = \nabla_{\mathbf{x}} \log p(\mathbf{x}) \, dt + \sqrt{2} \, d\mathbf{W}_t$ has stationary distribution $p(\mathbf{x})$. 
