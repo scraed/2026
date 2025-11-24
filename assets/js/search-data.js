@@ -96,9 +96,9 @@ ninja.data = [{
         },
       },{id: "post-rethinking-the-diffusion-model-from-a-langevin-perspective",
         
-          title: "Rethinking the diffusion model from a Langevin perspective",
+          title: "Rethinking the Diffusion Model from a Langevin Perspective",
         
-        description: "Diffusion models are typically introduced through fragmented perspectives involving VAEs, score matching, or flow matching, with dense, technically demanding mathematical derivations. This article presents a fresh Langevin perspective on the core theory of diffusion models, offering a simpler, cleaner, and more intuitive approach to the following questions: 1. Why are diffusion models more than just VAEs? 2. How can VAE, Score Matching, and Flow Matching be unified under Maximum Likelihood? 3. Why should neural networks model score functions (or their variants), and how can we generalize to discrete diffusion models where score functions don&#39;t exist? We demonstrate that the Langevin perspective provides strong pedagogical value for both learners and experienced researchers seeking deeper intuition.",
+        description: "Diffusion models are typically introduced through fragmented perspectives involving VAEs, score matching, or flow matching, with dense, technically demanding mathematical derivations. This article presents a fresh Langevin perspective on the core theory of diffusion models, offering a simpler, cleaner, and more intuitive approach to the following questions: 1. Why are diffusion models more than just VAEs? 2. What is the difference between ODE and SDE framework? 3. How can VAE, Score Matching, and Flow Matching be unified under Maximum Likelihood? 4. Why should neural networks model score functions (or their variants), and how can we generalize to discrete diffusion models where score functions don&#39;t exist? We demonstrate that the Langevin perspective provides strong pedagogical value for both learners and experienced researchers seeking deeper intuition.",
         section: "Posts",
         handler: () => {
           
