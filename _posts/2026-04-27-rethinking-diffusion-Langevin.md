@@ -146,6 +146,8 @@ The stationary of $$p(\mathbf{x})$$ is very important: The Langevin dynamics for
     </div>
 </div>
 
+Langevin dynamics, while widely used for sampling from complex distributions, becomes inefficient in high-dimensional or multi-modal settings due to slow mixing and sensitivity to hyperparameters such as step size and noise scale; this inefficiency highlights the need for more structured sampling approaches that can better explore complicated data landscapes.
+
 
 # Spliting the Identity: Forward and Backward Processes in DDPM
 The Denoising Diffusion Probabilistic Models (DDPMs) [^Ho2020DenoisingDP] are models that generate high-quality images from noise via a sequence of denoising steps. Denoting images as random variable $$\mathbf{x}$$ of the probabilistic density distribution $$p(\mathbf{x})$$, the DDPM aims to learn a model distribution that mimics the image distribution $$p(\mathbf{x})$$ and draw samples from it. The training and sampling of the DDPM utilize two diffusion process: the forward and the backward diffusion process. 
@@ -295,7 +297,7 @@ Previous section introduced **Forward Process** and **Backward Process** of Deno
 **Forward Process** 
 
 $$
-d \mathbf{x}_t = - \frac{1}{2} \mathbf{x}_t dt + d\mathbf{W}_t, \label{Forward Process}
+d \mathbf{x}_t = - \frac{1}{2} \mathbf{x}_t dt + d\mathbf{W}_t, 
 $$
 
 where $t \in [0,T]$ is the forward diffusion time. This process describes a gradual noising operation that transforms clean images into Gaussian noise.
@@ -303,15 +305,98 @@ where $t \in [0,T]$ is the forward diffusion time. This process describes a grad
 **Backward Process** 
 
 $$
-d\mathbf{x}_{t'} = \left( \frac{1}{2} \mathbf{x}_{t'}+ \mathbf{s}(\mathbf{x}_{t'}, T-t') \right) dt' + d\mathbf{W}_{t'}, \label{Backward Process}
+d\mathbf{x}_{t'} = \left( \frac{1}{2} \mathbf{x}_{t'}+ \mathbf{s}(\mathbf{x}_{t'}, T-t') \right) dt' + d\mathbf{W}_{t'},
 $$
 
 where $t' = T - t$ is the backward diffusion time, $\mathbf{s}(\mathbf{x}, t) = \nabla_{\mathbf{x}} \log p_t(\mathbf{x})$ is the score function of the density of $\mathbf{x}_{t}$ in the forward process.
 
 
-In this section, we will show how to train a neural network that models the score function $\mathbf{s}(\mathbf{x}, t)$.
+Training the backward process evolves two problem: 1. what to model 2. the training objective. In this case, it is quite evident that we should model the score funciton (or its rescaled version like x0 prediction, epsilon prediction, or velocity prediction in flow matching presepctive) as a neural network. However, it is not clear how it will participate the loss function. We wish to derive the training objective in a first principle way, but since we have not adopting the VAE perspective, we cannot use the ELBO.We will show that the score function could be trained with a denoising objective from the first principle.
 
-Training the backward requires a training objective. We will show that the score function could be trained with a denoising objective.
+
+To understand how score functions arise in the training objective, we will use the familar maximal likelihood method. However, maximal likelihood is for distributions. Before we proceed, we need to know how a SDE effects the distribution.
+
+#### From Individual Trajectories to Probability Distributions: The Fokker-Planck Equation
+
+While a stochastic differential equation (SDE) describes how individual samples evolve over time, we are also interested in how an entire probability distribution transforms. Consider a general SDE of the form:
+
+$$
+d\mathbf{x} = f(\mathbf{x}, t) \, dt + g(t) \, d\mathbf{W}.
+$$
+
+where $f(\mathbf{x}, t)$ is the drift term governing deterministic dynamics, $g(t)$ controls the diffusion strength, and $d\mathbf{W}$ represents Brownian motion increments. If we start with a collection of samples $\{\mathbf{x}_0^{(i)}\}$ drawn from an initial distribution $p_0(\mathbf{x})$ and evolve each sample according to this SDE, the resulting samples $\{\mathbf{x}_t^{(i)}\}$ will be distributed according to a time-evolved density $p_t(\mathbf{x})$. The question is: how does $p_t(\mathbf{x})$ relate to the SDE parameters $f$ and $g$?
+
+The answer is given by the **Fokker-Planck equation**, which governs how the probability density $$p(\mathbf{x}, t)$$ evolves under an SDE:
+
+$$
+\frac{\partial p}{\partial t} = -\frac{\partial}{\partial \mathbf{x}} \left[f(\mathbf{x}, t) p\right] + \frac{1}{2} g(t)^2 \frac{\partial^2  p}{\partial \mathbf{x}^2}.
+$$
+
+<details markdown="1">
+<summary><em>A short explaination:</em> (click to expand)</summary>
+
+You can find rigorous derivations of the Fokker-Planck equation in many textbooks; here we just sketch an intuitive, 1D argument that explains its form.
+
+1. **Linearity.** Particles following the SDE are independent, so if $p_1(x,t)$ and $p_2(x,t)$ each follow the evolution equation, then any mixture $a p_1 + (1-a)p_2$ should also follow it. This means the PDE for $p(x,t)$ must be linear:
+$$
+\frac{\partial p}{\partial t} + L[p] = 0,
+$$
+where $L[p]$ is a linear operator such as $a(x,t)p + b(x,t)\partial_x p + c(x,t)\partial_x^2 p$.
+
+2. **Conservation of probability.** The density is normalized for all time, $\int_{-\infty}^{\infty} p(x,t)\,dx = 1$, so
+$$
+\int_{-\infty}^{\infty} \frac{\partial p}{\partial t}\,dx = 0.
+$$
+This holds if we can write $L[p]$ as a spatial derivative of a **probability flux** $J[p]$:
+$$
+L[p] = \frac{\partial J[p]}{\partial x},
+$$
+because then
+$$
+\int_{-\infty}^{\infty} \frac{\partial J[p]}{\partial x}\,dx
+= J[p]\big|_{-\infty}^{\infty} = 0
+$$
+whenever $J[p]$ vanishes at infinity. So we obtain the conservation form
+$$
+\frac{\partial p}{\partial t} + \frac{\partial J[p]}{\partial x} = 0.
+$$
+
+3. **Drift term $f(x,t)$.** Consider first a simple 1D case with **constant speed** $v$, so $dx = v\,dt$. After time $t$, a particle now at position $x$ must have come from $x - vt$ at time $0$, so
+$$
+p(x,t) = p(x - vt, 0).
+$$
+This relation implies the advection equation
+$$
+\frac{\partial p}{\partial t} + v\,\frac{\partial p}{\partial x} = 0,
+$$
+which we can also write as
+$$
+\frac{\partial p}{\partial t} + \frac{\partial}{\partial x}\big(v\,p(x,t)\big) = 0.
+$$
+If the speed depends on position and time, $dx = f(x,t)\,dt$, the same reasoning gives
+$$
+\frac{\partial p}{\partial t} + \frac{\partial}{\partial x}\big(f(x,t)\,p(x,t)\big) = 0,
+$$
+so the drift contributes a flux $J_{\text{drift}}[p] = f(x,t)\,p(x,t)$.
+
+
+4. The diffusion term $g d W$: consider a simple case $dx = g dW$. Suppose $x(0) = 0$. At time $t$,  the accumulation of $dW$ from time $0$ to time $t$ is a Gaussian noise with variance $t$. Therefore the variance of $x$ is $g^2 t$, whose probability distribution is $p(x, t) = \frac{1}{\sqrt{2\pi g^2 t} } e^{-\frac{x^2}{2 g^2 t}}$. It satisfies the following equation 
+$$
+\frac{\partial p}{\partial t} -\frac{1}{2} \frac{\partial g^2 p}{\partial x}  = 0
+$$
+
+Combine them together we have 
+
+$$
+\frac{\partial p}{\partial t} = -\frac{\partial}{\partial \mathbf{x}} \left[f(\mathbf{x}, t) p\right] + \frac{1}{2} g(t)^2 \frac{\partial^2  p}{\partial \mathbf{x}^2}.
+$$
+
+</details>
+
+This partial differential equation reveals how both drift and diffusion shape the distribution. The first term, $$-\frac{\partial}{\partial \mathbf{x}} [f(\mathbf{x}, t) p]$$, is the advection term: it transports probability mass along the drift field $$f(\mathbf{x}, t)$$, shifting the distribution deterministically. The second term, $$\frac{1}{2} g(t)^2 \frac{\partial^2 p}{\partial \mathbf{x}^2}$$, is the diffusion term: it spreads probability mass outward due to stochastic fluctuations, smoothing the distribution over time. Together, these terms determine how $$p_0(\mathbf{x})$$ evolves into $$p_t(\mathbf{x})$$, providing the distributional perspective we need for maximum likelihood training.
+
+
+
 
 DDPM is trained to removes the noise $\bar{\boldsymbol{\epsilon}}_i$ from $\mathbf{x}_i$ in the forward diffusion process, by training a denoising neural network $\boldsymbol{\epsilon}_\theta( \mathbf{x}, t_i  )$ to predict and remove the noise $\bar{\boldsymbol{\epsilon}}_i $. This means that DDPM minimizes the **denoising objective** [^Ho2020DenoisingDP]:
 
