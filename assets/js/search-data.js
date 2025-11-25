@@ -83,15 +83,15 @@ ninja.data = [{
             window.location.href = "/2026/blog/2026/wait-do-we-need-to-wait/";
           
         },
-      },{id: "post-the-thermodynamic-implications-of-gpu-cooling-systems-on-transformer-model-training-efficiency-during-leap-years",
+      },{id: "post-symbolism-outside-connectionism-inside-the-trend-of-fusing-llms-and-automatic-programs-with-symbolic-intermediate-representations",
         
-          title: "The Thermodynamic Implications of GPU Cooling Systems on Transformer Model Training Efficiency During...",
+          title: "Symbolism Outside, Connectionism Inside: The Trend of Fusing LLMs and Automatic Programs with...",
         
-        description: "A comprehensive analysis of how the additional day in leap years affects thermal dissipation patterns in datacenter GPU arrays, with particular emphasis on the correlation between Gregorian calendar anomalies and attention mechanism convergence rates.",
+        description: "This blog introduces the trend of fusing Large Language Models (LLMs) with external symbolic programs as a new paradigm in modern and future artificial intelligence (AI). This paradigm regards LLM output as a symbolic intermediate representation (IR), which is interpreted and executed by external symbolic programs to achieve the desired behavior. We firstly review and summarize the diverse applications of this paradigm. Then we introduce the more possible usages of this paradigm, from synthesizing grounded training data to composing modular systems of specialized neural networks. Finally, we introduce the frontier of this approach: applying formal methods to automatically verify the LLM&#39;s internal reasoning processes and outputs.",
         section: "Posts",
         handler: () => {
           
-            window.location.href = "/2026/blog/2026/thermodynamic-gpu-cooling-leap-years/";
+            window.location.href = "/2026/blog/2026/symbolic-connect/";
           
         },
       },{id: "post-getting-sac-to-work-on-a-massive-parallel-simulator-an-rl-journey-with-off-policy-algorithms",
@@ -171,6 +171,28 @@ ninja.data = [{
             window.location.href = "/2026/blog/2026/llm-post-training/";
           
         },
+      },{id: "post-are-dilemmas-and-conflicts-in-llm-alignment-solvable-a-view-from-priority-graph",
+        
+          title: "Are Dilemmas and Conflicts in LLM Alignment Solvable? A View from Priority Graph...",
+        
+        description: "As Large Language Models (LLMs) become more powerful and autonomous, they increasingly face conflicts and dilemmas in many scenarios. We first summarize and taxonomize these diverse conflicts. Then, we model the LLM&#39;s preferences to make different choices as a priority graph, where instructions and values are nodes, and the edges represent context-specific priorities determined by the model&#39;s output distribution. This graph reveals that a unified stable LLM alignment is very challenging, because the graph is not static in different contexts. Besides, it also reveals a potential vulnerability: priority hacking, where adversaries can craft deceptive contexts to manipulate the graph and bypass safety alignments. To counter this, we propose a runtime verification mechanism, enabling LLMs to query external sources to ground their context and resist manipulation. While this approach enhances robustness, we also acknowledge that many ethical and value dilemmas are philosophically irreducible, posing an open challenge for the future of AI alignment.",
+        section: "Posts",
+        handler: () => {
+          
+            window.location.href = "/2026/blog/2026/llm-conflicts/";
+          
+        },
+      },{id: "post-justrl-scaling-a-1-5b-llm-with-a-simple-rl-recipe",
+        
+          title: "JustRL: Scaling a 1.5B LLM with a Simple RL Recipe",
+        
+        description: "Training small reasoning models with RL has become a race toward complexity, using multi-stage pipelines, dynamic schedules, and curriculum learning. We ask whether this complexity necessary? We show that JustRL, a simple recipe with fixed hyperparameters, achieves state-of-the-art performance on two different 1.5B base models (54.5% and 64.3% across 9 math benchmarks) while using 2× less compute than sophisticated approaches. The same hyperparameters transfer across both models without tuning, and training remains stable over thousands of steps without intervention. This suggests the field may be adding complexity to solve problems that disappear with a stable, scaled-up baseline.",
+        section: "Posts",
+        handler: () => {
+          
+            window.location.href = "/2026/blog/2026/justrl/";
+          
+        },
       },{id: "post-sample-blog-post",
         
           title: "Sample Blog Post",
@@ -213,6 +235,17 @@ ninja.data = [{
         handler: () => {
           
             window.location.href = "/2026/blog/2026/chunked-tabpfn/";
+          
+        },
+      },{id: "post-budget-alignment-making-models-reason-in-the-user-39-s-language",
+        
+          title: "Budget Alignment: Making Models Reason in the User&#39;s Language",
+        
+        description: "We explore a two step multilingual alignment recipe for large language models to keep reasoning and answers in the user language while preserving accuracy.",
+        section: "Posts",
+        handler: () => {
+          
+            window.location.href = "/2026/blog/2026/budget-alignment/";
           
         },
       },{id: "books-the-godfather",
