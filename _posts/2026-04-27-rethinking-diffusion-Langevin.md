@@ -290,7 +290,7 @@ This establishes an exact correspondence between the forward diffusion process a
 
 We demonstrated that **backward diffusion**—the dual of the forward process—can generate image data from noise. However, this requires access to the **score function** $\mathbf{s}(\mathbf{x}, t) = \nabla_{\mathbf{x}} \log p_t(\mathbf{x})$ at every timestep $t$. In practice, we approximate this function using a neural network.  In the next section, we will explain how to train such score networks.  
 
-## Training the Score Function
+## Training the Diffusion Model
 
 Previous section introduced **Forward Process** and **Backward Process** of Denoising Diffusion Probabilistic Model (DDPM). 
 
@@ -311,14 +311,247 @@ $$
 where $t' = T - t$ is the backward diffusion time, $\mathbf{s}(\mathbf{x}, t) = \nabla_{\mathbf{x}} \log p_t(\mathbf{x})$ is the score function of the density of $\mathbf{x}_{t}$ in the forward process.
 
 
-Training the backward process evolves two problem: 1. what to model 2. the training objective. In this case, it is quite evident that we should model the score funciton (or its rescaled version like x0 prediction, epsilon prediction, or velocity prediction in flow matching presepctive) as a neural network. However, it is not clear how it will participate the loss function. We wish to derive the training objective in a first principle way, but since we have not adopting the VAE perspective, we cannot use the ELBO.We will show that the score function could be trained with a denoising objective from the first principle.
+Training the backward process raises two key questions: (1) What should we model, and (2) What training objective should we use? It is clear that the central object to model is the **score function**, which we typically represent with a neural network since it is unknown and generally intractable. In practice, there are several parameterizations of the score function—such as $x_0$ prediction, $\epsilon$ prediction, or velocity prediction from a flow-matching perspective—but all these variants are simply rescaled forms of the same underlying score function. However, it is less obvious how the score function should enter the training objective.
+
+The variational autoencoder (VAE) perspective addresses the training objective by maximizing the Evidence Lower Bound (ELBO), a principled but approximate surrogate for maximum likelihood. While ELBO provides a systematic way to derive training objectives, this perspective can obscure the fact that diffusion models inherently perform true maximum likelihood estimation, distinguishing them from conventional VAEs and contributing to their empirical success.
 
 
-To understand how score functions arise in the training objective, we will use the familar maximal likelihood method. However, maximal likelihood is for distributions. Before we proceed, we need to know how a SDE effects the distribution.
+Alternatively, the score matching perspective motivates the use of **denoised score matching**, a method closely connected to maximum likelihood (see Lyu, S. (2009), *Interpretation and generalization of score matching*). However, employing the score function as a prior assumption—rather than deriving its necessity from first principles—limits the generality of this approach. Specifically, it becomes difficult to extend score matching to more general or discrete diffusion systems, where the notion of a continuous score function becomes less transparent.
 
-#### From Individual Trajectories to Probability Distributions: The Fokker-Planck Equation
+The flow matching perspective recasts score matching as "velocity learning" along straight lines, which simplifies the formalism. However, while this approach is easier to understand from first glance, it does not clarify the connection to maximum likelihood.
 
-While a stochastic differential equation (SDE) describes how individual samples evolve over time, we are also interested in how an entire probability distribution transforms. Consider a general SDE of the form:
+To address these shortcomings, our goal is to derive the training objective directly from first principles, beginning with the maximum likelihood framework itself. By doing so, we reveal the fundamental connection between diffusion model loss and exact maximum likelihood, without presupposing the existence or explicit usage of the score function.
+
+### From Maximal likelihood to Denoising objective
+
+
+
+We now look at maximum likelihood training of a diffusion model. Suppose we have two distributions $p(\mathbf{x}, t)$ and $q(\mathbf{x}, t)$ that both evolve under the same forward diffusion process. Think of $p$ as the **true data distribution** pushed forward by the diffusion dynamics, and $q$ as the **model distribution**. At any fixed time $t$, their Kullback–Leibler (KL) divergence is
+
+$$
+\mathrm{KL}\big(p_t \Vert q_t\big)
+= \int p(\mathbf{x}, t)\,\log \frac{p(\mathbf{x}, t)}{q(\mathbf{x}, t)}\,d\mathbf{x}.
+$$
+
+Maximum likelihood training of $p$ corresponds to minimizing this KL divergence at the data time $t=0$. In a diffusion model, however, we introduce an explicit **forward diffusion time** $t$ and then learn a **backward (reverse-time) process** that maps from noisy states back to data. Intuitively, this suggests that we should “distribute” the KL objective over diffusion time: instead of treating the KL only at $t=0$, we examine how it evolves along the forward process.
+
+ 
+The way to "distribute" the KL is consdering the **time derivative** of the KL divergence along the forward dynamics, noting that
+
+$$
+\mathrm{KL}\big(p_0 \Vert q_0\big) = -\int_0^{\infty}\frac{d}{dt}  \mathrm{KL}\big(p_t \Vert q_t\big) dt
+$$
+
+because $\mathrm{KL}\big(p_\infty \Vert q_\infty\big) = 0$ at infinitely large time $t$ since both $p$ and $q$ converges to the same Gaussian noise distribution. 
+
+The term $$L_t = -\frac{d}{dt}  \mathrm{KL}\big(p_t \Vert q_t\big)$$
+is exactly the training objective we needed for training the diffusion model.
+
+
+We will show that as long as the forward diffusion process takes the form:
+
+$$
+d\mathbf{x} = f(\mathbf{x}, t) \, dt + g(t) \, d\mathbf{W}.
+$$
+
+the training objective is
+
+$$\begin{align*}
+L_t
+  &= \frac{1}{2} g(t)^2
+     \int p(\mathbf{x}, t)\,
+          \big\|\nabla \log p(\mathbf{x}, t)
+                - \nabla \log q(\mathbf{x}, t)\big\|^2
+        d\mathbf{x} \\
+  &\propto \mathbb{E}_{\mathbf{x} \sim p(\mathbf{x}, t)}
+            \big\|\nabla \log p(\mathbf{x}, t)
+                  - \nabla \log q(\mathbf{x}, t)\big\|^2
+\end{align*}$$
+where the score functions $$\nabla \log p(\mathbf{x}, t)$$ and $$\nabla \log q(\mathbf{x}, t)$$ appears naturally inside the L2 objective. 
+
+In practice, we model the $$\nabla \log q(\mathbf{x}, t)$$ (or its rescaled version) as a neural network $\mathbf{s}_\theta(\mathbf{x}, t)$. The only thing remains to handle is the score of the true data distribution $$\nabla \log p(\mathbf{x}, t)$$, which should be approximated by an empirical value from samples since we don't know its vallue. In fact, we have
+
+$$
+\argmin_{\mathbf{s}_\theta}
+   \mathbb{E}_{\mathbf{x} \sim p(\mathbf{x}, 0)}
+            \big\|\nabla \log p(\mathbf{x}_t | \mathbf{x}_0)
+                  - \mathbf{s}_\theta\big\|^2 = \argmin_{\mathbf{s}_\theta}
+   \mathbb{E}_{\mathbf{x} \sim p(\mathbf{x}, t)}
+            \big\|\nabla \log p(\mathbf{x}, t)
+                  - \mathbf{s}_\theta\big\|^2
+$$
+where the LHS is the denoising score matching (DSM) loss while RHS is the score matching loss.
+
+<details markdown="1">
+<summary><em>Proof</em> (click to expand)</summary>
+
+Let us write the *denoising score matching* (DSM) loss at time $t$ as
+$$
+L_{\text{DSM}}(\mathbf{s}_\theta)
+:= \mathbb{E}_{\mathbf{x}_0 \sim p_0}\,
+   \mathbb{E}_{\mathbf{x}_t \sim p_t(\cdot \mid \mathbf{x}_0)}
+   \big\|
+      \nabla_{\mathbf{x}_t} \log p_t(\mathbf{x}_t \mid \mathbf{x}_0)
+      - \mathbf{s}_\theta(\mathbf{x}_t, t)
+   \big\|^2,
+$$
+and the *score matching* (SM) loss on the marginal $p_t(\mathbf{x}_t)$ as
+$$
+L_{\text{SM}}(\mathbf{s}_\theta)
+:= \mathbb{E}_{\mathbf{x}_t \sim p_t}
+   \big\|
+      \nabla_{\mathbf{x}_t} \log p_t(\mathbf{x}_t)
+      - \mathbf{s}_\theta(\mathbf{x}_t, t)
+   \big\|^2.
+$$
+Here $p_t(\mathbf{x}_t) = \int p_t(\mathbf{x}_t \mid \mathbf{x}_0)\,p_0(\mathbf{x}_0)\,d\mathbf{x}_0$ is the marginal of the forward process at time $t$.
+
+Define the conditional score
+$$
+\mathbf{s}(\mathbf{x}_t \mid \mathbf{x}_0)
+:= \nabla_{\mathbf{x}_t} \log p_t(\mathbf{x}_t \mid \mathbf{x}_0),
+$$
+and the marginal score
+$$
+\mathbf{s}(\mathbf{x}_t, t)
+:= \nabla_{\mathbf{x}_t} \log p_t(\mathbf{x}_t).
+$$
+Using $\|\mathbf{a}-\mathbf{b}\|^2 = \|\mathbf{a}\|^2 + \|\mathbf{b}\|^2 - 2\langle \mathbf{a}, \mathbf{b}\rangle$, we can expand both objectives. For DSM,
+$$
+\begin{aligned}
+L_{\text{DSM}}(\mathbf{s}_\theta)
+&= \mathbb{E}_{\mathbf{x}_0, \mathbf{x}_t}
+    \big\| \mathbf{s}_\theta(\mathbf{x}_t, t) \big\|^2
+   - 2\,\mathbb{E}_{\mathbf{x}_0, \mathbf{x}_t}
+       \big\langle
+          \mathbf{s}_\theta(\mathbf{x}_t, t),
+          \mathbf{s}(\mathbf{x}_t \mid \mathbf{x}_0)
+       \big\rangle \\
+&\quad
+   + \mathbb{E}_{\mathbf{x}_0, \mathbf{x}_t}
+       \big\|\mathbf{s}(\mathbf{x}_t \mid \mathbf{x}_0)\big\|^2,
+\end{aligned}
+$$
+where expectations are taken under the joint $p_0(\mathbf{x}_0)\,p_t(\mathbf{x}_t \mid \mathbf{x}_0)$. Similarly, for SM we have
+$$
+\begin{aligned}
+L_{\text{SM}}(\mathbf{s}_\theta)
+&= \mathbb{E}_{\mathbf{x}_t}
+    \big\| \mathbf{s}_\theta(\mathbf{x}_t, t) \big\|^2
+   - 2\,\mathbb{E}_{\mathbf{x}_t}
+       \big\langle
+          \mathbf{s}_\theta(\mathbf{x}_t, t),
+          \mathbf{s}(\mathbf{x}_t, t)
+       \big\rangle \\
+&\quad
+   + \mathbb{E}_{\mathbf{x}_t}
+       \big\|\mathbf{s}(\mathbf{x}_t, t)\big\|^2.
+\end{aligned}
+$$
+
+The first terms coincide, because the marginal of the joint distribution is exactly $p_t(\mathbf{x}_t)$:
+$$
+\mathbb{E}_{\mathbf{x}_0, \mathbf{x}_t}
+  \big\|\mathbf{s}_\theta(\mathbf{x}_t, t)\big\|^2
+ = \int p_t(\mathbf{x}_t)
+       \big\|\mathbf{s}_\theta(\mathbf{x}_t, t)\big\|^2
+   \,d\mathbf{x}_t
+ = \mathbb{E}_{\mathbf{x}_t}
+     \big\|\mathbf{s}_\theta(\mathbf{x}_t, t)\big\|^2.
+$$
+The last terms,
+$\mathbb{E}_{\mathbf{x}_0, \mathbf{x}_t}\|\mathbf{s}(\mathbf{x}_t \mid \mathbf{x}_0)\|^2$
+and
+$\mathbb{E}_{\mathbf{x}_t}\|\mathbf{s}(\mathbf{x}_t, t)\|^2$,
+do **not** depend on $\mathbf{s}_\theta$ at all, so they can only shift the loss by a constant.
+
+The only subtle point is the cross term. Because the inner product is linear, it is enough to prove that, for any (scalar) test function $f(\mathbf{x}_t)$,
+$$
+\mathbb{E}_{\mathbf{x}_0, \mathbf{x}_t}
+  \big[ f(\mathbf{x}_t)\,\mathbf{s}(\mathbf{x}_t \mid \mathbf{x}_0) \big]
+=
+\mathbb{E}_{\mathbf{x}_t}
+  \big[ f(\mathbf{x}_t)\,\mathbf{s}(\mathbf{x}_t, t) \big],
+$$
+and then apply this to each coordinate of $\mathbf{s}_\theta(\mathbf{x}_t, t)$.
+
+By definition of the score,
+$$
+\mathbf{s}(\mathbf{x}_t \mid \mathbf{x}_0)
+= \nabla_{\mathbf{x}_t} \log p_t(\mathbf{x}_t \mid \mathbf{x}_0)
+= \frac{\nabla_{\mathbf{x}_t} p_t(\mathbf{x}_t \mid \mathbf{x}_0)}
+       {p_t(\mathbf{x}_t \mid \mathbf{x}_0)}.
+$$
+Therefore,
+$$
+\begin{aligned}
+\mathbb{E}_{\mathbf{x}_0, \mathbf{x}_t}
+  \big[ f(\mathbf{x}_t)\,\mathbf{s}(\mathbf{x}_t \mid \mathbf{x}_0) \big]
+&= \iint
+     p_0(\mathbf{x}_0)\,
+     p_t(\mathbf{x}_t \mid \mathbf{x}_0)\,
+     f(\mathbf{x}_t)\,
+     \frac{\nabla_{\mathbf{x}_t} p_t(\mathbf{x}_t \mid \mathbf{x}_0)}
+          {p_t(\mathbf{x}_t \mid \mathbf{x}_0)}
+     \,d\mathbf{x}_t\,d\mathbf{x}_0 \\
+&= \iint
+     f(\mathbf{x}_t)\,
+     \nabla_{\mathbf{x}_t} p_t(\mathbf{x}_t \mid \mathbf{x}_0)\,
+     p_0(\mathbf{x}_0)\,
+     \,d\mathbf{x}_t\,d\mathbf{x}_0.
+\end{aligned}
+$$
+Under mild regularity conditions we can interchange the order of integration and differentiation, obtaining
+$$
+\begin{aligned}
+\mathbb{E}_{\mathbf{x}_0, \mathbf{x}_t}
+  \big[ f(\mathbf{x}_t)\,\mathbf{s}(\mathbf{x}_t \mid \mathbf{x}_0) \big]
+&= \int
+     f(\mathbf{x}_t)\,
+     \nabla_{\mathbf{x}_t}
+       \Big(
+         \int p_t(\mathbf{x}_t \mid \mathbf{x}_0)\,p_0(\mathbf{x}_0)\,d\mathbf{x}_0
+       \Big)
+     \,d\mathbf{x}_t \\
+&= \int f(\mathbf{x}_t)\,\nabla_{\mathbf{x}_t} p_t(\mathbf{x}_t)\,d\mathbf{x}_t \\
+&= \int
+     p_t(\mathbf{x}_t)\,
+     f(\mathbf{x}_t)\,
+     \nabla_{\mathbf{x}_t} \log p_t(\mathbf{x}_t)\,d\mathbf{x}_t \\
+&= \mathbb{E}_{\mathbf{x}_t}
+     \big[ f(\mathbf{x}_t)\,\mathbf{s}(\mathbf{x}_t, t) \big].
+\end{aligned}
+$$
+Taking $f(\mathbf{x}_t)$ to be each component of $\mathbf{s}_\theta(\mathbf{x}_t, t)$ shows that the DSM and SM cross terms are identical:
+$$
+\mathbb{E}_{\mathbf{x}_0, \mathbf{x}_t}
+  \big\langle
+     \mathbf{s}_\theta(\mathbf{x}_t, t),
+     \mathbf{s}(\mathbf{x}_t \mid \mathbf{x}_0)
+  \big\rangle
+=
+\mathbb{E}_{\mathbf{x}_t}
+  \big\langle
+     \mathbf{s}_\theta(\mathbf{x}_t, t),
+     \mathbf{s}(\mathbf{x}_t, t)
+  \big\rangle.
+$$
+
+Putting everything together, we have
+$$
+L_{\text{DSM}}(\mathbf{s}_\theta)
+= L_{\text{SM}}(\mathbf{s}_\theta) + C,
+$$
+where $C$ is a constant independent of $\mathbf{s}_\theta$. Hence both objectives are minimized by the same function, namely the true marginal score
+$$
+\mathbf{s}_\theta^\star(\mathbf{x}_t, t) = \nabla_{\mathbf{x}_t} \log p_t(\mathbf{x}_t).
+$$
+</details>
+
+
+To understand how score functions arise in the training objective, we will use the familar maximal likelihood method. However, maximal likelihood is for distributions. Before we proceed, we need to know how the forward diffusion process effects the distribution.
+
+While a stochastic differential equation (SDE) describes how individual samples evolve over time, the probability distribution of a collection of samples follows the corresponding Fokker-Planck equation. Consider a general SDE of the form:
 
 $$
 d\mathbf{x} = f(\mathbf{x}, t) \, dt + g(t) \, d\mathbf{W}.
@@ -329,8 +562,10 @@ where $f(\mathbf{x}, t)$ is the drift term governing deterministic dynamics, $g(
 The answer is given by the **Fokker-Planck equation**, which governs how the probability density $$p(\mathbf{x}, t)$$ evolves under an SDE:
 
 $$
-\frac{\partial p}{\partial t} = -\frac{\partial}{\partial \mathbf{x}} \left[f(\mathbf{x}, t) p\right] + \frac{1}{2} g(t)^2 \frac{\partial^2  p}{\partial \mathbf{x}^2}.
+\frac{\partial p}{\partial t} = -\nabla \cdot \left[f(\mathbf{x}, t) p\right] + \frac{1}{2} \nabla^2 \left[ g(t)^2 p \right].
 $$
+
+This partial differential equation reveals how both drift and diffusion shape the distribution. The first term, $$-\nabla \cdot \left[f(\mathbf{x}, t) p\right]$$, is the advection term: it transports probability mass along the drift field $$f(\mathbf{x}, t)$$, shifting the distribution deterministically. The second term, $$\frac{1}{2} \nabla^2 \left[ g(t)^2 p \right]$$, is the diffusion term: it spreads probability mass outward due to stochastic fluctuations, smoothing the distribution over time. 
 
 <details markdown="1">
 <summary><em>A short explaination:</em> (click to expand)</summary>
@@ -361,31 +596,24 @@ $$
 \frac{\partial p}{\partial t} + \frac{\partial J[p]}{\partial x} = 0.
 $$
 
-3. **Drift term $f(x,t)$.** Consider first a simple 1D case with **constant speed** $v$, so $dx = v\,dt$. After time $t$, a particle now at position $x$ must have come from $x - vt$ at time $0$, so
+3. **Drift term $f(x,t)$.** To determine $J[p]$ related to the drift $f(x,t)$, consider first a simple 1D case with **constant speed** $v$, so $dx = v\,dt$. After time $t$, a particle now at position $x$ must have come from $x - vt$ at time $0$, so
 $$
 p(x,t) = p(x - vt, 0).
 $$
-This relation implies the advection equation
-$$
-\frac{\partial p}{\partial t} + v\,\frac{\partial p}{\partial x} = 0,
-$$
-which we can also write as
+A $p(x,t)$ satisfying this relation also satisfy the equation
 $$
 \frac{\partial p}{\partial t} + \frac{\partial}{\partial x}\big(v\,p(x,t)\big) = 0.
 $$
-If the speed depends on position and time, $dx = f(x,t)\,dt$, the same reasoning gives
-$$
-\frac{\partial p}{\partial t} + \frac{\partial}{\partial x}\big(f(x,t)\,p(x,t)\big) = 0,
-$$
-so the drift contributes a flux $J_{\text{drift}}[p] = f(x,t)\,p(x,t)$.
+Therefore the flux $J_{\text{drift}}[p]$ for constant velocity is $v p$. If the speed depends on position and time, $dx = f(x,t)\,dt$, the drift contributes a flux $J_{\text{drift}}[p] = f(x,t)\,p(x,t)$.
 
 
-4. The diffusion term $g d W$: consider a simple case $dx = g dW$. Suppose $x(0) = 0$. At time $t$,  the accumulation of $dW$ from time $0$ to time $t$ is a Gaussian noise with variance $t$. Therefore the variance of $x$ is $g^2 t$, whose probability distribution is $p(x, t) = \frac{1}{\sqrt{2\pi g^2 t} } e^{-\frac{x^2}{2 g^2 t}}$. It satisfies the following equation 
+4. The noise term $g d W$: consider a simple case $dx = g dW$. Suppose $x(0) = 0$. At time $t$,  the accumulation of $dW$ from time $0$ to time $t$ is a Gaussian noise with variance $t$. Therefore the variance of $x$ is $g^2 t$, whose probability distribution is $p(x, t) = \frac{1}{\sqrt{2\pi g^2 t} } e^{-\frac{x^2}{2 g^2 t}}$. It satisfies the following equation 
 $$
-\frac{\partial p}{\partial t} -\frac{1}{2} \frac{\partial g^2 p}{\partial x}  = 0
+\frac{\partial p}{\partial t} -\frac{1}{2} \frac{\partial^2 g^2 p}{\partial x^2}  = 0
 $$
+Therefore the noise term contributes a flux $J_{\text{noise}}[p] = -\frac{1}{2} \frac{\partial g^2 p}{\partial x}$.
 
-Combine them together we have 
+Combine them together we have $J_[p] = f(x,t)\,p(x,t)-\frac{1}{2} \frac{\partial g^2 p}{\partial x}$ hence
 
 $$
 \frac{\partial p}{\partial t} = -\frac{\partial}{\partial \mathbf{x}} \left[f(\mathbf{x}, t) p\right] + \frac{1}{2} g(t)^2 \frac{\partial^2  p}{\partial \mathbf{x}^2}.
@@ -393,9 +621,137 @@ $$
 
 </details>
 
-This partial differential equation reveals how both drift and diffusion shape the distribution. The first term, $$-\frac{\partial}{\partial \mathbf{x}} [f(\mathbf{x}, t) p]$$, is the advection term: it transports probability mass along the drift field $$f(\mathbf{x}, t)$$, shifting the distribution deterministically. The second term, $$\frac{1}{2} g(t)^2 \frac{\partial^2 p}{\partial \mathbf{x}^2}$$, is the diffusion term: it spreads probability mass outward due to stochastic fluctuations, smoothing the distribution over time. Together, these terms determine how $$p_0(\mathbf{x})$$ evolves into $$p_t(\mathbf{x})$$, providing the distributional perspective we need for maximum likelihood training.
 
 
+
+To make this precise, consider the **time derivative** of the KL divergence along the forward dynamics. Assume that both $p$ and $q$ satisfy the same Fokker–Planck equation with drift $f(\mathbf{x}, t)$ and diffusion strength $g(t)$:
+
+$$
+\frac{\partial p}{\partial t}
+= -\nabla \cdot \big(f p\big)
+  + \frac{1}{2} g(t)^2 \nabla^2 p,
+\qquad
+\frac{\partial q}{\partial t}
+= -\nabla \cdot \big(f q\big)
+  + \frac{1}{2} g(t)^2 \nabla^2 q.
+$$
+
+Writing the KL divergence as
+
+$$
+\mathrm{KL}\big(p_t \Vert q_t\big)
+= \int p(\mathbf{x}, t) \log \frac{p(\mathbf{x}, t)}{q(\mathbf{x}, t)}\,d\mathbf{x},
+$$
+
+and differentiating under the integral sign, we obtain
+
+$$
+\frac{d}{dt} \mathrm{KL}\big(p_t \Vert q_t\big)
+= \int \left( \log \frac{p}{q} \right) \partial_t p\, d\mathbf{x}
+   + \int p\,\frac{\partial_t q}{q}\, d\mathbf{x},
+$$
+
+where all functions are evaluated at $(\mathbf{x}, t)$ and the integrals are over $\mathbf{x}$. Using the Fokker–Planck operator $\mathcal{L}$ defined by
+
+$$
+\mathcal{L} u
+= -\nabla \cdot (f u) + \frac{1}{2} g(t)^2 \nabla^2 u,
+$$
+
+we can rewrite this as
+
+$$
+\frac{d}{dt} \mathrm{KL}\big(p_t \Vert q_t\big)
+= \int \left( \log \frac{p}{q} \right) \mathcal{L} p\, d\mathbf{x}
+   - \int \frac{p}{q}\,\mathcal{L} q\, d\mathbf{x}.
+$$
+
+<details>
+<summary><strong>Derivation: how KL changes under the Fokker–Planck equation</strong></summary>
+
+Let $r = p/q$. Then $\log (p/q) = \log r$, and we can handle each term by integration by parts (assuming boundary terms vanish, e.g., in $\mathbb{R}^d$ with rapidly decaying densities).
+
+For the **drift part** of $\mathcal{L}$, we have
+
+$$
+\int \log r \, \big[-\nabla \cdot (f p)\big]\, d\mathbf{x}
+ = \int p \, f \cdot \nabla \log r\, d\mathbf{x},
+$$
+
+and
+
+$$
+\int r \, \big[-\nabla \cdot (f q)\big]\, d\mathbf{x}
+ = \int q \, f \cdot \nabla r\, d\mathbf{x}.
+$$
+
+A direct computation using $r = p/q$ shows that these two contributions cancel **exactly**:
+
+$$
+p\, f \cdot \nabla \log r
+ - q\, f \cdot \nabla r
+ = 0,
+$$
+
+so the drift does **not** contribute to the time derivative of KL.
+
+The **diffusion part** is responsible for KL contraction. Using $\nabla p = p \nabla \log p$, $\nabla q = q \nabla \log q$, and
+
+$$
+\nabla r = \nabla\left(\frac{p}{q}\right)
+         = p \left(\nabla \log p - \nabla \log q\right),
+$$
+
+one finds
+
+$$
+\int \log r \cdot \frac{1}{2} g(t)^2 \nabla^2 p\, d\mathbf{x}
+ = -\frac{1}{2} g(t)^2 \int \nabla \log r \cdot \nabla p\, d\mathbf{x},
+$$
+
+and
+
+$$
+\int r \cdot \frac{1}{2} g(t)^2 \nabla^2 q\, d\mathbf{x}
+ = -\frac{1}{2} g(t)^2 \int \nabla r \cdot \nabla q\, d\mathbf{x}.
+$$
+
+Substituting the expressions above and simplifying,
+
+$$
+\nabla \log r \cdot \nabla p
+ = p \left( \nabla \log p - \nabla \log q \right) \cdot \nabla \log p,
+$$
+
+$$
+\nabla r \cdot \nabla q
+ = p \left( \nabla \log p - \nabla \log q \right) \cdot \nabla \log q,
+$$
+
+so that the diffusion contribution to $\frac{d}{dt} \mathrm{KL}$ becomes
+
+$$
+-\frac{1}{2} g(t)^2 \int \nabla \log r \cdot \nabla p\, d\mathbf{x}
+ +\frac{1}{2} g(t)^2 \int \nabla r \cdot \nabla q\, d\mathbf{x}
+ = -\frac{1}{2} g(t)^2 \int p(\mathbf{x}, t)
+    \big\|\nabla \log p - \nabla \log q\big\|^2 \, d\mathbf{x}.
+$$
+
+</details>
+
+Putting everything together, we obtain the key identity
+
+$$
+\frac{d}{dt} \mathrm{KL}\big(p_t \Vert q_t\big)
+ = -\frac{1}{2} g(t)^2
+   \int p(\mathbf{x}, t)\,
+        \big\|\nabla \log p(\mathbf{x}, t)
+              - \nabla \log q(\mathbf{x}, t)\big\|^2
+      d\mathbf{x}
+ \;\leq\; 0.
+$$
+
+ Thus, along the forward diffusion process, the KL divergence between any two solutions of the same Fokker–Planck equation is **non-increasing**: diffusion strictly contracts KL (unless $p_t = q_t$ in the sense that $\nabla \log p = \nabla \log q$ almost everywhere). Drift does not affect this contraction; it only transports mass without changing the “distance” between $p_t$ and $q_t$ in KL. This monotone decrease of $\mathrm{KL}(p_t \Vert q_t)$ over $t$ underlies many stability results for stochastic dynamics, and in diffusion models it justifies decomposing the global maximum-likelihood objective into local-in-time terms associated with each diffusion step.
 
 
 DDPM is trained to removes the noise $\bar{\boldsymbol{\epsilon}}_i$ from $\mathbf{x}_i$ in the forward diffusion process, by training a denoising neural network $\boldsymbol{\epsilon}_\theta( \mathbf{x}, t_i  )$ to predict and remove the noise $\bar{\boldsymbol{\epsilon}}_i $. This means that DDPM minimizes the **denoising objective** [^Ho2020DenoisingDP]:
