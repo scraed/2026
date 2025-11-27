@@ -143,8 +143,11 @@ Langevin dynamics, while widely used for sampling from complex distributions, be
 
 <div class="row mt-3">
     <div class="col-md-10 offset-md-1 col-lg-8 offset-lg-2 mt-3 mt-md-0">
-        {% include figure.liquid path="assets/img/2026-04-27-rethinking-diffusion-Langevin/langevin_id.png" class="img-fluid rounded z-depth-1" %}
+        {% include figure.liquid path="assets/img/2026-04-27-rethinking-diffusion-Langevin/langevin_id.png" class="img-fluid rounded" %}
     </div>
+</div>
+<div class="caption">
+    Langevin dynamics acts as an identity operation on $p(\mathbf{x})$: starting from a sample $\mathbf{x}_0 \sim p(\mathbf{x})$, it produces a new, independent sample from the same distribution.
 </div>
 
 # Spliting the Identity: Forward and Backward Processes in diffusion models
