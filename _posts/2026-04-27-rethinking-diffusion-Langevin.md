@@ -168,25 +168,9 @@ $$
 
 where $$t \in [0,T]$$ is the forward diffusion time, $$\mathbf{x}_t$$ is the noise-contaminated image at time $$t$$, $$\mathbf{W}_t$$ is a Brownian motion, $$f(\mathbf{x}_t, t)$$ is the drift, and $$g(t)$$ scales the injected noise. Different choices of $$f$$ and $$g$$ correspond to different forward-diffusion parameterizations used in diffusion models.
 
-In the variance-preserving (VP) formulation commonly used in DDPMs, a particularly simple choice for the forward process is the Ornstein–Uhlenbeck diffusion process (OU process) [^Uhlenbeck1930OnTT]:
+In practice, diffusion models are usually instantiated by choosing specific parameterizations of this SDE. The most common ones are the **variance-preserving (VP)** process, implemented in DDPMs as an Ornstein–Uhlenbeck dynamics that gently pulls samples toward the origin while injecting noise so that the marginal converges to a standard Gaussian; the **variance-exploding (VE)** process, where there is no restoring drift and the noise scale grows with time so that the variance “explodes”; and **flow-matching** formulations, which view generation as following a time-dependent flow that implements an “straight line” interpolation between data and noise under a carefully designed schedule.
 
-$$
-d \mathbf{x}_t = - \frac{1}{2} \mathbf{x}_t\, dt + d\mathbf{W}_t,
-$$
-
-which corresponds to the specific choice $$f(\mathbf{x}_t, t) = -\tfrac{1}{2}\mathbf{x}_t$$ and $$g(t) = 1$$ in the general SDE above. Note that $$-\mathbf{x}$$ is just the score function of the standard Gaussian distribution $$\mathcal{N}(\mathbf{0},I)$$. Thus, this VP forward diffusion process corresponds to the Langevin dynamics of the standard Gaussian $$\mathcal{N}(\mathbf{0},I)$$.
-
-The OU forward diffusion process has $$\mathcal{N}(\mathbf{0},I)$$ as its stationary distribution. This means, for any initial distribution $$p_0(\mathbf{x})$$ of positions $$\{\mathbf{x}_0^{(1)},...,\mathbf{x}_0^{(N)}\}$$, their density $$p_t(\mathbf{x})$$ converges to $$\mathcal{N}(\mathbf{0},I)$$ as $$t\to\infty$$. When these positions represent vectors of clean images, the process describes a gradual noising operation that transforms clean images into Gaussian noise.
-
-Another commonly used family of forward processes is the variance-exploding (VE) formulation, where the variance grows with time instead of being preserved. A simple VE example is pure Brownian motion:
-
-$$
-d \mathbf{x}_t = d\mathbf{W}_t,
-$$
-
-which corresponds to a zero drift $$f(\mathbf{x}_t, t) = \mathbf{0}$$ and a constant diffusion scale $$g(t) = 1$$, so that the variance of $$\mathbf{x}_t$$ increases with $$t$$ and no stationary distribution exists.
-
-These forward SDEs can be summarized in terms of their parameterizations as follows (with $$\boldsymbol{\epsilon} \sim \mathcal{N}(\mathbf{0}, I)$$):
+The table below summarizes these three forward processes in terms of their variables, noise-level schedules, closed-form noising relations, and SDEs (with $$\boldsymbol{\epsilon} \sim \mathcal{N}(\mathbf{0}, I)$$):
 
 | **Name** | **Variable notation** | **Noise-level parameter** | **Relation between initial and noisy variable** | **Forward SDE (in time $$t$$)** |
 | --- | --- | --- | --- | --- |
