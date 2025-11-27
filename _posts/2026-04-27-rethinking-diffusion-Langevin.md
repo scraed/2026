@@ -88,10 +88,25 @@ _styles: >
   details[open] {
     background: transparent !important;
   }
-  /* Make Mermaid diagrams match article background (remove pink) */
+  /* Make Mermaid diagrams match article background (remove pink) and center them */
   .mermaid, svg.mermaid {
     background: transparent !important;
     background-color: transparent !important;
+    margin-left: auto;
+    margin-right: auto;
+    display: block;
+    text-align: center;
+  }
+  /* Remove box fill/border for nodes (formulas) */
+  .mermaid .node rect,
+  .mermaid .node polygon {
+    fill: transparent !important;
+    stroke: transparent !important;
+  }
+  /* Remove background for edge labels such as "Forward" */
+  .mermaid .edgeLabel rect {
+    fill: transparent !important;
+    stroke: transparent !important;
   }
 ---
 
@@ -192,7 +207,7 @@ No matter which notation we choose, A forward diffusion step with a step size of
 
 ```mermaid
 flowchart LR
-    A["x_t ~ p_t(x)"] -->|Forward| B["x_{t+Δt} ~ p_{t+Δt}(x)"]
+    A["$x_t \\sim p_t(x)$"] -- "Forward" --> B["$x_{t+\\Delta t} \\sim p_{t+\\Delta t}(x)$"]
 ```
 
 ### The Backward Diffusion Process
