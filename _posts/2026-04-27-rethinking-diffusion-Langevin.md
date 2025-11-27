@@ -151,10 +151,9 @@ One key reason Langevin dynamics struggles in high-dimensional settings is the c
 
 An enhancement to Langevin dynamics is the Annealed Langevin dynamics <d-cite key="song2019generative"></d-cite>. Instead of using a single Langevin sampler, this method involves training a sequence of Langevin dynamics, each corresponding to a different level of noise added to the data. Starting from pure noise, the method gradually reduces the noise level, switching between these samplers at each step. In this way, samples are progressively transformed from random noise into data-like samples, using Langevin dynamics that are effective for each stage of noise contamination. This approach highlights the importance of using multiple noise levels
 
-Diffusion model is one more step further: it 
+Diffusion models take this concept a step further by completely separating the training and inference processes: one process trains the model at different noise levels, while another process samples from noise to generate data.
 
-
-## The Forward Diffusion Process
+## The Forward Diffusion Process for training
 
 The forward diffusion process in DDPM generates the necessary training data: clean images and their progressively noised counterparts. It gradually adds noise to existing images $$\mathbf{x}_0 \sim p(x)$$ using the Ornstein-Uhlenbeck diffusion process (OU process) [^Uhlenbeck1930OnTT] within a finite time interval $$t\in [0,T]$$. The OU process is defined by the stochastic differential equation (SDE):
 
