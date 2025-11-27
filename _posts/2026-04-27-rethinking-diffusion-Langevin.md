@@ -178,13 +178,19 @@ The table below summarizes these three forward processes in terms of their varia
 | Variance-exploding (VE) | $$z_t = x_t e^{\frac{t}{2}}$$ | $$\sigma_t = \sqrt{e^{t} - 1}$$ | $$z_t = z_0 + \sigma_t\, \boldsymbol{\epsilon}$$ | $$d z_t = e^{t/2}\, dW_t$$ |
 | Flow | $$r_t = x_t \frac{e^{\frac{t}{2}}}{1 + \sqrt{e^{t} - 1}} $$ | $$s_t = \dfrac{\sqrt{e^{t} - 1}}{1 + \sqrt{e^{t} - 1}}$$ | $$r_t = (1-s_t)\, r_0 + s_t\, \boldsymbol{\epsilon}$$ | $$\begin{aligned} d r_t &= -\dfrac{r_t\, e^{t}}{2 \left( e^{t} - 1 + \sqrt{e^{t} - 1} \right)} \, dt \\\\ &\quad + \dfrac{e^{t/2}}{1 + \sqrt{e^{t} - 1}} \, dW_t \end{aligned}$$ |
 
-For the VP OU choice above, one discretized forward diffusion step with a step size of $$\Delta t$$ is displayed in the following picture.
+No matter which notation we choose, A forward diffusion step with a step size of $$\Delta t$$ acts as adding more noise to data, which is displayed in the following picture:
 
 <div class="row mt-3">
     <div class="col-md-10 offset-md-1 col-lg-8 offset-lg-2 mt-3 mt-md-0">
         {% include figure.liquid path="assets/img/2026-04-27-rethinking-diffusion-Langevin/forward.png" class="img-fluid rounded z-depth-1" %}
     </div>
 </div>
+
+```mermaid
+%%{init: {'theme': 'base', 'themeVariables': { 'background': 'transparent' }}}%%
+flowchart LR
+    A["x_t ~ p_t(x)"] -->|Forward| B["x_{t+Δt} ~ p_{t+Δt}(x)"]
+```
 
 ### The Backward Diffusion Process
 
