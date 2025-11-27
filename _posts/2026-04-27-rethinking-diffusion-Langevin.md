@@ -109,23 +109,23 @@ In this article, we aims to offer a perspective that is both mathematically simp
 
 which illustrates the connection among the forward, backward diffusion process and the Langevin dynamics.
 
-# Langevin Dynamics
+# Langevin Dynamics as 'Identity' Operation
 
-**Langevin Dynamics** is a special diffusion process that aims to generate samples from a probability distribution $$p(\mathbf{x})$$. It is defined as:
+**Langevin Dynamics** is a special diffusion process that can generate samples from a probability distribution $$p(\mathbf{x})$$. It is defined as:
 
 $$
 d\mathbf{x}_t = \lambda\, \mathbf{s}(\mathbf{x}_t) dt + \sqrt{2 \lambda}\, d\mathbf{W}_t, 
 $$
 
-where $$\mathbf{s}(\mathbf{x}) = \nabla_{\mathbf{x}} \log p(\mathbf{x})$$ is the score function of $$p(\mathbf{x})$$, $\lambda$ is an arbitrary positive constant. The $d\mathbf{W}$ term is a Brownian noise what can be treated as $\sqrt{dt} \boldsymbol{epsilon}$ This dynamics is often used as a Monte Carlo sampler to draw samples from $$p(\mathbf{x})$$, since $$p(\mathbf{x})$$ is its stationary distribution—the distribution that $$\mathbf{x}_t$$ converges to and and remains at as $$t \to \infty$$, regardless of the initial distribution of $$\mathbf{x}_0$$. 
+where $$\mathbf{s}(\mathbf{x}) = \nabla_{\mathbf{x}} \log p(\mathbf{x})$$ is the score function of $$p(\mathbf{x})$$, $\lambda$ is an arbitrary positive constant. The $d\mathbf{W}$ term is a Brownian noise what can be treated as $\sqrt{dt} \boldsymbol{epsilon}$, where $\boldsymbol{epsilon}$ is a standard Gaussian noise. This dynamics is often used as a Monte Carlo sampler to draw samples from $$p(\mathbf{x})$$, since $$p(\mathbf{x})$$ is its stationary distribution—the distribution that $$\mathbf{x}_t$$ converges to and and remains at as $$t \to \infty$$, regardless of the initial distribution of $$\mathbf{x}_0$$. 
 
 
 
 
 <details markdown="1">
-<summary><em>If you're comfortable simply assuming that $p(\mathbf{x})$ is the stationary distribution of the Langevin dynamics, you can skip this section. Otherwise, here is a short argument:</em> (click to expand)</summary>
+<summary><em>If you accept that $p(\mathbf{x})$ is the stationary distribution of Langevin dynamics, skip this. Otherwise, see the short argument below:</em> (click to expand)</summary>
 
-1. Write the dynamics in “energy” form as $$d\mathbf{x}_t = -\nabla E(\mathbf{x})\,dt + \sqrt{2}\,d\mathbf{W}_t$$. The randomness $d\mathbf{W}_t$ perturbs the system to equilibrium, where states with the same energy $E(\mathbf{x})$ have equal probability. Thus, the stationary distribution is $p(\mathbf{x}) = f(E(\mathbf{x}))$ for some function $f$.
+1. Set $\lambda = 1$, since it is simply a rescaling of the time $t$. Write the dynamics in “energy” form as $$d\mathbf{x}_t = -\nabla E(\mathbf{x})\,dt + \sqrt{2}\,d\mathbf{W}_t$$. The random term $d\mathbf{W}_t$ perturbs the system toward equilibrium, where states with the same energy $E(\mathbf{x})$ have equal probability. Thus, the stationary distribution is $p(\mathbf{x}) = f(E(\mathbf{x}))$ for some function $f$.
 
 2. Consider $N$ independent copies $\mathbf{x}_1, \dots, \mathbf{x}_N$. Their joint density is the product $p(\mathbf{x}_1) \cdots p(\mathbf{x}_N)$. Treating them as a single system, the total energy is additive: $E(\mathbf{x}_1, \dots, \mathbf{x}_N) = \sum E(\mathbf{x}_i)$. So the joint stationary density must also be $g(\sum E(\mathbf{x}_i))$ for some function $g$. The only function satisfying both the product (independence) and sum (additivity) forms for all $N$ is the exponential: $f(E) = e^{-\beta E}$, yielding $p(\mathbf{x}) \propto e^{-\beta E(\mathbf{x})}$.
 
@@ -137,9 +137,7 @@ Thus, the dynamics $$d\mathbf{x}_t = -\nabla E(\mathbf{x})\,dt + \sqrt{2}\,d\mat
 
 </details>
 
-### Langevin Dynamics as 'Identity'
-
-The stationary of $$p(\mathbf{x})$$ is very important: The Langevin dynamics for $$p(\mathbf{x})$$ acts as an "identity" operation on this distribution, transforming samples from $$p(\mathbf{x})$$ into new samples from the same distribution.
+Langevin dynamics, while widely used for sampling from complex distributions, becomes inefficient in high-dimensional or multi-modal settings due to slow mixing and sensitivity to hyperparameters such as step size and noise scale. However, Langevin dynamics play a crucial role as the foundation of diffusion models due to an important property: for $$p(\mathbf{x})$$, Langevin dynamics act as an "identity" operation on the distribution, transforming a sample from $$p(\mathbf{x})$$ into a new, independent sample from the same distribution.
 
 <div class="row mt-3">
     <div class="col-md-10 offset-md-1 col-lg-8 offset-lg-2 mt-3 mt-md-0">
@@ -147,11 +145,13 @@ The stationary of $$p(\mathbf{x})$$ is very important: The Langevin dynamics for
     </div>
 </div>
 
-Langevin dynamics, while widely used for sampling from complex distributions, becomes inefficient in high-dimensional or multi-modal settings due to slow mixing and sensitivity to hyperparameters such as step size and noise scale; this inefficiency highlights the need for more structured sampling approaches that can better explore complicated data landscapes.
+# Spliting the Identity: Forward and Backward Processes in diffusion models
 
+One key reason Langevin dynamics struggles in high-dimensional settings is the challenge of initialization. The score function must be learned from real data, so it is only accurate near true data points and poorly estimated elsewhere. However, in generative modeling, we want to generate entirely new data samples—which means we need to start Langevin dynamics from points that may not resemble real data at all. Finding a good initialization that is close to the true data manifold is difficult, making effective generation with Langevin dynamics hard in practice. 
 
-# Spliting the Identity: Forward and Backward Processes in DDPM
-The Denoising Diffusion Probabilistic Models (DDPMs) [^Ho2020DenoisingDP] are models that generate high-quality images from noise via a sequence of denoising steps. Denoting images as random variable $$\mathbf{x}$$ of the probabilistic density distribution $$p(\mathbf{x})$$, the DDPM aims to learn a model distribution that mimics the image distribution $$p(\mathbf{x})$$ and draw samples from it. The training and sampling of the DDPM utilize two diffusion process: the forward and the backward diffusion process. 
+An enhancement to Langevin dynamics is the Annealed Langevin dynamics <d-cite key="song2019generative"></d-cite>. Instead of using a single Langevin sampler, this method involves training a sequence of Langevin dynamics, each corresponding to a different level of noise added to the data. Starting from pure noise, the method gradually reduces the noise level, switching between these samplers at each step. In this way, samples are progressively transformed from random noise into data-like samples, using Langevin dynamics that are effective for each stage of noise contamination. This approach highlights the importance of using multiple noise levels
+
+Diffusion model is one more step further: it 
 
 
 ## The Forward Diffusion Process
