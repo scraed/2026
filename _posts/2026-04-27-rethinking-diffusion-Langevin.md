@@ -117,7 +117,7 @@ $$
 d\mathbf{x}_t = g\, \mathbf{s}(\mathbf{x}_t) dt + \sqrt{2 g}\, d\mathbf{W}_t, 
 $$
 
-where $$\mathbf{s}(\mathbf{x}) = \nabla_{\mathbf{x}} \log p(\mathbf{x})$$ is the score function of $$p(\mathbf{x})$$, $g$ is an arbitrary positive constant. The $d\mathbf{W}$ term is a Brownian noise what can be treated as $\sqrt{dt} \boldsymbol{epsilon}$, where $\boldsymbol{epsilon}$ is a standard Gaussian noise. This dynamics is often used as a Monte Carlo sampler to draw samples from $$p(\mathbf{x})$$, since $$p(\mathbf{x})$$ is its stationary distribution—the distribution that $$\mathbf{x}_t$$ converges to and and remains at as $$t \to \infty$$, regardless of the initial distribution of $$\mathbf{x}_0$$. 
+where $$\mathbf{s}(\mathbf{x}) = \nabla_{\mathbf{x}} \log p(\mathbf{x})$$ is the score function of $$p(\mathbf{x})$$, $g$ is an arbitrary positive constant. The $d\mathbf{W}$ term is a Brownian noise what can be treated as $\sqrt{dt} \boldsymbol{\epsilon}$, where $\boldsymbol{\epsilon}$ is a standard Gaussian noise. This dynamics is often used as a Monte Carlo sampler to draw samples from $$p(\mathbf{x})$$, since $$p(\mathbf{x})$$ is its stationary distribution—the distribution that $$\mathbf{x}_t$$ converges to and and remains at as $$t \to \infty$$, regardless of the initial distribution of $$\mathbf{x}_0$$. 
 
 
 
@@ -158,21 +158,42 @@ An enhancement to Langevin dynamics is the Annealed Langevin dynamics <d-cite ke
 
 Diffusion models take this concept a step further by completely separating the training and inference processes: one process trains the model at different noise levels, while another process samples from noise to generate data.
 
-## The Forward Diffusion Process for training
+### The Forward Diffusion Process for training
 
-The forward diffusion process in DDPM generates the necessary training data: clean images and their progressively noised counterparts. It gradually adds noise to existing images $$\mathbf{x}_0 \sim p(x)$$ using the Ornstein-Uhlenbeck diffusion process (OU process) [^Uhlenbeck1930OnTT] within a finite time interval $$t\in [0,T]$$. The OU process is defined by the stochastic differential equation (SDE):
+The forward diffusion process in DDPM generates the necessary training data: clean images and their progressively noised counterparts. In continuous time, a very general way to describe such a process is by an Itô SDE of the form
 
 $$
-d \mathbf{x}_t = - \frac{1}{2} \mathbf{x}_t dt + d\mathbf{W}_t, \label{Forward Process}
+d \mathbf{x}_t = f(\mathbf{x}_t, t)\, dt + g(t)\, d\mathbf{W}_t, \label{Forward Process}
 $$
 
-in which $$t$$ is the forward time of the diffusion process, $$\mathbf{x}_t$$ is the noise contaminated image at time $$t$$, and $$\mathbf{W}_t$$ is a Brownian noise.
+where $$t \in [0,T]$$ is the forward diffusion time, $$\mathbf{x}_t$$ is the noise-contaminated image at time $$t$$, $$\mathbf{W}_t$$ is a Brownian motion, $$f(\mathbf{x}_t, t)$$ is the drift, and $$g(t)$$ scales the injected noise. Different choices of $$f$$ and $$g$$ correspond to different forward-diffusion parameterizations used in diffusion models.
 
-Note that $$-\mathbf{x}$$ is just the score function of the standard Gaussian distribution $$\mathcal{N}(\mathbf{0},I)$$. Thus, the forward diffusion process corresponds to the Langevin dynamics of the standard Gaussian $$\mathcal{N}(\mathbf{0},I)$$.
+In the variance-preserving (VP) formulation commonly used in DDPMs, a particularly simple choice for the forward process is the Ornstein–Uhlenbeck diffusion process (OU process) [^Uhlenbeck1930OnTT]:
 
-The forward diffusion process has $$\mathcal{N}(\mathbf{0},I)$$ as its stationary distribution. This means, for any initial distribution $$p_0(\mathbf{x})$$ of positions $$\{\mathbf{x}_0^{(1)},...,\mathbf{x}_0^{(N)}\}$$, their density $$p_t(\mathbf{x})$$ converges to $$\mathcal{N}(\mathbf{0},I)$$ as $$t\to\infty$$. When these positions represent vectors of clean images, the process describes a gradual noising operation that transforms clean images into Gaussian noise.
+$$
+d \mathbf{x}_t = - \frac{1}{2} \mathbf{x}_t\, dt + d\mathbf{W}_t,
+$$
 
-One forward diffusion step with a step size of $$\Delta t$$ is displayed in the following picture.
+which corresponds to the specific choice $$f(\mathbf{x}_t, t) = -\tfrac{1}{2}\mathbf{x}_t$$ and $$g(t) = 1$$ in the general SDE above. Note that $$-\mathbf{x}$$ is just the score function of the standard Gaussian distribution $$\mathcal{N}(\mathbf{0},I)$$. Thus, this VP forward diffusion process corresponds to the Langevin dynamics of the standard Gaussian $$\mathcal{N}(\mathbf{0},I)$$.
+
+The OU forward diffusion process has $$\mathcal{N}(\mathbf{0},I)$$ as its stationary distribution. This means, for any initial distribution $$p_0(\mathbf{x})$$ of positions $$\{\mathbf{x}_0^{(1)},...,\mathbf{x}_0^{(N)}\}$$, their density $$p_t(\mathbf{x})$$ converges to $$\mathcal{N}(\mathbf{0},I)$$ as $$t\to\infty$$. When these positions represent vectors of clean images, the process describes a gradual noising operation that transforms clean images into Gaussian noise.
+
+Another commonly used family of forward processes is the variance-exploding (VE) formulation, where the variance grows with time instead of being preserved. A simple VE example is pure Brownian motion:
+
+$$
+d \mathbf{x}_t = d\mathbf{W}_t,
+$$
+
+which corresponds to a zero drift $$f(\mathbf{x}_t, t) = \mathbf{0}$$ and a constant diffusion scale $$g(t) = 1$$, so that the variance of $$\mathbf{x}_t$$ increases with $$t$$ and no stationary distribution exists.
+
+These forward SDEs can be summarized in terms of their parameterizations as follows (with $$\boldsymbol{\epsilon} \sim \mathcal{N}(\mathbf{0}, I)$$):
+
+| **Name** | **Variable notation** | **Noise-level parameter** | **Relation between initial and noisy variable** | **Forward SDE (in time $$t$$)** |
+| --- | --- | --- | --- | --- |
+| Variance-preserving (VP) | $$x$$ | $$\alpha(t) = e^{-t}$$ | $$x(t) = \sqrt{\alpha(t)}\, x(0) + \sqrt{1-\alpha(t)}\, \boldsymbol{\epsilon}$$ | $$d x_t = - \tfrac{1}{2} x_t\, dt + dW_t$$ |
+| Variance-exploding (VE) | $$z$$ | $$\sigma(t) = \sqrt{\tfrac{1 - e^{-t}}{e^{-t}}}$$ | $$z(t) = z(0) + \sigma(t)\, \boldsymbol{\epsilon}$$ | $$d z_t = e^{t/2}\, dW_t$$ |
+
+For the VP OU choice above, one discretized forward diffusion step with a step size of $$\Delta t$$ is displayed in the following picture.
 
 <div class="row mt-3">
     <div class="col-md-10 offset-md-1 col-lg-8 offset-lg-2 mt-3 mt-md-0">
@@ -180,7 +201,7 @@ One forward diffusion step with a step size of $$\Delta t$$ is displayed in the 
     </div>
 </div>
 
-## The Backward Diffusion Process
+### The Backward Diffusion Process
 
 The backward diffusion process is the conjugate of the forward process. While the forward process evolves $$p_t(\mathbf{x})$$ toward $$\mathcal{N}(\mathbf{0},I)$$, the backward process reverses this evolution, restoring $$\mathcal{N}(\mathbf{0},I)$$ to $$p_t$$.
 
@@ -377,10 +398,10 @@ where the score functions $$\nabla \log p(\mathbf{x}, t)$$ and $$\nabla \log q(\
 In practice, we model the $$\nabla \log q(\mathbf{x}, t)$$ (or its rescaled version) as a neural network $\mathbf{s}_\theta(\mathbf{x}, t)$. The only thing remains to handle is the score of the true data distribution $$\nabla \log p(\mathbf{x}, t)$$, which should be approximated by an empirical value from samples since we don't know its vallue. In fact, we have
 
 $$
-\argmin_{\mathbf{s}_\theta}
+\text{argmin}_{\mathbf{s}_\theta}
    \mathbb{E}_{\mathbf{x} \sim p(\mathbf{x}, 0)}
             \big\|\nabla \log p(\mathbf{x}_t | \mathbf{x}_0)
-                  - \mathbf{s}_\theta\big\|^2 = \argmin_{\mathbf{s}_\theta}
+                  - \mathbf{s}_\theta\big\|^2 = \text{argmin}_{\mathbf{s}_\theta}
    \mathbb{E}_{\mathbf{x} \sim p(\mathbf{x}, t)}
             \big\|\nabla \log p(\mathbf{x}, t)
                   - \mathbf{s}_\theta\big\|^2
