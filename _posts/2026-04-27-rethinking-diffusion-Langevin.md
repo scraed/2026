@@ -88,6 +88,11 @@ _styles: >
   details[open] {
     background: transparent !important;
   }
+  /* Make Mermaid diagrams match article background (remove pink) */
+  .mermaid, svg.mermaid {
+    background: transparent !important;
+    background-color: transparent !important;
+  }
 ---
 
 Modern diffusion models are built upon two fundamental processes: the forward process, which gradually corrupts data with noise during training, and the backward process, which generates data by sampling from noise. The development of diffusion models has diverged into several branches, resulting in different perspectives on these processes. Most interpretations fall into three main frameworks: the Variational Autoencoder (VAE) perspective, the score-based perspective, and the flow-based perspective. Although there are many tutorials available, learning the core theory of diffusion models remains challenging due to mathematically dense derivations and fragmented intuitions scattered across these different approaches. 
@@ -187,7 +192,6 @@ No matter which notation we choose, A forward diffusion step with a step size of
 </div>
 
 ```mermaid
-%%{init: {'theme': 'base', 'themeVariables': { 'background': 'transparent' }}}%%
 flowchart LR
     A["x_t ~ p_t(x)"] -->|Forward| B["x_{t+Δt} ~ p_{t+Δt}(x)"]
 ```
