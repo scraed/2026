@@ -190,9 +190,9 @@ These forward SDEs can be summarized in terms of their parameterizations as foll
 
 | **Name** | **Variable notation** | **Noise-level parameter** | **Relation between initial and noisy variable** | **Forward SDE (in time $$t$$)** |
 | --- | --- | --- | --- | --- |
-| Variance-preserving (VP) | $$x$$ | $$\alpha(t) = e^{-t}$$ | $$x(t) = \sqrt{\alpha(t)}\, x(0) + \sqrt{1-\alpha(t)}\, \boldsymbol{\epsilon}$$ | $$d x_t = - \tfrac{1}{2} x_t\, dt + dW_t$$ |
-| Variance-exploding (VE) | $$z$$ | $$\sigma(t) = \sqrt{\tfrac{1 - e^{-t}}{e^{-t}}}$$ | $$z(t) = z(0) + \sigma(t)\, \boldsymbol{\epsilon}$$ | $$d z_t = e^{t/2}\, dW_t$$ |
-| Flow | $$r$$ | $$s(t) = \dfrac{\sqrt{e^{t} - 1}}{1 + \sqrt{e^{t} - 1}}$$ | $$r(s) = (1-s)\, r(0) + s\, \boldsymbol{\epsilon}$$ | $$d r = -\dfrac{r\, e^{t}}{2 \left( e^{t} - 1 + \sqrt{e^{t} - 1} \right)} \, dt + \dfrac{e^{t/2}}{1 + \sqrt{e^{t} - 1}} \, dW_t$$ |
+| Variance-preserving (VP) | $$x_t$$ | $$\alpha_t = e^{-t}$$ | $$x_t = \sqrt{\alpha_t}\, x_0 + \sqrt{1-\alpha_t}\, \boldsymbol{\epsilon}$$ | $$d x_t = - \tfrac{1}{2} x_t\, dt + dW_t$$ |
+| Variance-exploding (VE) | $$z_t$$ | $$\sigma_t = \sqrt{e^{t} - 1}$$ | $$z_t = z_0 + \sigma_t\, \boldsymbol{\epsilon}$$ | $$d z_t = e^{t/2}\, dW_t$$ |
+| Flow | $$r_t$$ | $$s_t = \dfrac{\sqrt{e^{t} - 1}}{1 + \sqrt{e^{t} - 1}}$$ | $$r_t = (1-s_t)\, r_0 + s_t\, \boldsymbol{\epsilon}$$ | $$d r_t = -\dfrac{r_t\, e^{t}}{2 \left( e^{t} - 1 + \sqrt{e^{t} - 1} \right)} \, dt + \dfrac{e^{t/2}}{1 + \sqrt{e^{t} - 1}} \, dW_t$$ |
 
 For the VP OU choice above, one discretized forward diffusion step with a step size of $$\Delta t$$ is displayed in the following picture.
 
