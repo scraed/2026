@@ -116,11 +116,11 @@ ninja.data = [{
             window.location.href = "/2026/blog/2026/rethinking-diffusion-Langevin/";
           
         },
-      },{id: "post-how-well-do-the-meta-cl-algorithms-perform-at-scale",
+      },{id: "post-pushing-meta-continual-learning-algorithms-to-the-limit",
         
-          title: "How well do the meta-CL algorithms perform at scale?",
+          title: "Pushing Meta-Continual Learning Algorithms to the Limit",
         
-        description: "Coming soon to a pull request near you!",
+        description: "Meta-continual learning algorithms should be able to handle tasks with extended data streams compared to the traditional deep learning setting. These algorithms have not been applied to settings with extreme data streams, such as classification tasks with 1,000 classes, nor have they been compared to traditional continual learning algorithms. In this blog, we compare GeMCL and OML, two meta-continual algorithms trained on the CASIA dataset, against the REMIND continual learning algorithm and an Offline learner on 1,000-way 10-shot classification tasks using the Omniglot and CASIA datasets.",
         section: "Posts",
         handler: () => {
           
