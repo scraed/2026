@@ -190,13 +190,13 @@ where $$t \in [0,T]$$ is the forward diffusion time, $$\mathbf{x}_t$$ is the noi
 
 In practice, diffusion models are usually instantiated by choosing specific parameterizations of this SDE. The most common ones are the **variance-preserving (VP)** process, implemented in DDPMs as an Ornstein–Uhlenbeck dynamics that gently pulls samples toward the origin while injecting noise so that the marginal converges to a standard Gaussian; the **variance-exploding (VE)** process, where there is no restoring drift and the noise scale grows with time so that the variance “explodes”; and **flow-matching** formulations, which view generation as following a time-dependent flow that implements an “straight line” interpolation between data and noise under a carefully designed schedule.
 
-The table below summarizes these three forward processes in terms of their variables, noise-level schedules, closed-form noising relations, and SDEs (with $$\boldsymbol{\epsilon} \sim \mathcal{N}(\mathbf{0}, I)$$):
+The table below summarizes these three forward processes in terms of their time variables, state variables, noise-level schedules, closed-form noising relations (with $$\boldsymbol{\epsilon} \sim \mathcal{N}(\mathbf{0}, I)$$), and their corresponding SDEs expressed in terms of their respective time parameters.
 
-| **Name** | **Variable notation** | **Noise-level parameter** | **Relation between initial and noisy variable** | **Forward SDE** |
-| --- | --- | --- | --- | --- |
-| Variance-preserving (VP) | $$x_t$$ | $$\alpha_t = e^{-t}$$ | $$x_t = \sqrt{\alpha_t}\, x_0 + \sqrt{1-\alpha_t}\, \boldsymbol{\epsilon}$$ | $$d x_t = - \tfrac{1}{2} x_t\, dt + dW_t$$ |
-| Variance-exploding (VE) | $$z_t = x_t e^{\frac{t}{2}}$$ | $$\sigma_t = \sqrt{e^{t} - 1}$$ | $$z_t = z_0 + \sigma_t\, \boldsymbol{\epsilon}$$ | $$d\mathbf{z}_{\sigma} = \sqrt{2\sigma} d\mathbf{W}_{\sigma}$$ |
-| Flow | $$r_t = x_t \frac{e^{\frac{t}{2}}}{1 + \sqrt{e^{t} - 1}} $$ | $$s_t = \dfrac{\sqrt{e^{t} - 1}}{1 + \sqrt{e^{t} - 1}}$$ | $$r_t = (1-s_t)\, r_0 + s_t\, \boldsymbol{\epsilon}$$ | $$d\mathbf{r}_{s} = -\frac{\mathbf{r}_s}{1-s}ds + \sqrt{\frac{2s}{1-s}}d\mathbf{W}_{s}$$ |
+| **Name** | **Time variable** | **Variable notation** | **Noise-level parameter** | **Relation between initial and noisy variable** | **Forward SDE** |
+| --- | --- | --- | --- | --- | --- |
+| Variance-preserving (VP) | $$t$$ | $$x_t$$ | $$\alpha_t = e^{-t}$$ | $$x_t = \sqrt{\alpha_t}\, x_0 + \sqrt{1-\alpha_t}\, \boldsymbol{\epsilon}$$ | $$d x_t = - \tfrac{1}{2} x_t\, dt + dW_t$$ |
+| Variance-exploding (VE) | $$\sigma = \sqrt{e^{t} - 1}$$ | $$z_{\sigma(t)} = x_t e^{\frac{t}{2}}$$ | $$\sigma$$ | $$z_\sigma = z_0 + \sigma\, \boldsymbol{\epsilon}$$ | $$dz_{\sigma} = \sqrt{2\sigma}\, dW_{\sigma}$$ |
+| Flow | $$s= \dfrac{\sqrt{e^{t} - 1}}{1 + \sqrt{e^{t} - 1}}$$ | $$r_{s(t)} = x_t \frac{e^{\frac{t}{2}}}{1 + \sqrt{e^{t} - 1}} $$ | $$s$$ | $$r_s = (1-s)\, r_0 + s\, \boldsymbol{\epsilon}$$ | $$dr_{s} = -\frac{r_s}{1-s}\, ds + \sqrt{\frac{2s}{1-s}}\, dW_{s}$$ |
 
 No matter which notation we choose, A forward diffusion step with a step size of $$\Delta t$$ acts as adding more noise to data, which is displayed in the following picture:
 
