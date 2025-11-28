@@ -55,7 +55,7 @@ toc:
   - name: Other Typography?
 
 # Below is an example of injecting additional post-specific styles.
-# This is used in the 'Layouts' section of this post.
+# This is used in the 'Layout\mathfrak{s} section of this post.
 # If you use this post as a template, delete this _styles block.
 _styles: >
   .fake-img {
@@ -192,11 +192,11 @@ In practice, diffusion models are usually instantiated by choosing specific para
 
 The table below summarizes these three forward processes in terms of their time variables, state variables, noise-level schedules, closed-form noising relations (with $$\boldsymbol{\epsilon} \sim \mathcal{N}(\mathbf{0}, I)$$), and their corresponding SDEs expressed in terms of their respective time parameters.
 
-| **Name** | **Time variable** | **Variable notation** | **Noise-level parameter** | **Relation between initial and noisy variable** | **Forward SDE** |
-| --- | --- | --- | --- | --- | --- |
-| Variance-preserving (VP) | $$t$$ | $$x_t$$ | $$\alpha_t = e^{-t}$$ | $$x_t = \sqrt{\alpha_t}\, x_0 + \sqrt{1-\alpha_t}\, \boldsymbol{\epsilon}$$ | $$d x_t = - \tfrac{1}{2} x_t\, dt + dW_t$$ |
-| Variance-exploding (VE) | $$\sigma = \sqrt{e^{t} - 1}$$ | $$z_{\sigma(t)} = x_t e^{\frac{t}{2}}$$ | $$\sigma$$ | $$z_\sigma = z_0 + \sigma\, \boldsymbol{\epsilon}$$ | $$dz_{\sigma} = \sqrt{2\sigma}\, dW_{\sigma}$$ |
-| Flow | $$s= \dfrac{\sqrt{e^{t} - 1}}{1 + \sqrt{e^{t} - 1}}$$ | $$r_{s(t)} = x_t \frac{e^{\frac{t}{2}}}{1 + \sqrt{e^{t} - 1}} $$ | $$s$$ | $$r_s = (1-s)\, r_0 + s\, \boldsymbol{\epsilon}$$ | $$dr_{s} = -\frac{r_s}{1-s}\, ds + \sqrt{\frac{2s}{1-s}}\, dW_{s}$$ |
+| **Name** | **Time variable** | **Time domain** | **Variable notation** | **Noise-level parameter** | **Relation between initial and noisy variable** | **Forward SDE** |
+| --- | --- | --- | --- | --- | --- | --- |
+| Variance-preserving (VP) | $$t$$ | $$[0, T]$$ | $$x_t$$ | $$\alpha_t = e^{-t}$$ | $$x_t = \sqrt{\alpha_t}\, x_0 + \sqrt{1-\alpha_t}\, \boldsymbol{\epsilon}$$ | $$d x_t = - \tfrac{1}{2} x_t\, dt + dW_t$$ |
+| Variance-exploding-Karras (VE-Karras) | $$\sigma = \sqrt{e^{t} - 1}$$ | $$[0, \Sigma]$$ | $$z_{\sigma(t)} = x_t e^{\frac{t}{2}}$$ | $$\sigma$$ | $$z_\sigma = z_0 + \sigma\, \boldsymbol{\epsilon}$$ | $$dz_{\sigma} = \sqrt{2\sigma}\, dW_{\sigma}$$ |
+| Flow | $$s= \dfrac{\sqrt{e^{t} - 1}}{1 + \sqrt{e^{t} - 1}}$$ | $$[0, 1]$$ | $$r_{s(t)} = x_t \frac{e^{\frac{t}{2}}}{1 + \sqrt{e^{t} - 1}} $$ | $$s$$ | $$r_s = (1-s)\, r_0 + s\, \boldsymbol{\epsilon}$$ | $$dr_{s} = -\frac{r_s}{1-s}\, ds + \sqrt{\frac{2s}{1-s}}\, dW_{s}$$ |
 
 No matter which notation we choose, A forward diffusion step with a step size of $$\Delta t$$ acts as adding more noise to data, which is displayed in the following picture:
 
@@ -213,9 +213,9 @@ No matter which notation we choose, A forward diffusion step with a step size of
 
 ### The Reverse Diffusion Process
 
-The reverse diffusion process is the conjugate of the forward process. While the forward process evolves $$p_t(\mathbf{x})$$ toward $$\mathcal{N}(\mathbf{0},I)$$, the reverse process reverses this evolution, restoring $$\mathcal{N}(\mathbf{0},I)$$ to $$p_t$$.
+The reverse diffusion process is the conjugate of the forward process. While the forward process evolves $p_t(\mathbf{x})$ toward $\mathcal{N}(\mathbf{0},I)$, the reverse process reverses this evolution, restoring $\mathcal{N}(\mathbf{0},I)$ to $p_t$.
 
-The concept behind the reverse process is intuitive: since Langevin dynamics (Equation $$\ref{Langevin Dynamics}$$) acts as an identity operation on a distribution—preserving it unchanged—any forward process composed with its corresponding reverse process should similarly yield an identity transformation. Specifically, at any time $$t$$, combining the forward and reverse processes must reproduce the Langevin dynamics for the distribution $$p_t(\mathbf{x})$$, as illustrated in the following diagram.
+The concept behind the reverse process is intuitive: since Langevin dynamics (Equation $\ref{Langevin Dynamics}$) acts as an identity operation on a distribution—preserving it unchanged—any forward process composed with its corresponding reverse process should similarly yield an identity transformation. Specifically, at any time $t$, combining the forward and reverse processes must reproduce the Langevin dynamics for the distribution $p_t(\mathbf{x})$, as illustrated in the following diagram.
 
 <div class="row mt-3">
     <div class="col-md-12 col-lg-10 offset-lg-1 mt-3 mt-md-0">
@@ -227,7 +227,7 @@ The concept behind the reverse process is intuitive: since Langevin dynamics (Eq
 </div>
 
 
-To formalize this, consider the Langevin dynamics for $$ p_t(\mathbf{x}) $$ with a distinct time variable $$ \tau $$, distinguished from the forward diffusion time $$ t $$. This dynamics can be decomposed into forward and reverse components as follows:  
+To formalize this, consider the Langevin dynamics for $p_t(\mathbf{x})$ with a distinct time variable $\tau$, distinguished from the forward diffusion time $t$. This dynamics can be decomposed into forward and reverse components as follows:  
 
 $$
 \begin{split}  
@@ -236,19 +236,28 @@ d\mathbf{x}_\tau &= \mathbf{s}(\mathbf{x}_\tau, t) d\tau + \sqrt{2}\, d\mathbf{W
 \end{split}  
 $$
 
-where $$ \mathbf{s}(\mathbf{x}, t) = \nabla_{\mathbf{x}} \log p_t(\mathbf{x}) $$ is the score function of $$ p_t(\mathbf{x}) $$. We have utilized the property that $$\sqrt{2}\, d\mathbf{W}_\tau = \sqrt{2 dt} \boldsymbol{\epsilon} = \sqrt{dt} \boldsymbol{\epsilon}_1 + \sqrt{dt} \boldsymbol{\epsilon}_2 = d\mathbf{W}_\tau^{(1)} + d\mathbf{W}_\tau^{(2)}$$. 
+where $\mathbf{s}(\mathbf{x}, t) = \nabla_{\mathbf{x}} \log p_t(\mathbf{x})$ is the score function of $p_t(\mathbf{x})$. We have utilized the property that $$\sqrt{2}\, d\mathbf{W}_\tau = \sqrt{2 dt} \boldsymbol{\epsilon} = \sqrt{dt} \boldsymbol{\epsilon}_1 + \sqrt{dt} \boldsymbol{\epsilon}_2 = d\mathbf{W}_\tau^{(1)} + d\mathbf{W}_\tau^{(2)}$$. 
 
-The "Forward" part in this decomposition corresponds to the forward diffusion process, effectively **increasing the forward diffusion time $$ t $$ by $$ d\tau $$**, bringing the distribution to $$p_{t + d\tau}(\mathbf{x})$$. Since the forward and reverse components combine to form an "identity" operation, the "Reverse" part must reverse the forward process—**decreasing the forward diffusion time $$ t $$ by $$ d\tau $$** and restoring the distribution back to $$ p_t(\mathbf{x}) $$.
+The table below summarizes how each parameterization relates its Langevin dynamics to its forward and reverse processes:
+
+| **Name** | **Langevin dynamics** | **Forward Split** | **Reverse Split** |
+| --- | --- | --- | --- |
+| VP-SDE | $$dx = \mathbf{s}_x\, d\tau + \sqrt{2}\, d W_\tau$$ | $$d x = - \tfrac{1}{2} x\, d\tau + dW_\tau$$ | $$dx = \left[ \frac{1}{2} x + \mathbf{s}_x \right] d\tau + dW_{\tau}$$ |
+| VP-ODE | $$dx = \frac{1}{2} \mathbf{s}_x\, d\tau + d W_\tau$$ | $$d x = - \tfrac{1}{2} x\, d\tau + dW_\tau$$ | $$dx = \frac{1}{2} \left( x + \mathbf{s}_x \right) d\tau $$ |
+| VE-Karras | $$dz = \tau\, \mathbf{s}_z\, d\tau + \sqrt{2 \tau}\, d W_\tau$$ | $$dz = \sqrt{2\tau}\, dW_{\tau}$$ |  $$dz = \tau\, \mathbf{s}_z\, d\tau $$ |
+| Flow | $$dr = \frac{\tau}{1+\tau} \mathbf{s}_r\, d\tau + \sqrt{\frac{2\tau}{1+\tau}}\, d W_\tau$$  | $$dr = -\frac{r}{1-\tau}\, d\tau + \sqrt{\frac{2\tau}{1-\tau}}\, dW_{\tau}$$  |  $$dr = \frac{\tau\, \mathbf{s}_r + r}{1-\tau} d\tau$$ |
+
+The "Forward" part in this decomposition corresponds to the forward diffusion process, effectively **increasing the forward diffusion time $t$ by $d\tau$**, bringing the distribution to $p_{t + d\tau}(\mathbf{x})$. Since the forward and reverse components combine to form an "identity" operation, the "Reverse" part must reverse the forward process—**decreasing the forward diffusion time $t$ by $d\tau$** and restoring the distribution back to $p_t(\mathbf{x})$.
 
 
 
-Now we can define the reverse process according to the reverse part in the equation above, and a reverse diffusion time $$t'$$ different from the forward diffusion time $$t$$:
+Now we can define the reverse process according to the reverse part in the equation above, and a reverse diffusion time $t'$ different from the forward diffusion time $t$:
 
 $$
 d\mathbf{x}_{t'} = \left( \frac{1}{2} \mathbf{x}_{t'}+ \mathbf{s}(\mathbf{x}_{t'}, t) \right) dt' + d\mathbf{W}_{t'}.
 $$
 
-One step of this reverse diffusion process with $$dt' = \Delta t$$ acts as a reversal of the forward process.
+One step of this reverse diffusion process with $dt' = \Delta t$ acts as a reversal of the forward process.
 
 <div class="row mt-3">
     <div class="col-md-10 offset-md-1 col-lg-8 offset-lg-2 mt-3 mt-md-0">
@@ -256,7 +265,7 @@ One step of this reverse diffusion process with $$dt' = \Delta t$$ acts as a rev
     </div>
 </div>
 
-The reverse diffusion process itself is also a standalone SDE that advances the reverse diffusion time $$t'$$. If $$\mathbf{x}_{t'} \sim q_{t'}(\mathbf{x})$$, then one step of the reverse diffusion process with $$dt' = \Delta t'$$ brings it to $$\mathbf{x}_{t' + \Delta t'} \sim q_{t' + \Delta t'}(\mathbf{x})$$.
+The reverse diffusion process itself is also a standalone SDE that advances the reverse diffusion time $t'$. If $\mathbf{x}_{t'} \sim q_{t'}(\mathbf{x})$, then one step of the reverse diffusion process with $dt' = \Delta t'$ brings it to $\mathbf{x}_{t' + \Delta t'} \sim q_{t' + \Delta t'}(\mathbf{x})$.
 
 <div class="row mt-3">
     <div class="col-md-10 offset-md-1 col-lg-8 offset-lg-2 mt-3 mt-md-0">
@@ -264,27 +273,38 @@ The reverse diffusion process itself is also a standalone SDE that advances the 
     </div>
 </div>
 
-These two interpretations help us determine the relationship between the forward diffusion time $$t$$ and the reverse diffusion time $$t'$$. Since $$dt'$$ is interpreted as a "decrease" in the forward diffusion time $$t$$, as well as a "increase" of the reverse diffusion time $$t'$$, we have 
+These two interpretations help us determine the relationship between the forward diffusion time $t$ and the reverse diffusion time $t'$. Since $dt'$ is interpreted as a "decrease" in the forward diffusion time $t$, as well as a "increase" of the reverse diffusion time $t'$, we have 
 
 $$
 dt = -dt'
 $$
 
-which means the reverse diffusion time is the inverse of the forward. To make $$t'$$ lies in the same range $$[0, T]$$ of the forward diffusion time, we define $$t = T - t'$$. In this notation, the reverse diffusion process [^Anderson1982ReversetimeDE] is
+which means the reverse diffusion time is the inverse of the forward. To make $t'$ lies in the same range $[0, T]$ of the forward diffusion time, we define $t = T - t'$. In this notation, the reverse diffusion process [^Anderson1982ReversetimeDE] is
 
 $$
 d\mathbf{x}_{t'} = \left( \frac{1}{2} \mathbf{x}_{t'}+ \mathbf{s}(\mathbf{x}_{t'}, T-t') \right) dt' + d\mathbf{W}_{t'}, \label{Reverse Process}
 $$
 
-in which $$t' \in [0,T]$$ is the reverse time, $$\mathbf{s}(\mathbf{x}, t) = \nabla_{\mathbf{x}} \log p_t(\mathbf{x})$$ is the score function of the density of $$\mathbf{x}_{t}$$ in the forward process.
+in which $t' \in [0,T]$ is the reverse time, $\mathbf{s}(\mathbf{x}, t) = \nabla_{\mathbf{x}} \log p_t(\mathbf{x})$ is the score function of the density of $\mathbf{x}_{t}$ in the forward process.
 
 The table below summarizes the reverse diffusion process, the definition of the reverse time, and its associated Langevin dynamics for the VP parameterization:
 
-| **Name** | **Reverse Time** | **Reverse Process** | **Langevin Dynamics Splitted (in time $\tau$)** |
-| --- | --- | --- | --- |
-| VP-SDE | $$t' = T - t$$ | $$dx_{t'} = \left[ \frac{1}{2} x_{t'}+ \mathbf{s}(x_{t'}, T-t') \right] dt' + dW_{t'}$$ | $$dx_\tau = s_x\, d\tau + \sqrt{2}\, d W_\tau$$ |
-| VP-ODE | $$t' = T - t$$ | $$dx_{t'} = \frac{1}{2} \left( x_{t'} + \mathbf{s}(x_{t'}, T-t') \right) dt' $$ | $$dx_\tau = \frac{1}{2} s_x\, d\tau + \, d W_\tau$$ |
-| VE-SDE | $$\sigma'(t') = \sigma(T-t')$$ | $$dz_{\sigma'} = \left( \frac{1}{2} x_{t'}+ \mathbf{s}(x_{t'}, T-t') \right) dt' + dW_{t'}$$ | $$dx_\tau = s_x\, d\tau + \sqrt{2}\, d W_\tau$$ |
+
+| **Name** | **Time variable** | **Time domain** | **Variable notation** | **Noise-level parameter** | **Relation between initial and noisy variable** | **Forward SDE** |
+| --- | --- | --- | --- | --- | --- | --- |
+| Variance-preserving (VP) | $$t$$ | $$[0, T]$$ | $$x_t$$ | $$\alpha_t = e^{-t}$$ | $$x_t = \sqrt{\alpha_t}\, x_0 + \sqrt{1-\alpha_t}\, \boldsymbol{\epsilon}$$ | $$d x_t = - \tfrac{1}{2} x_t\, dt + dW_t$$ |
+| Variance-exploding-Karras (VE-Karras) | $$\sigma = \sqrt{e^{t} - 1}$$ | $$[0, \Sigma]$$ | $$z_{\sigma(t)} = x_t e^{\frac{t}{2}}$$ | $$\sigma$$ | $$z_\sigma = z_0 + \sigma\, \boldsymbol{\epsilon}$$ | $$dz_{\sigma} = \sqrt{2\sigma}\, dW_{\sigma}$$ |
+| Flow | $$s= \dfrac{\sqrt{e^{t} - 1}}{1 + \sqrt{e^{t} - 1}}$$ | $$[0, 1]$$ | $$r_{s(t)} = x_t \frac{e^{\frac{t}{2}}}{1 + \sqrt{e^{t} - 1}} $$ | $$s$$ | $$r_s = (1-s)\, r_0 + s\, \boldsymbol{\epsilon}$$ | $$dr_{s} = -\frac{r_s}{1-s}\, ds + \sqrt{\frac{2s}{1-s}}\, dW_{s}$$ |
+
+
+| **Name** | **Reverse Time** | **Reverse time domain** | **Reverse Process** | **Function modeled by NN** |
+| --- | --- | --- | --- | --- |
+| VP-SDE | $$\mathfrak{t} = T - t$$ | $$\mathfrak{t} \in [0, T]$$ | $$dx_{\mathfrak{t}} = \left[ \frac{1}{2} x_{\mathfrak{t}}+ \mathbf{s}(x_{\mathfrak{t}}, t) \right] d\mathfrak{t} + dW_{\mathfrak{t}}$$ | $$\mathbf{s}(x, t)$$  |
+| VP-ODE | $$\mathfrak{t} = T - t$$ | $$\mathfrak{t} \in [0, T]$$ | $$dx_{\mathfrak{t}} = \frac{1}{2} \left[ x_{\mathfrak{t}} + \mathbf{s}(x_{\mathfrak{t}}, t) \right] d\mathfrak{t} $$ | $$\mathbf{s}(x, t)$$  |
+| VE-Karras | $$\varsigma = \Sigma - \sigma$$ | $$\varsigma \in [0, \Sigma]$$ | $$dz_{\varsigma} = \sigma\, s(z_{\varsigma}, \sigma)d \varsigma$$ | $$\boldsymbol{\epsilon}(z, \sigma) =  -\sigma s(z, \sigma) $$|
+| Flow | $$\mathfrak{s} = 1 - s$$ | $$\mathfrak{s} \in [0, 1]$$ | $$dr_{\mathfrak{s}} = \frac{s\, \mathbf{s}(r_{\mathfrak{s}}, s) + r_{\mathfrak{s}}}{1-s} d\mathfrak{s}$$ | $$v(r, s) =  - \frac{s\, \mathbf{s} + r_{\mathfrak{s}}}{1-s} $$ |
+
+
 
 ### Forward-Reverse Duality
 
