@@ -136,6 +136,7 @@ which illustrates the connection among the forward, reverse diffusion process an
 $$
 d\mathbf{x}_t = g(t)\, \mathbf{s}(\mathbf{x}_t) dt + \sqrt{2 g(t)}\, d\mathbf{W}_t, 
 $$
+
 where $$\mathbf{s}(\mathbf{x}) = \nabla_{\mathbf{x}} \log p(\mathbf{x})$$ is the score function of $$p(\mathbf{x})$$, $g(t)$ is an arbitrary positive function satisfying $\int_0^\infty g(t) dt = \infty$ to ensure ergodicity. The $d\mathbf{W}$ term is a Brownian noise what can be treated as $\sqrt{dt} \boldsymbol{\epsilon}$, where $\boldsymbol{\epsilon}$ is a standard Gaussian noise. This dynamics is often used as a Monte Carlo sampler to draw samples from $$p(\mathbf{x})$$, since $$p(\mathbf{x})$$ is its stationary distribution—the distribution that $$\mathbf{x}_t$$ converges to and and remains at as $$t \to \infty$$, regardless of the initial distribution of $$\mathbf{x}_0$$. 
 
 
@@ -166,14 +167,14 @@ Langevin dynamics, while widely used for sampling from complex distributions, be
     </div>
 </div>
 <div class="caption">
-    Langevin dynamics acts as an identity operation on $p(\mathbf{x})$: starting from a sample $\mathbf{x}_0 \sim p(\mathbf{x})$, it produces a new, independent sample from the same distribution.
+    Langevin dynamics acts as an identity operation on $p(\mathbf{x})$: starting from a sample $\mathbf{x} \sim p(\mathbf{x})$, it produces a new sample $\mathbf{x}'$ from the same distribution.
 </div>
 
 # Spliting the Identity: Forward and Reverse Processes in diffusion models
 
-One key reason Langevin dynamics struggles in high-dimensional settings is the challenge of initialization. The score function must be learned from real data, so it is only accurate near true data points and poorly estimated elsewhere. However, in generative modeling, we want to generate entirely new data samples—which means we need to start Langevin dynamics from points that may not resemble real data at all. Finding a good initialization that is close to the true data manifold is difficult, making effective generation with Langevin dynamics hard in practice. 
+One key reason Langevin dynamics struggles in high-dimensional settings is the challenge of initialization. The score function required by it is learned from real data and is therefore reliable only near true data points, while being poorly estimated elsewhere. Yet in generative modeling we need to start from locations that may be far from the data manifold. Finding an initialization that is both realistic and close enough to the true data manifold is difficult, making effective generation with Langevin dynamics challenging in practice. In short, Langevin dynamics is well-suited for generating new samples from an existing one, but ill-suited for generating samples entirely from scratch.
 
-An enhancement to Langevin dynamics is the Annealed Langevin dynamics <d-cite key="song2019generative"></d-cite>. Instead of using a single Langevin sampler, this method involves training a sequence of Langevin dynamics, each corresponding to a different level of noise added to the data. Starting from pure noise, the method gradually reduces the noise level, switching between these samplers at each step. In this way, samples are progressively transformed from random noise into data-like samples, using Langevin dynamics that are effective for each stage of noise contamination. This approach highlights the importance of using multiple noise levels
+An enhancement to Langevin dynamics is the Annealed Langevin dynamics <d-cite key="song2019generative"></d-cite>. Instead of using a single Langevin sampler, this method involves training a sequence of Langevin dynamics, each corresponding to a different level of noise added to the data. Starting from pure noise, the method gradually reduces the noise level, switching between these samplers at each step. In this way, samples are progressively transformed from random noise into data-like samples, using Langevin dynamics that are effective for each stage of noise contamination. This approach highlights the importance of using multiple noise levels.
 
 Diffusion models take this concept a step further by completely separating the training and inference processes: one process trains the model at different noise levels, while another process samples from noise to generate data.
 
@@ -194,8 +195,8 @@ The table below summarizes these three forward processes in terms of their varia
 | **Name** | **Variable notation** | **Noise-level parameter** | **Relation between initial and noisy variable** | **Forward SDE** |
 | --- | --- | --- | --- | --- |
 | Variance-preserving (VP) | $$x_t$$ | $$\alpha_t = e^{-t}$$ | $$x_t = \sqrt{\alpha_t}\, x_0 + \sqrt{1-\alpha_t}\, \boldsymbol{\epsilon}$$ | $$d x_t = - \tfrac{1}{2} x_t\, dt + dW_t$$ |
-| Variance-exploding (VE) | $$z_t = x_t e^{\frac{t}{2}}$$ | $$\sigma_t = \sqrt{e^{t} - 1}$$ | $$z_t = z_0 + \sigma_t\, \boldsymbol{\epsilon}$$ | $$d z_t = e^{t/2}\, dW_t$$ |
-| Flow | $$r_t = x_t \frac{e^{\frac{t}{2}}}{1 + \sqrt{e^{t} - 1}} $$ | $$s_t = \dfrac{\sqrt{e^{t} - 1}}{1 + \sqrt{e^{t} - 1}}$$ | $$r_t = (1-s_t)\, r_0 + s_t\, \boldsymbol{\epsilon}$$ | $$\begin{aligned} d r_t &= -\dfrac{r_t\, e^{t}}{2 \left( e^{t} - 1 + \sqrt{e^{t} - 1} \right)} \, dt \\\\ &\quad + \dfrac{e^{t/2}}{1 + \sqrt{e^{t} - 1}} \, dW_t \end{aligned}$$ |
+| Variance-exploding (VE) | $$z_t = x_t e^{\frac{t}{2}}$$ | $$\sigma_t = \sqrt{e^{t} - 1}$$ | $$z_t = z_0 + \sigma_t\, \boldsymbol{\epsilon}$$ | $$d\mathbf{z}_{\sigma} = \sqrt{2\sigma} d\mathbf{W}_{\sigma}$$ |
+| Flow | $$r_t = x_t \frac{e^{\frac{t}{2}}}{1 + \sqrt{e^{t} - 1}} $$ | $$s_t = \dfrac{\sqrt{e^{t} - 1}}{1 + \sqrt{e^{t} - 1}}$$ | $$r_t = (1-s_t)\, r_0 + s_t\, \boldsymbol{\epsilon}$$ | $$d\mathbf{r}_{s} = -\frac{\mathbf{r}_s}{1-s}ds + \sqrt{\frac{2s}{1-s}}d\mathbf{W}_{s}$$ |
 
 No matter which notation we choose, A forward diffusion step with a step size of $$\Delta t$$ acts as adding more noise to data, which is displayed in the following picture:
 
@@ -206,7 +207,7 @@ No matter which notation we choose, A forward diffusion step with a step size of
 </div>
 
 <div class="caption">
-    A forward diffusion step with step size $$\Delta t$$ adds Gaussian noise to data, pushing samples closer to a Gaussian distribution.
+    A forward diffusion step with step size $\Delta t$ adds Gaussian noise to data, pushing samples closer to a Gaussian distribution.
 </div>
 
 
@@ -221,7 +222,6 @@ The concept behind the reverse process is intuitive: since Langevin dynamics (Eq
         {% include figure.liquid path="assets/img/2026-04-27-rethinking-diffusion-Langevin/forward-reverse-langevin.png" class="img-fluid rounded" %}
     </div>
 </div>
-
 <div class="caption">
     The forward and reverse diffusion processes compose to reproduce Langevin dynamics.
 </div>
@@ -277,6 +277,12 @@ d\mathbf{x}_{t'} = \left( \frac{1}{2} \mathbf{x}_{t'}+ \mathbf{s}(\mathbf{x}_{t'
 $$
 
 in which $$t' \in [0,T]$$ is the reverse time, $$\mathbf{s}(\mathbf{x}, t) = \nabla_{\mathbf{x}} \log p_t(\mathbf{x})$$ is the score function of the density of $$\mathbf{x}_{t}$$ in the forward process.
+
+The table below summarizes the reverse diffusion process, the definition of the reverse time, and its associated Langevin dynamics for the VP parameterization:
+
+| **Name** | **Reverse Time** | **Reverse Process** | **Langevin Dynamics Splitted** |
+| --- | --- | --- | --- |
+| Variance-preserving (VP) | $$t = T - t'$$ | $$d\mathbf{x}_{t'} = \left( \frac{1}{2} \mathbf{x}_{t'}+ \mathbf{s}(\mathbf{x}_{t'}, T-t') \right) dt' + d\mathbf{W}_{t'}$$ | $$d\mathbf{x}_\tau = \mathbf{s}(\mathbf{x}_\tau, t)\, d\tau + \sqrt{2}\, d\mathbf{W}_\tau$$ |
 
 ### Forward-Reverse Duality
 
