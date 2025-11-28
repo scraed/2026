@@ -303,10 +303,10 @@ The above analysis applies not only to SDE reverse processes but also to ODE rev
 
 | **Name** | **Reverse Time** | **Reverse time domain** | **Reverse Process** | **Function modeled by NN** |
 | --- | --- | --- | --- | --- |
-| VP-SDE | $$\mathfrak{t} = T - t$$ | $$\mathfrak{t} \in [0, T]$$ | $$dx_{\mathfrak{t}} = \left[ \frac{1}{2} x_{\mathfrak{t}}+ \mathbf{s}_x(x_{\mathfrak{t}}, t) \right] d\mathfrak{t} + dW_{\mathfrak{t}}$$ | $$\mathbf{s}_x(x, t)$$  |
-| VP-ODE | $$\mathfrak{t} = T - t$$ | $$\mathfrak{t} \in [0, T]$$ | $$dx_{\mathfrak{t}} = \frac{1}{2} \left[ x_{\mathfrak{t}} + \mathbf{s}_x (x_{\mathfrak{t}}, t) \right] d\mathfrak{t} $$ | $$\mathbf{s}_x(x, t)$$  |
-| VE-Karras | $$\varsigma = \Sigma - \sigma$$ | $$\varsigma \in [0, \Sigma]$$ | $$dz_{\varsigma} = -\boldsymbol{\epsilon}(z_{\varsigma}, \sigma)d \varsigma$$ | $$\boldsymbol{\epsilon}(z, \sigma) =  -\sigma \mathbf{s}_z(z, \sigma) $$|
-| Flow | $$\mathfrak{s} = 1 - s$$ | $$\mathfrak{s} \in [0, 1]$$ | $$dr_{\mathfrak{s}} = -\mathbf{v} (r_{\mathfrak{s}}, s) d\mathfrak{s}$$ | $$\mathbf{v}(r, s) =  - \frac{s\, \mathbf{s}_r(r,s) + r_{\mathfrak{s}}}{1-s} $$ |
+| VP-SDE | $$\mathfrak{t} = T - t$$ | $$\mathfrak{t} \in [0, T]$$ | $$dx_{\mathfrak{t}} = \left[ \frac{1}{2} x_{\mathfrak{t}}+ \mathbf{s}_x(x_{\mathfrak{t}}, T-\mathfrak{t}) \right] d\mathfrak{t} + dW_{\mathfrak{t}}$$ | $$\mathbf{s}_x(x, t)$$  |
+| VP-ODE | $$\mathfrak{t} = T - t$$ | $$\mathfrak{t} \in [0, T]$$ | $$dx_{\mathfrak{t}} = \frac{1}{2} \left[ x_{\mathfrak{t}} + \mathbf{s}_x (x_{\mathfrak{t}}, T-\mathfrak{t}) \right] d\mathfrak{t} $$ | $$\mathbf{s}_x(x, t)$$  |
+| VE-Karras | $$\varsigma = \Sigma - \sigma$$ | $$\varsigma \in [0, \Sigma]$$ | $$dz_{\varsigma} = -\boldsymbol{\epsilon}(z_{\varsigma}, \Sigma-\varsigma)d \varsigma$$ | $$\boldsymbol{\epsilon}(z, \sigma) =  -\sigma \mathbf{s}_z(z, \sigma) $$|
+| Flow | $$\mathfrak{s} = 1 - s$$ | $$\mathfrak{s} \in [0, 1]$$ | $$dr_{\mathfrak{s}} = -\mathbf{v} (r_{\mathfrak{s}}, 1-\mathfrak{s}) d\mathfrak{s}$$ | $$\mathbf{v}(r, s) =  - \frac{s\, \mathbf{s}_r(r,s) + r_{\mathfrak{s}}}{1-s} $$ |
 
 
 
