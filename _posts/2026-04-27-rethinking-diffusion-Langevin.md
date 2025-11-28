@@ -237,7 +237,7 @@ The concept behind the reverse process is intuitive: since Langevin dynamics act
 </div>
 
 
-To formalize this, consider the Langevin dynamics for $p_t(\mathbf{x})$ with a distinct time variable $\tau$, distinguished from the forward diffusion time $t$. This dynamics can be decomposed into forward and reverse components as follows:  
+To formalize this, consider the VP case with the following Langevin dynamics for $p_t(\mathbf{x})$ with a time variable $\tau$, distinguished from the forward diffusion time $t$. This dynamics can be decomposed into forward and reverse components as follows:  
 
 $$
 \begin{split}  
@@ -248,47 +248,65 @@ $$
 
 where $\mathbf{s}(\mathbf{x}, t) = \nabla_{\mathbf{x}} \log p_t(\mathbf{x})$ is the score function of $p_t(\mathbf{x})$. We have utilized the property that $$\sqrt{2}\, d\mathbf{W}_\tau = \sqrt{2 dt} \boldsymbol{\epsilon} = \sqrt{dt} \boldsymbol{\epsilon}_1 + \sqrt{dt} \boldsymbol{\epsilon}_2 = d\mathbf{W}_\tau^{(1)} + d\mathbf{W}_\tau^{(2)}$$. 
 
-The table below summarizes how each parameterization relates its Langevin dynamics to its forward and reverse processes:
-
-| **Name** | **Langevin dynamics** | **Forward Split** | **Reverse Split** |
-| --- | --- | --- | --- |
-| VP-SDE<br>VP-ODE | $$dx = \mathbf{s}_x\, d\tau + \sqrt{2}\, d W_\tau$$<br>$$dx = \frac{1}{2} \mathbf{s}_x\, d\tau + d W_\tau$$ | $$d x = - \tfrac{1}{2} x\, d\tau + dW_\tau$$ | $$dx = \left[ \frac{1}{2} x + \mathbf{s}_x \right] d\tau + dW_{\tau} \text{(SDE)}$$<br>$$dx = \frac{1}{2} \left( x + \mathbf{s}_x \right) d\tau \text{(ODE)}$$ |
-| VE-Karras | $$dz = \tau\, \mathbf{s}_z\, d\tau + \sqrt{2 \tau}\, d W_\tau$$ | $$dz = \sqrt{2\tau}\, dW_{\tau}$$ |  $$dz = \tau\, \mathbf{s}_z\, d\tau $$ |
-| Flow | $$dr = \frac{\tau}{1+\tau} \mathbf{s}_r\, d\tau + \sqrt{\frac{2\tau}{1+\tau}}\, d W_\tau$$  | $$dr = -\frac{r}{1-\tau}\, d\tau + \sqrt{\frac{2\tau}{1-\tau}}\, dW_{\tau}$$  |  $$dr = \frac{\tau\, \mathbf{s}_r + r}{1-\tau} d\tau$$ |
-
 The "Forward" part in this decomposition corresponds to the forward diffusion process, effectively **increasing the forward diffusion time $t$ by $d\tau$**, bringing the distribution to $p_{t + d\tau}(\mathbf{x})$. Since the forward and reverse components combine to form an "identity" operation, the "Reverse" part must reverse the forward process—**decreasing the forward diffusion time $t$ by $d\tau$** and restoring the distribution back to $p_t(\mathbf{x})$.
 
 
-
-Now we can define the reverse process according to the reverse part in the equation above, and a reverse diffusion time $t'$ different from the forward diffusion time $t$:
+Now we can read the reverse process according to the reverse part in the equation above, and a reverse diffusion time $t'$ different from the forward diffusion time $t$:
 
 $$
 d\mathbf{x}_{t'} = \left( \frac{1}{2} \mathbf{x}_{t'}+ \mathbf{s}(\mathbf{x}_{t'}, t) \right) dt' + d\mathbf{W}_{t'}.
 $$
 
-One step of this reverse diffusion process with $dt' = \Delta t$ acts as a reversal of the forward process.
+The reverse diffusion process itself is also a standalone SDE that advances the reverse diffusion time $t'$. If $\mathbf{x}_{t'} \sim q_{t'}(\mathbf{x})$, then one step of the reverse diffusion process with $dt' = \Delta t'$ brings it to $\mathbf{x}_{t' + \Delta t'} \sim q_{t' + \Delta t'}(\mathbf{x})$.
+
+The same decomposition approach can be applied to other diffusion schemes. The following table summarizes how each parameterization relates its Langevin dynamics to its corresponding forward and reverse processes:
+
+| **Name** | **Langevin dynamics** | **Forward Split** | **Reverse Split** |
+| --- | --- | --- | --- |
+| VP-SDE/<br>VP-ODE | $$dx = \mathbf{s}_x\, d\tau + \sqrt{2}\, d W_\tau$$<br>$$dx = \frac{1}{2} \mathbf{s}_x\, d\tau + d W_\tau$$ | $$d x = - \tfrac{1}{2} x\, d\tau + dW_\tau$$ | $$dx = \left[ \frac{1}{2} x + \mathbf{s}_x \right] d\tau + dW_{\tau}$$<br>$$dx = \frac{1}{2} \left( x + \mathbf{s}_x \right) d\tau$$ |
+| VE-Karras | $$dz = \tau\, \mathbf{s}_z\, d\tau + \sqrt{2 \tau}\, d W_\tau$$ | $$dz = \sqrt{2\tau}\, dW_{\tau}$$ |  $$dz = \tau\, \mathbf{s}_z\, d\tau $$ |
+| Flow | $$dr = \frac{\tau}{1+\tau} \mathbf{s}_r\, d\tau + \sqrt{\frac{2\tau}{1+\tau}}\, d W_\tau$$  | $$dr = -\frac{r}{1-\tau}\, d\tau + \sqrt{\frac{2\tau}{1-\tau}}\, dW_{\tau}$$  |  $$dr = \frac{\tau\, \mathbf{s}_r + r}{1-\tau} d\tau$$ |
+
+Now let's make the relationship between the forward time $t$ and the reverse time $t'$ precise. A single reverse-time step $dt'$ can be understood in two complementary ways:
+
+1. **As an undoing of the forward diffusion:** one step of the reverse diffusion process with $dt' = \Delta t$ removes a small amount of noise and therefore **reduces** the forward diffusion time by $\Delta t$.
 
 <div class="row mt-3">
     <div class="col-md-10 offset-md-1 col-lg-8 offset-lg-2 mt-3 mt-md-0">
         {% include figure.liquid path="assets/img/2026-04-27-rethinking-diffusion-Langevin/reverse2.png" class="img-fluid rounded z-depth-1" %}
     </div>
 </div>
+<div class="caption">
+    One reverse-time step acts as a reversal of the forward diffusion process, removing noise from the sample.
+</div>
 
-The reverse diffusion process itself is also a standalone SDE that advances the reverse diffusion time $t'$. If $\mathbf{x}_{t'} \sim q_{t'}(\mathbf{x})$, then one step of the reverse diffusion process with $dt' = \Delta t'$ brings it to $\mathbf{x}_{t' + \Delta t'} \sim q_{t' + \Delta t'}(\mathbf{x})$.
+2. **As forward evolution in its own clock:** the reverse diffusion process is itself a well-defined SDE/ODE in the variable $t'$, so one step with $dt' = \Delta t$ simply **advances** the reverse diffusion time from $t'$ to $t' + \Delta t$:
 
 <div class="row mt-3">
     <div class="col-md-10 offset-md-1 col-lg-8 offset-lg-2 mt-3 mt-md-0">
         {% include figure.liquid path="assets/img/2026-04-27-rethinking-diffusion-Langevin/reverse3.png" class="img-fluid rounded z-depth-1" %}
     </div>
 </div>
+<div class="caption">
+    One reverse-time step also advances the reverse diffusion time \(t'\) by \(\Delta t\), viewing the reverse dynamics as its own SDE/ODE evolving forward in \(t'\).
+</div>
 
-These two interpretations help us determine the relationship between the forward diffusion time $t$ and the reverse diffusion time $t'$. Since $dt'$ is interpreted as a "decrease" in the forward diffusion time $t$, as well as a "increase" of the reverse diffusion time $t'$, we have 
+Together, these two viewpoints determine how the forward and reverse clocks are related. Since a positive reverse-time step $dt' > 0$ both **decreases** the forward time $t$ and **increases** the reverse time $t'$, their infinitesimal increments must satisfy
 
 $$
 dt = -dt'
 $$
 
-which means the reverse diffusion time is the inverse of the forward. To make $t'$ lies in the same range $[0, T]$ of the forward diffusion time, we define $t = T - t'$. In this notation, the reverse diffusion process [^Anderson1982ReversetimeDE] is
+which means that $t'$ runs in the opposite direction to $t$. To make $t'$ lie in the same range $[0, T]$ as the forward diffusion time, we can define
+
+$$
+t = T - t',
+$$
+
+so that $t = 0$ corresponds to $t' = T$ and $t = T$ corresponds to $t' = 0$.
+
+
+In this notation, the reverse diffusion process of VP is
 
 $$
 d\mathbf{x}_{t'} = \left( \frac{1}{2} \mathbf{x}_{t'}+ \mathbf{s}(\mathbf{x}_{t'}, T-t') \right) dt' + d\mathbf{W}_{t'}, \label{Reverse Process}
@@ -296,7 +314,7 @@ $$
 
 in which $t' \in [0,T]$ is the reverse time, $\mathbf{s}(\mathbf{x}, t) = \nabla_{\mathbf{x}} \log p_t(\mathbf{x})$ is the score function of the density of $\mathbf{x}_{t}$ in the forward process.
 
-The table below summarizes the reverse diffusion process, the definition of the reverse time, and its associated Langevin dynamics for the VP parameterization:
+The above analysis applies not only to SDE reverse processes but also to ODE reverse processes. The following table summarizes the reverse diffusion processes for several popular schemes, including their reverse time definitions and associated Langevin dynamics under the VP parameterization:
 
 
 
