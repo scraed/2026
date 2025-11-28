@@ -110,24 +110,24 @@ _styles: >
   }
 ---
 
-Modern diffusion models are built upon two fundamental processes: the forward process, which gradually corrupts data with noise during training, and the backward process, which generates data by sampling from noise. The development of diffusion models has diverged into several branches, resulting in different perspectives on these processes. Most interpretations fall into three main frameworks: the Variational Autoencoder (VAE) perspective, the score-based perspective, and the flow-based perspective. Although there are many tutorials available, learning the core theory of diffusion models remains challenging due to mathematically dense derivations and fragmented intuitions scattered across these different approaches. 
+Modern diffusion models are built upon two fundamental processes: the forward process, which gradually corrupts data with noise during training, and the reverse process, which generates data by sampling from noise. The development of diffusion models has diverged into several branches, resulting in different perspectives on these processes. Most interpretations fall into three main frameworks: the Variational Autoencoder (VAE) perspective, the score-based perspective, and the flow-based perspective. Although there are many tutorials available, learning the core theory of diffusion models remains challenging due to mathematically dense derivations and fragmented intuitions scattered across these different approaches. 
 
-The VAE perspective interprets the forward and backward diffusion processes as an encoder and decoder, respectively, and using the Evidence Lower Bound (ELBO) as the training objective <d-cite key="Luo2022UnderstandingDM"></d-cite><d-cite key="Ho2020DenoisingDP"></d-cite>.  While this approach is intuitive for much of the machine learning community, it involves dense mathematical derivations of the backward processes and often blurs a crucial intuition: in VAEs, encoder and decoder are approximations of a prior-posterior pair, whereas in diffusion models, the prior and posterior are an exact prior-posterior pair. 
+The VAE perspective interprets the forward and reverse diffusion processes as an encoder and decoder, respectively, and using the Evidence Lower Bound (ELBO) as the training objective <d-cite key="Luo2022UnderstandingDM"></d-cite><d-cite key="Ho2020DenoisingDP"></d-cite>.  While this approach is intuitive for much of the machine learning community, it involves dense mathematical derivations of the reverse processes and often blurs a crucial intuition: in VAEs, encoder and decoder are approximations of a prior-posterior pair, whereas in diffusion models, the prior and posterior are an exact prior-posterior pair. 
 
-The score-based perspective <d-cite key="Song2020ScoreBasedGM"></d-cite> usually starts from the mathematical exactness of the forward and backward process pair from the point of view of stochastic equations. It typically introduces the forward process first and treats the backward process as an oracle, often citing Anderson (1982) <d-cite key="Anderson1982ReversetimeDE"></d-cite>. However, fully grasping the derivation of the backward process requires familiarity with advanced mathematical concepts like the Kolmogorov equations and the continuity equation, making this approach less accessible. Moreover, the choice of score matching objective is often treated as a given rather than derived from first principles, which obscures its connection to maximum likelihood.
+The score-based perspective <d-cite key="Song2020ScoreBasedGM"></d-cite> usually starts from the mathematical exactness of the forward and reverse process pair from the point of view of stochastic equations. It typically introduces the forward process first and treats the reverse process as an oracle, often citing Anderson (1982) <d-cite key="Anderson1982ReversetimeDE"></d-cite>. However, fully grasping the derivation of the reverse process requires familiarity with advanced mathematical concepts like the Kolmogorov equations and the continuity equation, making this approach less accessible. Moreover, the choice of score matching objective is often treated as a given rather than derived from first principles, which obscures its connection to maximum likelihood.
 
 
-A third valuable perspective is the flow-based viewpoint <d-cite key="liu2022flow"></d-cite>, which has become increasingly popular in modern diffusion models. This approach is theoretically equivalent to both the VAE and score-based frameworks, but it distinguishes itself by emphasizing an intuitive and visually accessible straight-line interpolation between data and noise. While this simplicity makes the flow-based perspective appealing and approachable, it also carries the risk of oversimplification, potentially overlooking the intricate pairing between the forward and backward processes that underpin the theoretical foundation of diffusion models.
+A third valuable perspective is the flow-based viewpoint <d-cite key="liu2022flow"></d-cite>, which has become increasingly popular in modern diffusion models. This approach is theoretically equivalent to both the VAE and score-based frameworks, but it distinguishes itself by emphasizing an intuitive and visually accessible straight-line interpolation between data and noise. While this simplicity makes the flow-based perspective appealing and approachable, it also carries the risk of oversimplification, potentially overlooking the intricate pairing between the forward and reverse processes that underpin the theoretical foundation of diffusion models.
 
-In this article, we aims to offer a perspective that is both mathematically simple and nuanced: the Langevin perspective. This approach maintains a emphasis on the exactness of the forward and backward processes, while relying only on fundamental techinques of stochastic differential equations (SDEs). The central insight is encapsulated in the following triangle relationship:
+In this article, we aims to offer a perspective that is both mathematically simple and nuanced: the Langevin perspective. This approach maintains a emphasis on the exactness of the forward and reverse processes, while relying only on fundamental techinques of stochastic differential equations (SDEs). The central insight is encapsulated in the following triangle relationship:
 
 <div class="row mt-3">
     <div class="col-md-12 col-lg-10 offset-lg-1 mt-3 mt-md-0">
-        {% include figure.liquid path="assets/img/2026-04-27-rethinking-diffusion-Langevin/forward-backward-langevin.png" class="img-fluid rounded z-depth-1" %}
+        {% include figure.liquid path="assets/img/2026-04-27-rethinking-diffusion-Langevin/forward-reverse-langevin.png" class="img-fluid rounded z-depth-1" %}
     </div>
 </div>
 
-which illustrates the connection among the forward, backward diffusion process and the Langevin dynamics.
+which illustrates the connection among the forward, reverse diffusion process and the Langevin dynamics.
 
 # Langevin Dynamics as 'Identity' Operation
 
@@ -169,7 +169,7 @@ Langevin dynamics, while widely used for sampling from complex distributions, be
     Langevin dynamics acts as an identity operation on $p(\mathbf{x})$: starting from a sample $\mathbf{x}_0 \sim p(\mathbf{x})$, it produces a new, independent sample from the same distribution.
 </div>
 
-# Spliting the Identity: Forward and Backward Processes in diffusion models
+# Spliting the Identity: Forward and Reverse Processes in diffusion models
 
 One key reason Langevin dynamics struggles in high-dimensional settings is the challenge of initialization. The score function must be learned from real data, so it is only accurate near true data points and poorly estimated elsewhere. However, in generative modeling, we want to generate entirely new data samples—which means we need to start Langevin dynamics from points that may not resemble real data at all. Finding a good initialization that is close to the true data manifold is difficult, making effective generation with Langevin dynamics hard in practice. 
 
@@ -194,92 +194,93 @@ The table below summarizes these three forward processes in terms of their varia
 | **Name** | **Variable notation** | **Noise-level parameter** | **Relation between initial and noisy variable** | **Forward SDE** |
 | --- | --- | --- | --- | --- |
 | Variance-preserving (VP) | $$x_t$$ | $$\alpha_t = e^{-t}$$ | $$x_t = \sqrt{\alpha_t}\, x_0 + \sqrt{1-\alpha_t}\, \boldsymbol{\epsilon}$$ | $$d x_t = - \tfrac{1}{2} x_t\, dt + dW_t$$ |
-| Variance-exploding (VE) | $$z_t = x_t e^{\frac{t}{2}}$$ | $$\sigma_t = \sqrt{e^{t} - 1}$$ | $$z_t = z_0 + \sigma_t\, \boldsymbol{\epsilon}$$ | $$d\mathbf{z}_{\sigma} = \sqrt{2\sigma} d\mathbf{W}_{\sigma}$$ |
-| Flow | $$r_t = x_t \frac{e^{\frac{t}{2}}}{1 + \sqrt{e^{t} - 1}} $$ | $$s_t = \dfrac{\sqrt{e^{t} - 1}}{1 + \sqrt{e^{t} - 1}}$$ | $$r_t = (1-s_t)\, r_0 + s_t\, \boldsymbol{\epsilon}$$ | $$d\mathbf{r}_{s} = -\frac{\mathbf{r}_s}{1-s}ds + \sqrt{\frac{2s}{1-s}}d\mathbf{W}_{s}$$ |
+| Variance-exploding (VE) | $$z_t = x_t e^{\frac{t}{2}}$$ | $$\sigma_t = \sqrt{e^{t} - 1}$$ | $$z_t = z_0 + \sigma_t\, \boldsymbol{\epsilon}$$ | $$d z_t = e^{t/2}\, dW_t$$ |
+| Flow | $$r_t = x_t \frac{e^{\frac{t}{2}}}{1 + \sqrt{e^{t} - 1}} $$ | $$s_t = \dfrac{\sqrt{e^{t} - 1}}{1 + \sqrt{e^{t} - 1}}$$ | $$r_t = (1-s_t)\, r_0 + s_t\, \boldsymbol{\epsilon}$$ | $$\begin{aligned} d r_t &= -\dfrac{r_t\, e^{t}}{2 \left( e^{t} - 1 + \sqrt{e^{t} - 1} \right)} \, dt \\\\ &\quad + \dfrac{e^{t/2}}{1 + \sqrt{e^{t} - 1}} \, dW_t \end{aligned}$$ |
 
 No matter which notation we choose, A forward diffusion step with a step size of $$\Delta t$$ acts as adding more noise to data, which is displayed in the following picture:
 
 <div class="row mt-3">
     <div class="col-md-10 offset-md-1 col-lg-8 offset-lg-2 mt-3 mt-md-0">
-        {% include figure.liquid path="assets/img/2026-04-27-rethinking-diffusion-Langevin/forward.png" class="img-fluid rounded z-depth-1" %}
+        {% include figure.liquid path="assets/img/2026-04-27-rethinking-diffusion-Langevin/forward.png" class="img-fluid rounded" %}
     </div>
 </div>
 
-```mermaid
-flowchart LR
-    A["$x_t \\sim p_t(x)$"] -- "Forward" --> B["$x_{t+\\Delta t} \\sim p_{t+\\Delta t}(x)$"]
-```
-
-### The Backward Diffusion Process
-
-The backward diffusion process is the conjugate of the forward process. While the forward process evolves $$p_t(\mathbf{x})$$ toward $$\mathcal{N}(\mathbf{0},I)$$, the backward process reverses this evolution, restoring $$\mathcal{N}(\mathbf{0},I)$$ to $$p_t$$.
-
-To derive it, we employ Langevin dynamics as a stepping stone, which provides a starightforward way to obtain the backward diffusion process: 
+<div class="caption">
+    A forward diffusion step with step size $$\Delta t$$ adds Gaussian noise to data, pushing samples closer to a Gaussian distribution.
+</div>
 
 
-$$\ref{Langevin Dynamics}$$ functions as an "identity" operation with respect to a distribution. Given that the backward process is the reverse of the forward process, the composition of the forward and backward process at time $$t$$ must therefore reproduce the Langevin dynamics for $$p_t(\mathbf{x})$$, as shown in the following picture
+### The Reverse Diffusion Process
+
+The reverse diffusion process is the conjugate of the forward process. While the forward process evolves $$p_t(\mathbf{x})$$ toward $$\mathcal{N}(\mathbf{0},I)$$, the reverse process reverses this evolution, restoring $$\mathcal{N}(\mathbf{0},I)$$ to $$p_t$$.
+
+The concept behind the reverse process is intuitive: since Langevin dynamics (Equation $$\ref{Langevin Dynamics}$$) acts as an identity operation on a distribution—preserving it unchanged—any forward process composed with its corresponding reverse process should similarly yield an identity transformation. Specifically, at any time $$t$$, combining the forward and reverse processes must reproduce the Langevin dynamics for the distribution $$p_t(\mathbf{x})$$, as illustrated in the following diagram.
 
 <div class="row mt-3">
     <div class="col-md-12 col-lg-10 offset-lg-1 mt-3 mt-md-0">
-        {% include figure.liquid path="assets/img/2026-04-27-rethinking-diffusion-Langevin/forward-backward-langevin.png" class="img-fluid rounded z-depth-1" %}
+        {% include figure.liquid path="assets/img/2026-04-27-rethinking-diffusion-Langevin/forward-reverse-langevin.png" class="img-fluid rounded" %}
     </div>
 </div>
 
+<div class="caption">
+    The forward and reverse diffusion processes compose to reproduce Langevin dynamics.
+</div>
 
-To formalize this, consider the Langevin dynamics for $$ p_t(\mathbf{x}) $$ with a distinct time variable $$ \tau $$, distinguished from the forward diffusion time $$ t $$. This dynamics can be decomposed into forward and backward components as follows:  
+
+To formalize this, consider the Langevin dynamics for $$ p_t(\mathbf{x}) $$ with a distinct time variable $$ \tau $$, distinguished from the forward diffusion time $$ t $$. This dynamics can be decomposed into forward and reverse components as follows:  
 
 $$
 \begin{split}  
 d\mathbf{x}_\tau &= \mathbf{s}(\mathbf{x}_\tau, t) d\tau + \sqrt{2}\, d\mathbf{W}_\tau, \\
-&= \underbrace{-\frac{1}{2} \mathbf{x}_\tau d\tau + d\mathbf{W}_\tau^{(1)}}_{\text{Forward}} + \underbrace{ \left( \frac{1}{2} \mathbf{x}_\tau + \mathbf{s}(\mathbf{x}_\tau, t) \right)d\tau + d\mathbf{W}_\tau^{(2)}}_{\text{Backward} },  
+&= \underbrace{-\frac{1}{2} \mathbf{x}_\tau d\tau + d\mathbf{W}_\tau^{(1)}}_{\text{Forward}} + \underbrace{ \left( \frac{1}{2} \mathbf{x}_\tau + \mathbf{s}(\mathbf{x}_\tau, t) \right)d\tau + d\mathbf{W}_\tau^{(2)}}_{\text{Reverse} },  
 \end{split}  
 $$
 
 where $$ \mathbf{s}(\mathbf{x}, t) = \nabla_{\mathbf{x}} \log p_t(\mathbf{x}) $$ is the score function of $$ p_t(\mathbf{x}) $$. We have utilized the property that $$\sqrt{2}\, d\mathbf{W}_\tau = \sqrt{2 dt} \boldsymbol{\epsilon} = \sqrt{dt} \boldsymbol{\epsilon}_1 + \sqrt{dt} \boldsymbol{\epsilon}_2 = d\mathbf{W}_\tau^{(1)} + d\mathbf{W}_\tau^{(2)}$$. 
 
-The "Forward" part in this decomposition corresponds to the forward diffusion process, effectively **increasing the forward diffusion time $$ t $$ by $$ d\tau $$**, bringing the distribution to $$p_{t + d\tau}(\mathbf{x})$$. Since the forward and backward components combine to form an "identity" operation, the "Backward" part must reverse the forward process—**decreasing the forward diffusion time $$ t $$ by $$ d\tau $$** and restoring the distribution back to $$ p_t(\mathbf{x}) $$.
+The "Forward" part in this decomposition corresponds to the forward diffusion process, effectively **increasing the forward diffusion time $$ t $$ by $$ d\tau $$**, bringing the distribution to $$p_{t + d\tau}(\mathbf{x})$$. Since the forward and reverse components combine to form an "identity" operation, the "Reverse" part must reverse the forward process—**decreasing the forward diffusion time $$ t $$ by $$ d\tau $$** and restoring the distribution back to $$ p_t(\mathbf{x}) $$.
 
 
 
-Now we can define the backward process according to the backward part in the equation above, and a backward diffusion time $$t'$$ different from the forward diffusion time $$t$$:
+Now we can define the reverse process according to the reverse part in the equation above, and a reverse diffusion time $$t'$$ different from the forward diffusion time $$t$$:
 
 $$
 d\mathbf{x}_{t'} = \left( \frac{1}{2} \mathbf{x}_{t'}+ \mathbf{s}(\mathbf{x}_{t'}, t) \right) dt' + d\mathbf{W}_{t'}.
 $$
 
-One step of this backward diffusion process with $$dt' = \Delta t$$ acts as a reversal of the forward process.
+One step of this reverse diffusion process with $$dt' = \Delta t$$ acts as a reversal of the forward process.
 
 <div class="row mt-3">
     <div class="col-md-10 offset-md-1 col-lg-8 offset-lg-2 mt-3 mt-md-0">
-        {% include figure.liquid path="assets/img/2026-04-27-rethinking-diffusion-Langevin/backward2.png" class="img-fluid rounded z-depth-1" %}
+        {% include figure.liquid path="assets/img/2026-04-27-rethinking-diffusion-Langevin/reverse2.png" class="img-fluid rounded z-depth-1" %}
     </div>
 </div>
 
-The backward diffusion process itself is also a standalone SDE that advances the backward diffusion time $$t'$$. If $$\mathbf{x}_{t'} \sim q_{t'}(\mathbf{x})$$, then one step of the backward diffusion process with $$dt' = \Delta t'$$ brings it to $$\mathbf{x}_{t' + \Delta t'} \sim q_{t' + \Delta t'}(\mathbf{x})$$.
+The reverse diffusion process itself is also a standalone SDE that advances the reverse diffusion time $$t'$$. If $$\mathbf{x}_{t'} \sim q_{t'}(\mathbf{x})$$, then one step of the reverse diffusion process with $$dt' = \Delta t'$$ brings it to $$\mathbf{x}_{t' + \Delta t'} \sim q_{t' + \Delta t'}(\mathbf{x})$$.
 
 <div class="row mt-3">
     <div class="col-md-10 offset-md-1 col-lg-8 offset-lg-2 mt-3 mt-md-0">
-        {% include figure.liquid path="assets/img/2026-04-27-rethinking-diffusion-Langevin/backward3.png" class="img-fluid rounded z-depth-1" %}
+        {% include figure.liquid path="assets/img/2026-04-27-rethinking-diffusion-Langevin/reverse3.png" class="img-fluid rounded z-depth-1" %}
     </div>
 </div>
 
-These two interpretations help us determine the relationship between the forward diffusion time $$t$$ and the backward diffusion time $$t'$$. Since $$dt'$$ is interpreted as a "decrease" in the forward diffusion time $$t$$, as well as a "increase" of the backward diffusion time $$t'$$, we have 
+These two interpretations help us determine the relationship between the forward diffusion time $$t$$ and the reverse diffusion time $$t'$$. Since $$dt'$$ is interpreted as a "decrease" in the forward diffusion time $$t$$, as well as a "increase" of the reverse diffusion time $$t'$$, we have 
 
 $$
 dt = -dt'
 $$
 
-which means the backward diffusion time is the inverse of the forward. To make $$t'$$ lies in the same range $$[0, T]$$ of the forward diffusion time, we define $$t = T - t'$$. In this notation, the backward diffusion process [^Anderson1982ReversetimeDE] is
+which means the reverse diffusion time is the inverse of the forward. To make $$t'$$ lies in the same range $$[0, T]$$ of the forward diffusion time, we define $$t = T - t'$$. In this notation, the reverse diffusion process [^Anderson1982ReversetimeDE] is
 
 $$
-d\mathbf{x}_{t'} = \left( \frac{1}{2} \mathbf{x}_{t'}+ \mathbf{s}(\mathbf{x}_{t'}, T-t') \right) dt' + d\mathbf{W}_{t'}, \label{Backward Process}
+d\mathbf{x}_{t'} = \left( \frac{1}{2} \mathbf{x}_{t'}+ \mathbf{s}(\mathbf{x}_{t'}, T-t') \right) dt' + d\mathbf{W}_{t'}, \label{Reverse Process}
 $$
 
-in which $$t' \in [0,T]$$ is the backward time, $$\mathbf{s}(\mathbf{x}, t) = \nabla_{\mathbf{x}} \log p_t(\mathbf{x})$$ is the score function of the density of $$\mathbf{x}_{t}$$ in the forward process.
+in which $$t' \in [0,T]$$ is the reverse time, $$\mathbf{s}(\mathbf{x}, t) = \nabla_{\mathbf{x}} \log p_t(\mathbf{x})$$ is the score function of the density of $$\mathbf{x}_{t}$$ in the forward process.
 
-### Forward-Backward Duality
+### Forward-Reverse Duality
 
-We have previously shown that a backward step is the reverse of a forward step: advancing time $$t'$$ in the backward process corresponds to receding time $$t$$ by the same amount in the forward process. What then occurs when we chain together a series of forward and backward steps? Consider the following process: start with $$\mathbf{x}_0$$, evolve it via the $$\ref{Forward Process}$$ to $$\mathbf{x}_T$$, then take $$\mathbf{x}_T$$ as the initial position $$\mathbf{x}_{0'}$$ of the $$\ref{Backward Process}$$ and evolve it to $$\mathbf{x}_{T'}$$. This sequence is illustrated in the figure below.
+We have previously shown that a reverse step is the reverse of a forward step: advancing time $$t'$$ in the reverse process corresponds to receding time $$t$$ by the same amount in the forward process. What then occurs when we chain together a series of forward and reverse steps? Consider the following process: start with $$\mathbf{x}_0$$, evolve it via the $$\ref{Forward Process}$$ to $$\mathbf{x}_T$$, then take $$\mathbf{x}_T$$ as the initial position $$\mathbf{x}_{0'}$$ of the $$\ref{Reverse Process}$$ and evolve it to $$\mathbf{x}_{T'}$$. This sequence is illustrated in the figure below.
 
 <div class="row mt-3">
     <div class="col-md-10 offset-md-1 col-lg-8 offset-lg-2 mt-3 mt-md-0">
@@ -287,9 +288,9 @@ We have previously shown that a backward step is the reverse of a forward step: 
     </div>
 </div>
 
-The green arrows represent consecutive forward process steps that advance the forward diffusion time $$t$$, while the blue arrows indicate consecutive backward process steps that advance the backward diffusion time $$t'$$. 
+The green arrows represent consecutive forward process steps that advance the forward diffusion time $$t$$, while the blue arrows indicate consecutive reverse process steps that advance the reverse diffusion time $$t'$$. 
 
-We examine the relationship between $$\mathbf{x}_{t}$$ in the forward diffusion process and $$\mathbf{x}_{t'=T-t}$$ in the backward diffusion process. The composition of a forward and a backward step constitutes a Langevin dynamics step. This allows us to connect $$\mathbf{x}$$ in the forward process with those in the backward process through Langevin dynamics steps, as illustrated below:
+We examine the relationship between $$\mathbf{x}_{t}$$ in the forward diffusion process and $$\mathbf{x}_{t'=T-t}$$ in the reverse diffusion process. The composition of a forward and a reverse step constitutes a Langevin dynamics step. This allows us to connect $$\mathbf{x}$$ in the forward process with those in the reverse process through Langevin dynamics steps, as illustrated below:
 
 <div class="row mt-3">
     <div class="col-md-10 offset-md-1 col-lg-8 offset-lg-2 mt-3 mt-md-0">
@@ -297,13 +298,13 @@ We examine the relationship between $$\mathbf{x}_{t}$$ in the forward diffusion 
     </div>
 </div>
 
-**Each horizontal row in this picture corresponds to consecutive steps of Langevin dynamics, which alters the samples while maintaining the same probability density**. This illustrates the duality between the forward and backward diffusion processes: while $$\mathbf{x}_t$$ (forward) and $$\mathbf{x}_{(T-t)'}$$ (backward) are distinct samples, they obey the same probability distribution.
+**Each horizontal row in this picture corresponds to consecutive steps of Langevin dynamics, which alters the samples while maintaining the same probability density**. This illustrates the duality between the forward and reverse diffusion processes: while $$\mathbf{x}_t$$ (forward) and $$\mathbf{x}_{(T-t)'}$$ (reverse) are distinct samples, they obey the same probability distribution.
 
 
-- It's important to note that the backward diffusion process does not generate identical samples to the forward process; rather, it produces samples according to the same probability distribution, due to the identity property of Langevin dynamics.
+- It's important to note that the reverse diffusion process does not generate identical samples to the forward process; rather, it produces samples according to the same probability distribution, due to the identity property of Langevin dynamics.
 
 
-To formalize the duality, we define the densities of $$\mathbf{x}_t$$ (forward) as $$p_t(\mathbf{x})$$, the densities of $$\mathbf{x}_{t'}$$ (backward) as $$q_{t'}(\mathbf{x})$$. If we initialize
+To formalize the duality, we define the densities of $$\mathbf{x}_t$$ (forward) as $$p_t(\mathbf{x})$$, the densities of $$\mathbf{x}_{t'}$$ (reverse) as $$q_{t'}(\mathbf{x})$$. If we initialize
 
 $$
 q_0(\mathbf{x}) = p_T(\mathbf{x}),  
@@ -315,19 +316,19 @@ $$
 q_{t'}(\mathbf{x}) = p_{T-t'}(\mathbf{x}) 
 $$
 
-For large $T$, $p_T(\mathbf{x})$ converges to $$\mathcal{N}(\mathbf{x}|\mathbf{0},I)$$. Thus, the backward process starts at $t'=0$ with $$\mathcal{N}(\mathbf{0},I)$$ and, after evolving to $t'=T$, generates samples from the data distribution:
+For large $T$, $p_T(\mathbf{x})$ converges to $$\mathcal{N}(\mathbf{x}|\mathbf{0},I)$$. Thus, the reverse process starts at $t'=0$ with $$\mathcal{N}(\mathbf{0},I)$$ and, after evolving to $t'=T$, generates samples from the data distribution:
 
 $$
 q_T(\mathbf{x}) = p_0(\mathbf{x}) \quad \text{(data distribution)}.  
 $$
 
-This establishes an exact correspondence between the forward diffusion process and the backward diffusion process, indicating that the backward diffusion process can generate image data from pure Gaussian noise.
+This establishes an exact correspondence between the forward diffusion process and the reverse diffusion process, indicating that the reverse diffusion process can generate image data from pure Gaussian noise.
 
-We demonstrated that **backward diffusion**—the dual of the forward process—can generate image data from noise. However, this requires access to the **score function** $\mathbf{s}(\mathbf{x}, t) = \nabla_{\mathbf{x}} \log p_t(\mathbf{x})$ at every timestep $t$. In practice, we approximate this function using a neural network.  In the next section, we will explain how to train such score networks.  
+We demonstrated that **reverse diffusion**—the dual of the forward process—can generate image data from noise. However, this requires access to the **score function** $\mathbf{s}(\mathbf{x}, t) = \nabla_{\mathbf{x}} \log p_t(\mathbf{x})$ at every timestep $t$. In practice, we approximate this function using a neural network.  In the next section, we will explain how to train such score networks.  
 
 ## Training the Diffusion Model
 
-Previous section introduced **Forward Process** and **Backward Process** of Denoising Diffusion Probabilistic Model (DDPM). 
+Previous section introduced **Forward Process** and **Reverse Process** of Denoising Diffusion Probabilistic Model (DDPM). 
 
 **Forward Process** 
 
@@ -337,16 +338,16 @@ $$
 
 where $t \in [0,T]$ is the forward diffusion time. This process describes a gradual noising operation that transforms clean images into Gaussian noise.
 
-**Backward Process** 
+**Reverse Process** 
 
 $$
 d\mathbf{x}_{t'} = \left( \frac{1}{2} \mathbf{x}_{t'}+ \mathbf{s}(\mathbf{x}_{t'}, T-t') \right) dt' + d\mathbf{W}_{t'},
 $$
 
-where $t' = T - t$ is the backward diffusion time, $\mathbf{s}(\mathbf{x}, t) = \nabla_{\mathbf{x}} \log p_t(\mathbf{x})$ is the score function of the density of $\mathbf{x}_{t}$ in the forward process.
+where $t' = T - t$ is the reverse diffusion time, $\mathbf{s}(\mathbf{x}, t) = \nabla_{\mathbf{x}} \log p_t(\mathbf{x})$ is the score function of the density of $\mathbf{x}_{t}$ in the forward process.
 
 
-Training the backward process raises two key questions: (1) What should we model, and (2) What training objective should we use? It is clear that the central object to model is the **score function**, which we typically represent with a neural network since it is unknown and generally intractable. In practice, there are several parameterizations of the score function—such as $x_0$ prediction, $\epsilon$ prediction, or velocity prediction from a flow-matching perspective—but all these variants are simply rescaled forms of the same underlying score function. However, it is less obvious how the score function should enter the training objective.
+Training the reverse process raises two key questions: (1) What should we model, and (2) What training objective should we use? It is clear that the central object to model is the **score function**, which we typically represent with a neural network since it is unknown and generally intractable. In practice, there are several parameterizations of the score function—such as $x_0$ prediction, $\epsilon$ prediction, or velocity prediction from a flow-matching perspective—but all these variants are simply rescaled forms of the same underlying score function. However, it is less obvious how the score function should enter the training objective.
 
 The variational autoencoder (VAE) perspective addresses the training objective by maximizing the Evidence Lower Bound (ELBO), a principled but approximate surrogate for maximum likelihood. While ELBO provides a systematic way to derive training objectives, this perspective can obscure the fact that diffusion models inherently perform true maximum likelihood estimation, distinguishing them from conventional VAEs and contributing to their empirical success.
 
@@ -368,7 +369,7 @@ $$
 = \int p(\mathbf{x}, t)\,\log \frac{p(\mathbf{x}, t)}{q(\mathbf{x}, t)}\,d\mathbf{x}.
 $$
 
-Maximum likelihood training of $p$ corresponds to minimizing this KL divergence at the data time $t=0$. In a diffusion model, however, we introduce an explicit **forward diffusion time** $t$ and then learn a **backward (reverse-time) process** that maps from noisy states back to data. Intuitively, this suggests that we should “distribute” the KL objective over diffusion time: instead of treating the KL only at $t=0$, we examine how it evolves along the forward process.
+Maximum likelihood training of $p$ corresponds to minimizing this KL divergence at the data time $t=0$. In a diffusion model, however, we introduce an explicit **forward diffusion time** $t$ and then learn a **reverse (reverse-time) process** that maps from noisy states back to data. Intuitively, this suggests that we should “distribute” the KL objective over diffusion time: instead of treating the KL only at $t=0$, we examine how it evolves along the forward process.
 
  
 The way to "distribute" the KL is consdering the **time derivative** of the KL divergence along the forward dynamics, noting that
