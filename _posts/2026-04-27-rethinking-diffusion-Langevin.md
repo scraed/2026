@@ -280,9 +280,11 @@ in which $$t' \in [0,T]$$ is the reverse time, $$\mathbf{s}(\mathbf{x}, t) = \na
 
 The table below summarizes the reverse diffusion process, the definition of the reverse time, and its associated Langevin dynamics for the VP parameterization:
 
-| **Name** | **Reverse Time** | **Reverse Process** | **Langevin Dynamics Splitted** |
+| **Name** | **Reverse Time** | **Reverse Process** | **Langevin Dynamics Splitted (in time $\tau$)** |
 | --- | --- | --- | --- |
-| Variance-preserving (VP) | $$t = T - t'$$ | $$d\mathbf{x}_{t'} = \left( \frac{1}{2} \mathbf{x}_{t'}+ \mathbf{s}(\mathbf{x}_{t'}, T-t') \right) dt' + d\mathbf{W}_{t'}$$ | $$d\mathbf{x}_\tau = \mathbf{s}(\mathbf{x}_\tau, t)\, d\tau + \sqrt{2}\, d\mathbf{W}_\tau$$ |
+| VP-SDE | $$t' = T - t$$ | $$dx_{t'} = \left[ \frac{1}{2} x_{t'}+ \mathbf{s}(x_{t'}, T-t') \right] dt' + dW_{t'}$$ | $$dx_\tau = s_x\, d\tau + \sqrt{2}\, d W_\tau$$ |
+| VP-ODE | $$t' = T - t$$ | $$dx_{t'} = \frac{1}{2} \left( x_{t'} + \mathbf{s}(x_{t'}, T-t') \right) dt' $$ | $$dx_\tau = \frac{1}{2} s_x\, d\tau + \, d W_\tau$$ |
+| VE-SDE | $$\sigma'(t') = \sigma(T-t')$$ | $$dz_{\sigma'} = \left( \frac{1}{2} x_{t'}+ \mathbf{s}(x_{t'}, T-t') \right) dt' + dW_{t'}$$ | $$dx_\tau = s_x\, d\tau + \sqrt{2}\, d W_\tau$$ |
 
 ### Forward-Reverse Duality
 
