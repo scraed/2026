@@ -190,9 +190,7 @@ where $$t \in [0,T]$$ is the forward diffusion time, $$\mathbf{x}_t$$ is the noi
 
 In practice, diffusion models are usually instantiated by choosing specific parameterizations of this SDE. The most common ones are the **variance-preserving (VP)** process, implemented in DDPMs as an Ornstein–Uhlenbeck dynamics that gently pulls samples toward the origin while injecting noise so that the marginal converges to a standard Gaussian; the **variance-exploding (VE)** process, where there is no restoring drift and the noise scale grows with time so that the variance “explodes”; and **flow-matching** formulations, which view generation as following a time-dependent flow that implements an “straight line” interpolation between data and noise under a carefully designed schedule.
 
-The table below summarizes these three forward processes in terms of their time variables, state variables, noise-level schedules, closed-form noising relations (with $$\boldsymbol{\epsilon} \sim \mathcal{N}(\mathbf{0}, I)$$), and their corresponding SDEs expressed in terms of their respective time parameters.
-
-We start from the **noise schedules and SDEs**, since these directly specify the forward dynamics:
+The table below summarizes these three forward processes in terms of their noise-level, closed-form noising relations (with $$\boldsymbol{\epsilon} \sim \mathcal{N}(\mathbf{0}, I)$$), and their corresponding SDEs expressed in terms of their respective time parameters:
 
 | **Name** | **Noise-level parameter** | **Relation between initial and noisy variable** | **Forward SDE** |
 | --- | --- | --- | --- |
@@ -221,14 +219,14 @@ No matter which notation we choose, A forward diffusion step with a step size of
 </div>
 
 
-### The Reverse Diffusion Process
+### The Reverse Diffusion Process for Sampling
 
 The reverse diffusion process is the conjugate of the forward process. While the forward process evolves $p_t(\mathbf{x})$ toward $\mathcal{N}(\mathbf{0},I)$, the reverse process reverses this evolution, restoring $\mathcal{N}(\mathbf{0},I)$ to $p_t$.
 
 The concept behind the reverse process is intuitive: since Langevin dynamics acts as an identity operation on a distribution—preserving it unchanged—any forward process composed with its corresponding reverse process should similarly yield an identity transformation. Specifically, at any time $t$, combining the forward and reverse processes must reproduce the Langevin dynamics for the distribution $p_t(\mathbf{x})$, as illustrated in the following diagram.
 
 <div class="row mt-3">
-    <div class="col-md-12 col-lg-10 offset-lg-1 mt-3 mt-md-0">
+    <div class="col-md-10 offset-md-1 col-lg-8 offset-lg-2 mt-3 mt-md-0">
         {% include figure.liquid path="assets/img/2026-04-27-rethinking-diffusion-Langevin/forward-reverse-langevin.png" class="img-fluid rounded" %}
     </div>
 </div>
@@ -267,29 +265,14 @@ The same decomposition approach can be applied to other diffusion schemes. The f
 | VE-Karras | $$dz = \tau\, \mathbf{s}_z\, d\tau + \sqrt{2 \tau}\, d W_\tau$$ | $$dz = \sqrt{2\tau}\, dW_{\tau}$$ |  $$dz = \tau\, \mathbf{s}_z\, d\tau $$ |
 | Flow | $$dr = \frac{\tau}{1+\tau} \mathbf{s}_r\, d\tau + \sqrt{\frac{2\tau}{1+\tau}}\, d W_\tau$$  | $$dr = -\frac{r}{1-\tau}\, d\tau + \sqrt{\frac{2\tau}{1-\tau}}\, dW_{\tau}$$  |  $$dr = \frac{\tau\, \mathbf{s}_r + r}{1-\tau} d\tau$$ |
 
-Now let's make the relationship between the forward time $t$ and the reverse time $\mathfrak{t}$ precise. A single reverse-time step $d\mathfrak{t}$ can be understood in two complementary ways:
+Note that the $\mathbf{s}(\mathbf{x}_{\mathfrak{t}}, t)$ term in the reverse process still depends on the forward time $t$; we need the relationship between the forward time $t$ and the reverse time $\mathfrak{t}$ to close the equation. A single reverse-time step $d\mathfrak{t}$ can be understood in two complementary ways:
 
 1. **As an undoing of the forward diffusion:** one step of the reverse diffusion process with $d\mathfrak{t} = \Delta t$ removes a small amount of noise and therefore **reduces** the forward diffusion time by $\Delta t$.
 
-<!-- <div class="row mt-3">
-    <div class="col-md-10 offset-md-1 col-lg-8 offset-lg-2 mt-3 mt-md-0">
-        {% include figure.liquid path="assets/img/2026-04-27-rethinking-diffusion-Langevin/reverse2.png" class="img-fluid rounded" %}
-    </div>
-</div>
-<div class="caption">
-    One reverse-time step acts as a reversal of the forward diffusion process, removing noise from the sample.
-</div> -->
 
 2. **As forward evolution in its own clock:** the reverse diffusion process is itself a well-defined SDE/ODE in the variable $\mathfrak{t}$, so one step with $d\mathfrak{t} = \Delta t$ simply **advances** the reverse diffusion time from $\mathfrak{t}$ to $\mathfrak{t} + \Delta t$:
 
-<!-- <div class="row mt-3">
-    <div class="col-md-10 offset-md-1 col-lg-8 offset-lg-2 mt-3 mt-md-0">
-        {% include figure.liquid path="assets/img/2026-04-27-rethinking-diffusion-Langevin/reverse3.png" class="img-fluid rounded" %}
-    </div>
-</div>
-<div class="caption">
-    One reverse-time step also advances the reverse diffusion time \(\mathfrak{t}\) by \(\Delta t\), viewing the reverse dynamics as its own SDE/ODE evolving forward in \(\mathfrak{t}\).
-</div> -->
+
 
 Together, these two viewpoints determine how the forward and reverse clocks are related. Since a positive reverse-time step $d\mathfrak{t} > 0$ both **decreases** the forward time $t$ and **increases** the reverse time $\mathfrak{t}$, their infinitesimal increments must satisfy
 
