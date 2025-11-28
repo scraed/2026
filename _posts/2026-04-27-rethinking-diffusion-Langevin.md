@@ -311,12 +311,15 @@ The above analysis applies not only to SDE reverse processes but also to ODE rev
 
 
 ### Forward-Reverse Duality
-We have established that a single reverse step undoes a forward step: advancing the reverse time $$t'$$ by an amount corresponds to decreasing the forward time $$t$$ by the same amount. Now, let's examine what happens when we combine multiple forward and reverse steps. Consider this sequence: begin with a data sample $$\mathbf{x}_0$$, propagate it through the forward process ($$\ref{Forward Process}$$) to obtain $$\mathbf{x}_T$$, then use $$\mathbf{x}_T$$ as the starting point $$\mathbf{x}_{0'}$$ for the reverse process ($$\ref{Reverse Process}$$) and evolve it to $$\mathbf{x}_{T'}$$. This complete forward-reverse cycle is illustrated in the figure below.
+We have established that a single reverse step undoes a forward step: advancing the reverse time $$t'$$ by an amount corresponds to decreasing the forward time $$t$$ by the same amount. Now, let's examine what happens when we combine multiple forward and reverse steps. Consider this sequence: begin with a data sample $$\mathbf{x}_0$$, propagate it through the forward process to obtain $$\mathbf{x}_T$$, then use $$\mathbf{x}_T$$ as the starting point $$\mathbf{x}_{0'}$$ for the reverse process and evolve it to $$\mathbf{x}_{T'}$$. Part of this forward-reverse cycle is illustrated in the figure below.
 
 <div class="row mt-3">
     <div class="col-md-10 offset-md-1 col-lg-8 offset-lg-2 mt-3 mt-md-0">
         {% include figure.liquid path="assets/img/2026-04-27-rethinking-diffusion-Langevin/FastestDiffusionTheory_08.jpg" class="img-fluid rounded" %}
     </div>
+</div>
+<div class="caption">
+    Part of a forward–reverse diffusion cycle: the last two steps of the forward process (green arrows, increasing $t$) followed by the first two steps of the reverse process (blue arrows, increasing $t'$ while decreasing $t$).
 </div>
 
 The green arrows represent consecutive forward process steps that advance the forward diffusion time $$t$$, while the blue arrows indicate consecutive reverse process steps that advance the reverse diffusion time $$t'$$. 
@@ -329,10 +332,11 @@ We examine the relationship between $$\mathbf{x}_{t}$$ in the forward diffusion 
     </div>
 </div>
 
+<div class="caption">
+    Each horizontal row shows a Langevin dynamics step that maps a forward sample $\mathbf{x}_t$ to a new reverse sample $\mathbf{x}_{(T-t)'}$ from the **same** probability density.
+</div>
+
 **Each horizontal row in this picture corresponds to consecutive steps of Langevin dynamics, which alters the samples while maintaining the same probability density**. This illustrates the duality between the forward and reverse diffusion processes: while $$\mathbf{x}_t$$ (forward) and $$\mathbf{x}_{(T-t)'}$$ (reverse) are distinct samples, they obey the same probability distribution.
-
-
-- It's important to note that the reverse diffusion process does not generate identical samples to the forward process; rather, it produces samples according to the same probability distribution, due to the identity property of Langevin dynamics.
 
 
 To formalize the duality, we define the densities of $$\mathbf{x}_t$$ (forward) as $$p_t(\mathbf{x})$$, the densities of $$\mathbf{x}_{t'}$$ (reverse) as $$q_{t'}(\mathbf{x})$$. If we initialize
@@ -347,7 +351,7 @@ $$
 q_{t'}(\mathbf{x}) = p_{T-t'}(\mathbf{x}) 
 $$
 
-For large $T$, $p_T(\mathbf{x})$ converges to $$\mathcal{N}(\mathbf{x}|\mathbf{0},I)$$. Thus, the reverse process starts at $t'=0$ with $$\mathcal{N}(\mathbf{0},I)$$ and, after evolving to $t'=T$, generates samples from the data distribution:
+Diffusion models typically use a sufficiently large terminal time $$T$$, which ensures that the forward process distribution $$p_T(\mathbf{x})$$ converges to a standard Gaussian distribution $$\mathcal{N}(\mathbf{x}|\mathbf{0},I)$$. Consequently, the reverse process begins at $$t'=0$$ with this Gaussian noise distribution $$\mathcal{N}(\mathbf{0},I)$$ and, after evolving through the reverse time $$t'$$ from 0 to $$T$$, produces samples that follow the original data distribution:
 
 $$
 q_T(\mathbf{x}) = p_0(\mathbf{x}) \quad \text{(data distribution)}.  
@@ -355,7 +359,7 @@ $$
 
 This establishes an exact correspondence between the forward diffusion process and the reverse diffusion process, indicating that the reverse diffusion process can generate image data from pure Gaussian noise.
 
-We demonstrated that **reverse diffusion**—the dual of the forward process—can generate image data from noise. However, this requires access to the **score function** $\mathbf{s}(\mathbf{x}, t) = \nabla_{\mathbf{x}} \log p_t(\mathbf{x})$ at every timestep $t$. In practice, we approximate this function using a neural network.  In the next section, we will explain how to train such score networks.  
+Now we have demonstrated that **reverse diffusion**—the dual of the forward process—can generate image data from noise. However, this requires access to the **score function** $\mathbf{s}(\mathbf{x}, t) = \nabla_{\mathbf{x}} \log p_t(\mathbf{x})$ at every timestep $t$. In practice, we approximate this function using a neural network.  In the next section, we will explain how to train such score networks.  
 
 ## Training the Diffusion Model
 
