@@ -191,11 +191,11 @@ In practice, diffusion models are usually instantiated by choosing specific para
 
 The table below summarizes these three forward processes in terms of their variables, noise-level schedules, closed-form noising relations, and SDEs (with $$\boldsymbol{\epsilon} \sim \mathcal{N}(\mathbf{0}, I)$$):
 
-| **Name** | **Variable notation** | **Noise-level parameter** | **Relation between initial and noisy variable** | **Forward SDE (in time $$t$$)** |
+| **Name** | **Variable notation** | **Noise-level parameter** | **Relation between initial and noisy variable** | **Forward SDE** |
 | --- | --- | --- | --- | --- |
 | Variance-preserving (VP) | $$x_t$$ | $$\alpha_t = e^{-t}$$ | $$x_t = \sqrt{\alpha_t}\, x_0 + \sqrt{1-\alpha_t}\, \boldsymbol{\epsilon}$$ | $$d x_t = - \tfrac{1}{2} x_t\, dt + dW_t$$ |
-| Variance-exploding (VE) | $$z_t = x_t e^{\frac{t}{2}}$$ | $$\sigma_t = \sqrt{e^{t} - 1}$$ | $$z_t = z_0 + \sigma_t\, \boldsymbol{\epsilon}$$ | $$d z_t = e^{t/2}\, dW_t$$ |
-| Flow | $$r_t = x_t \frac{e^{\frac{t}{2}}}{1 + \sqrt{e^{t} - 1}} $$ | $$s_t = \dfrac{\sqrt{e^{t} - 1}}{1 + \sqrt{e^{t} - 1}}$$ | $$r_t = (1-s_t)\, r_0 + s_t\, \boldsymbol{\epsilon}$$ | $$\begin{aligned} d r_t &= -\dfrac{r_t\, e^{t}}{2 \left( e^{t} - 1 + \sqrt{e^{t} - 1} \right)} \, dt \\\\ &\quad + \dfrac{e^{t/2}}{1 + \sqrt{e^{t} - 1}} \, dW_t \end{aligned}$$ |
+| Variance-exploding (VE) | $$z_t = x_t e^{\frac{t}{2}}$$ | $$\sigma_t = \sqrt{e^{t} - 1}$$ | $$z_t = z_0 + \sigma_t\, \boldsymbol{\epsilon}$$ | $$d\mathbf{z}_{\sigma} = \sqrt{2\sigma} d\mathbf{W}_{\sigma}$$ |
+| Flow | $$r_t = x_t \frac{e^{\frac{t}{2}}}{1 + \sqrt{e^{t} - 1}} $$ | $$s_t = \dfrac{\sqrt{e^{t} - 1}}{1 + \sqrt{e^{t} - 1}}$$ | $$r_t = (1-s_t)\, r_0 + s_t\, \boldsymbol{\epsilon}$$ | $$d\mathbf{r}_{s} = -\frac{\mathbf{r}_s}{1-s}ds + \sqrt{\frac{2s}{1-s}}d\mathbf{W}_{s}$$ |
 
 No matter which notation we choose, A forward diffusion step with a step size of $$\Delta t$$ acts as adding more noise to data, which is displayed in the following picture:
 
