@@ -116,6 +116,17 @@ ninja.data = [{
             window.location.href = "/2026/blog/2026/rethinking-diffusion-Langevin/";
           
         },
+      },{id: "post-how-well-do-the-meta-cl-algorithms-perform-at-scale",
+        
+          title: "How well do the meta-CL algorithms perform at scale?",
+        
+        description: "Coming soon to a pull request near you!",
+        section: "Posts",
+        handler: () => {
+          
+            window.location.href = "/2026/blog/2026/pushing-meta-cl-methods/";
+          
+        },
       },{id: "post-language-as-a-window-into-the-mind-how-nlp-and-llms-advance-human-sciences",
         
           title: "Language as a Window Into the Mind: How NLP and LLMs Advance Human...",
