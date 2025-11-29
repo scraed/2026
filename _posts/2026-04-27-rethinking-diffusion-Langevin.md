@@ -631,10 +631,10 @@ $$
 Thus, along the forward diffusion process, the KL divergence between any two solutions of the same Fokker–Planck equation is **non-increasing**: diffusion strictly contracts KL (with equality only if the scores $\nabla\log p$ and $\nabla\log q$ coincide almost everywhere). This monotone decrease of $\mathrm{KL}(p_t \Vert q_t)$ justifies decomposing the global maximum-likelihood objective into local-in-time, squared-score terms associated with each diffusion step.
 </details>
 
-In practice, we model the $$\nabla \log q(\mathbf{x}, t)$$ (or its rescaled version) as a neural network $\mathbf{s}_\theta(\mathbf{x}, t)$. 
+In practice, we approximate the score function $$\nabla \log q(\mathbf{x}, t)$$ using a neural network. For the standard score-based model, we directly model $\mathbf{s}_\theta(\mathbf{x}, t)$. For other formulations like VE-Karras and Flow models, we instead model related functions: $\boldsymbol{\epsilon}$ (noise prediction) or $\mathbf{v}$ (velocity field), which can be transformed to obtain the score.
 
 
-The only thing remains to handle is the score of the true data distribution $$\nabla \log p(\mathbf{x}, t)$$, which should be approximated by an empirical value from samples since we don't know its vallue. In fact, we have
+The only thing remains to handle is the score of the true data distribution $$\nabla \log p(\mathbf{x}, t)$$, which should be approximated by an empirical value from samples since we don't know its value. In fact, we have
 
 $$
 \text{argmin}_{\mathbf{s}_\theta}
@@ -848,19 +848,27 @@ $$
 
 
 
+This tells us that training the diffusion model, we only need to figure out the $$\nabla \log p(\mathbf{x}_t | \mathbf{x}_0)$$, then minimize the loss
+
+$$
+L_t=\mathbb{E}_{\mathbf{x}_0 \sim p_0}\,
+   \mathbb{E}_{\mathbf{x}_t \sim p_t(\cdot \mid \mathbf{x}_0)}
+            \big\|\nabla \log p(\mathbf{x}_t | \mathbf{x}_0)
+                  - \mathbf{s}_\theta\big\|^2 = \text{argmin}_{\mathbf{s}_\theta}
+   \mathbb{E}_{\mathbf{x} \sim p(\mathbf{x}, t)}
+            \big\|\nabla \log p(\mathbf{x}, t)
+                  - \mathbf{s}_\theta\big\|^2
+$$
+
+The following table list the loss for different parameterizations considered in this article:
 
 
 
-
-
-DDPM is trained to removes the noise $\bar{\boldsymbol{\epsilon}}_i$ from $\mathbf{x}_i$ in the forward diffusion process, by training a denoising neural network $\boldsymbol{\epsilon}_\theta( \mathbf{x}, t_i  )$ to predict and remove the noise $\bar{\boldsymbol{\epsilon}}_i $. This means that DDPM minimizes the **denoising objective** [^Ho2020DenoisingDP]:
-
-
-| **Name** | **function modeled by NN** | **\mathbf{s}_\theta$$ in terms of NN** | **$$\nabla \log p(x_t \mid x_0)$$** | **loss $$L_t$$** |
+| **Name** | **function modeled by NN** | **$$\mathbf{s}_\theta$$ in terms of NN** | **$$\nabla \log p(x_t \mid x_0)$$** | **loss $$L_t$$** |
 | --- | --- | --- | --- | --- |
-| Variance-preserving (VP) | $$\mathbf{s}_{\theta}(x_t, t)$$ | $$\mathbf{s}_{\theta}(x_t, t)$$ | $$-\frac{\boldsymbol{\epsilon}}{\sqrt{1-\alpha_t}}$$ | $$\frac{1}{2}\left\| -\frac{\boldsymbol{\epsilon}}{\sqrt{1-\alpha_t}} - \mathbf{s}_{\theta}(x_t, t) \right\|^2$$ |
-| Variance-exploding-Karras (VE-Karras) | $$\boldsymbol{\epsilon}_{\theta}(z_\sigma, \sigma)$$ | $$-\frac{\boldsymbol{\epsilon}_{\theta}(z_\sigma, \sigma)}{\sigma}$$ | $$-\frac{\boldsymbol{\epsilon}}{\sigma}$$ | $$\frac{1}{\sigma} \left\| \boldsymbol{\epsilon}_{\theta}(z_\sigma, \sigma) - \boldsymbol{\epsilon} \right\|^2$$ |
-| Flow | $$\mathbf{v}_{\theta}(r_s, s)$$ | $$\frac{ -\mathbf{v}_{\theta}(r_s, s) (1-s) - r_s }{s}$$ | $$-\frac{\boldsymbol{\epsilon}}{s}$$ | $$\frac{1-s}{s} \left\| \mathbf{v}_{\theta}(r_s, s) + r_0 - \boldsymbol{\epsilon} \right\|^2$$ |
+| Variance-preserving (VP) | $$\mathbf{s}_{\theta}(x_t, t)$$ | $$\mathbf{s}_{\theta}(x_t, t)$$ | $$-\frac{\boldsymbol{\epsilon}}{\sqrt{1-\alpha_t}}$$ | $$\frac{1}{2}\mathbb{E}_{\mathbf{x}_t \sim p_t(\cdot \mid \mathbf{x}_0)}\big\| -\frac{\boldsymbol{\epsilon}}{\sqrt{1-\alpha_t}} - \mathbf{s}_{\theta}(x_t, t) \big\|^2$$ |
+| Variance-exploding-Karras (VE-Karras) | $$\boldsymbol{\epsilon}_{\theta}(z_\sigma, \sigma)$$ | $$-\frac{\boldsymbol{\epsilon}_{\theta}(z_\sigma, \sigma)}{\sigma}$$ | $$-\frac{\boldsymbol{\epsilon}}{\sigma}$$ | $$\frac{1}{\sigma}\mathbb{E}_{\mathbf{z}_\sigma \sim p_\sigma(\cdot \mid \mathbf{z}_0)} \big\| \boldsymbol{\epsilon}_{\theta}(z_\sigma, \sigma) - \boldsymbol{\epsilon} \big\|^2$$ |
+| Flow | $$\mathbf{v}_{\theta}(r_s, s)$$ | $$\frac{ -\mathbf{v}_{\theta}(r_s, s) (1-s) - r_s }{s}$$ | $$-\frac{\boldsymbol{\epsilon}}{s}$$ | $$\frac{1-s}{s} \mathbb{E}_{\mathbf{r}_s \sim p_s(\cdot \mid \mathbf{r}_0)} \big\| \mathbf{v}_{\theta}(r_s, s) + r_0 - \boldsymbol{\epsilon} \big\|^2$$ |
 
 
 Note: please use the table of contents as defined in the front matter rather than the traditional markdown styling.
