@@ -862,12 +862,45 @@ $$
 
 The following table list the loss for different parameterizations considered in this article:
 
-
-
-| **Name** | **function modeled by NN** | **$$\mathbf{s}_\theta$$ in terms of NN** | **$$\nabla \log p(x_t \mid x_0)$$** | **loss $$L_t$$** |
-| --- | --- | --- | --- | --- |
-| Variance-preserving (VP) | $$\mathbf{s}_{\theta}(x_t, t)$$ | $$\mathbf{s}_{\theta}(x_t, t)$$ | $$-\frac{\boldsymbol{\epsilon}}{\sqrt{1-\alpha_t}}$$ | $$\frac{1}{2}\mathbb{E}_{\mathbf{x}_t \sim p_t(\cdot \mid \mathbf{x}_0)}\big\| -\frac{\boldsymbol{\epsilon}}{\sqrt{1-\alpha_t}} - \mathbf{s}_{\theta}(x_t, t) \big\|^2$$ |
-| Variance-exploding-Karras (VE-Karras) | $$\boldsymbol{\epsilon}_{\theta}(z_\sigma, \sigma)$$ | $$-\frac{\boldsymbol{\epsilon}_{\theta}(z_\sigma, \sigma)}{\sigma}$$ | $$-\frac{\boldsymbol{\epsilon}}{\sigma}$$ | $$\frac{1}{\sigma}\mathbb{E}_{\mathbf{z}_\sigma \sim p_\sigma(\cdot \mid \mathbf{z}_0)} \big\| \boldsymbol{\epsilon}_{\theta}(z_\sigma, \sigma) - \boldsymbol{\epsilon} \big\|^2$$ |
-| Flow | $$\mathbf{v}_{\theta}(r_s, s)$$ | $$\frac{ -\mathbf{v}_{\theta}(r_s, s) (1-s) - r_s }{s}$$ | $$-\frac{\boldsymbol{\epsilon}}{s}$$ | $$\frac{1-s}{s} \mathbb{E}_{\mathbf{r}_s \sim p_s(\cdot \mid \mathbf{r}_0)} \big\| \mathbf{v}_{\theta}(r_s, s) + r_0 - \boldsymbol{\epsilon} \big\|^2$$ |
+<div style="overflow-x: auto;">
+  <table>
+    <thead>
+      <tr>
+        <th><strong>Name</strong></th>
+        <th><strong>Relation between initial and noisy variable</strong></th>
+        <th><strong>function modeled by NN</strong></th>
+        <th><strong>$$\mathbf{s}_\theta$$ in terms of NN</strong></th>
+        <th><strong>$$\nabla \log p(x_t \mid x_0)$$</strong></th>
+        <th><strong>loss $$L_t$$</strong></th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td>Variance-preserving (VP)</td>
+        <td>$$x_t = \sqrt{\alpha_t}\, x_0 + \sqrt{1-\alpha_t}\, \boldsymbol{\epsilon}$$</td>
+        <td>$$\mathbf{s}_{\theta}(x_t, t)$$</td>
+        <td>$$\mathbf{s}_{\theta}(x_t, t)$$</td>
+        <td>$$-\frac{\boldsymbol{\epsilon}}{\sqrt{1-\alpha_t}}$$</td>
+        <td>$$\frac{1}{2}\mathbb{E}_{\mathbf{x}_0 \sim p_0}\mathbb{E}_{\mathbf{x}_t \sim p_t(\cdot \mid \mathbf{x}_0)}\big\| -\frac{\boldsymbol{\epsilon}}{\sqrt{1-\alpha_t}} - \mathbf{s}_{\theta}(x_t, t) \big\|^2$$</td>
+      </tr>
+      <tr>
+        <td>Variance-exploding-Karras (VE-Karras)</td>
+        <td>$$z_\sigma = z_0 + \sigma\, \boldsymbol{\epsilon}$$</td>
+        <td>$$\boldsymbol{\epsilon}_{\theta}(z_\sigma, \sigma)$$</td>
+        <td>$$-\frac{\boldsymbol{\epsilon}_{\theta}(z_\sigma, \sigma)}{\sigma}$$</td>
+        <td>$$-\frac{\boldsymbol{\epsilon}}{\sigma}$$</td>
+        <td>$$\frac{1}{\sigma}\mathbb{E}_{\mathbf{z}_0 \sim p_0}\mathbb{E}_{\mathbf{z}_\sigma \sim p_\sigma(\cdot \mid \mathbf{z}_0)} \big\| \boldsymbol{\epsilon}_{\theta}(z_\sigma, \sigma) - \boldsymbol{\epsilon} \big\|^2$$</td>
+      </tr>
+      <tr>
+        <td>Flow</td>
+        <td>$$r_s = (1-s)\, r_0 + s\, \boldsymbol{\epsilon}$$</td>
+        <td>$$\mathbf{v}_{\theta}(r_s, s)$$</td>
+        <td>$$\frac{ -\mathbf{v}_{\theta}(r_s, s) (1-s) - r_s }{s}$$</td>
+        <td>$$-\frac{\boldsymbol{\epsilon}}{s}$$</td>
+        <td>$$\frac{1-s}{s} \mathbb{E}_{\mathbf{r}_0 \sim p_0}\mathbb{E}_{\mathbf{r}_s \sim p_s(\cdot \mid \mathbf{r}_0)} \big\| \mathbf{v}_{\theta}(r_s, s) + r_0 - \boldsymbol{\epsilon} \big\|^2$$</td>
+      </tr>
+    </tbody>
+  </table>
+</div>
 
 
