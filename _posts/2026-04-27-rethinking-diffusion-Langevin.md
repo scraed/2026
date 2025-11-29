@@ -539,15 +539,16 @@ $$
 $$
 
 Introduce the Fokker–Planck operator
+
 $$
-\mathcal{L}u
-:= -\nabla\cdot(fu) + \frac{1}{2}g(t)^2\nabla^2 u,
+\mathcal{L}u = -\nabla\cdot(fu) + \frac{1}{2}g(t)^2\nabla^2 u,
 $$
+
 so that $\partial_t p = \mathcal{L}p$ and $\partial_t q = \mathcal{L}q$. Let $r = p/q$. Then
+
 $$
 \frac{d}{dt}\mathrm{KL}\big(p_t \Vert q_t\big)
-= \int \log r\,\mathcal{L}p\,d\mathbf{x}
-  - \int r\,\mathcal{L}q\,d\mathbf{x}.
+= \int \log r\,\mathcal{L}p\,d\mathbf{x} - \int r\,\mathcal{L}q\,d\mathbf{x}.
 $$
 
 **Step 2: Drift does not change the KL.**  
