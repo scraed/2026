@@ -904,12 +904,44 @@ The table above shows the loss functions for different diffusion model formulati
 
 Combining all results from previous discussion, we summarize the forward, reverse, and loss for each diffusion type:
 
-| **Name** | **Forward Process** | **Reverse Process** | **Loss (up to a weight factor)** |
-| --- | --- | --- | --- |
-| VP-SDE | $$x_t = \sqrt{\alpha_t}\, x_0 + \sqrt{1-\alpha_t}\, \boldsymbol{\epsilon}$$ | $$dx_{t'} = \left[ \frac{1}{2} x_{t'}+ \mathbf{s}(x_{t'}, T-t') \right] dt' + dW_{t'}$$ | $$\mathbb{E}_{\mathbf{x}_0 \sim p_0}\mathbb{E}_{\mathbf{x}_t \sim p_t(\cdot \mid \mathbf{x}_0)}\big\| -\frac{\boldsymbol{\epsilon}}{\sqrt{1-\alpha_t}} - \mathbf{s}_{\theta}(x_t, t) \big\|^2$$ |
-| VP-ODE | $$x_t = \sqrt{\alpha_t}\, x_0 + \sqrt{1-\alpha_t}\, \boldsymbol{\epsilon}$$ | $$dx_{t'} = \frac{1}{2} \left[ x_{t'} + \mathbf{s} (x_{t'}, T-t') \right] dt' $$ | $$\mathbb{E}_{\mathbf{x}_0 \sim p_0}\mathbb{E}_{\mathbf{x}_t \sim p_t(\cdot \mid \mathbf{x}_0)}\big\| -\frac{\boldsymbol{\epsilon}}{\sqrt{1-\alpha_t}} - \mathbf{s}_{\theta}(x_t, t) \big\|^2$$ |
-| VE-Karras | $$z_\sigma = z_0 + \sigma\, \boldsymbol{\epsilon}$$ | $$dz_{\sigma'} = -\boldsymbol{\epsilon}(z_{\sigma'}, \Sigma-\sigma')d \sigma'$$ | $$\mathbb{E}_{\mathbf{z}_0 \sim p_0}\mathbb{E}_{\mathbf{z}_\sigma \sim p_\sigma(\cdot \mid \mathbf{z}_0)} \big\| \boldsymbol{\epsilon}_{\theta}(z_\sigma, \sigma) - \boldsymbol{\epsilon} \big\|^2$$ |
-| Rectified flow | $$r_s = (1-s)\, r_0 + s\, \boldsymbol{\epsilon}$$ | $$dr_{s'} = -\mathbf{v} (r_{s'}, 1-s') ds'$$ | $$ \mathbb{E}_{\mathbf{r}_0 \sim p_0}\mathbb{E}_{\mathbf{r}_s \sim p_s(\cdot \mid \mathbf{r}_0)} \big\| \boldsymbol{\epsilon}- r_0 - \mathbf{v}_{\theta}(r_s, s) \big\|^2$$ |
+<div style="overflow-x: auto;">
+  <table>
+    <thead>
+      <tr>
+        <th><strong>Name</strong></th>
+        <th><strong>Forward Process</strong></th>
+        <th><strong>Reverse Process</strong></th>
+        <th><strong>Loss (up to a weight factor)</strong></th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td>VP-SDE</td>
+        <td>$$x_t = \sqrt{\alpha_t}\, x_0 + \sqrt{1-\alpha_t}\, \boldsymbol{\epsilon}$$</td>
+        <td>$$dx_{t'} = \left[ \frac{1}{2} x_{t'}+ \mathbf{s}(x_{t'}, T-t') \right] dt' + dW_{t'}$$</td>
+        <td>$$\mathbb{E}_{\mathbf{x}_0 \sim p_0}\mathbb{E}_{\mathbf{x}_t \sim p_t(\cdot \mid \mathbf{x}_0)}\big\| -\frac{\boldsymbol{\epsilon}}{\sqrt{1-\alpha_t}} - \mathbf{s}_{\theta}(x_t, t) \big\|^2$$</td>
+      </tr>
+      <tr>
+        <td>VP-ODE</td>
+        <td>$$x_t = \sqrt{\alpha_t}\, x_0 + \sqrt{1-\alpha_t}\, \boldsymbol{\epsilon}$$</td>
+        <td>$$dx_{t'} = \frac{1}{2} \left[ x_{t'} + \mathbf{s} (x_{t'}, T-t') \right] dt' $$</td>
+        <td>$$\mathbb{E}_{\mathbf{x}_0 \sim p_0}\mathbb{E}_{\mathbf{x}_t \sim p_t(\cdot \mid \mathbf{x}_0)}\big\| -\frac{\boldsymbol{\epsilon}}{\sqrt{1-\alpha_t}} - \mathbf{s}_{\theta}(x_t, t) \big\|^2$$</td>
+      </tr>
+      <tr>
+        <td>VE-Karras</td>
+        <td>$$z_\sigma = z_0 + \sigma\, \boldsymbol{\epsilon}$$</td>
+        <td>$$dz_{\sigma'} = -\boldsymbol{\epsilon}(z_{\sigma'}, \Sigma-\sigma')d \sigma'$$</td>
+        <td>$$\mathbb{E}_{\mathbf{z}_0 \sim p_0}\mathbb{E}_{\mathbf{z}_\sigma \sim p_\sigma(\cdot \mid \mathbf{z}_0)} \big\| \boldsymbol{\epsilon}_{\theta}(z_\sigma, \sigma) - \boldsymbol{\epsilon} \big\|^2$$</td>
+      </tr>
+      <tr>
+        <td>Rectified flow</td>
+        <td>$$r_s = (1-s)\, r_0 + s\, \boldsymbol{\epsilon}$$</td>
+        <td>$$dr_{s'} = -\mathbf{v} (r_{s'}, 1-s') ds'$$</td>
+        <td>$$ \mathbb{E}_{\mathbf{r}_0 \sim p_0}\mathbb{E}_{\mathbf{r}_s \sim p_s(\cdot \mid \mathbf{r}_0)} \big\| \boldsymbol{\epsilon}- r_0 - \mathbf{v}_{\theta}(r_s, s) \big\|^2$$</td>
+      </tr>
+    </tbody>
+  </table>
+</div>
 
 
 For the VE-Karras model, the loss trains the network $\boldsymbol{\epsilon}_\theta$ to directly predict the Gaussian noise $\boldsymbol{\epsilon}$ added to the data; this is often called the epsilon-prediction parameterization. Other choices such as x0-prediction or v-prediction are algebraically equivalent reformulations of the same underlying objective.
@@ -920,4 +952,4 @@ $$
 \big\| r_1 - r_0 - \mathbf{v}_{\theta}(r_s, s) \big\|^2 .
 $$
 
-If we interpret $r_0$ and $r_1$ as the particle positions at times $s=0$ and $s=1$, then $r_1 - r_0$ is the average velocity over $[0,1]$, which motivates viewing $\mathbf{v}_\theta$ as a velocity field and writing the reverse process as $dr = -\mathbf{v}(r,s)\, ds$. This has led to the intuition that rectified flows are trained on simple "straight lines" and are therefore conceptually simpler than general diffusion models. However, $\mathbf{v}_\theta(r,s)$ still depends on time $s$, so the velocity changes over time and trajectories are not truly straight in state–time space. Since this velocity is directly related to the score function (as shown in the table), rectified flow is best understood as a particular parameterization of diffusion models rather than a fundamentally simpler class.
+If we interpret $r_0$ and $r_1$ as the particle positions at times $s=0$ and $s=1$, then $r_1 - r_0$ is the average velocity over $[0,1]$, which motivates viewing $$\mathbf{v}_\theta$$ as a velocity field and writing the reverse process as $dr = -\mathbf{v}(r,s)\, ds$. This has led to the intuition that rectified flows are trained on simple "straight lines" and are therefore conceptually simpler than general diffusion models. However, $$\mathbf{v}_\theta(r,s)$$ still depends on time $s$, so the velocity changes over time and trajectories are not truly straight in state–time space. Since this velocity is directly related to the score function (as shown in the table), rectified flow is best understood as a particular parameterization of diffusion models rather than a fundamentally simpler class.
