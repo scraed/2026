@@ -196,7 +196,7 @@ The table below summarizes these three forward processes in terms of their noise
 | --- | --- | --- | --- |
 | Variance-preserving (VP) | $$\alpha_t = e^{-t}$$ | $$x_t = \sqrt{\alpha_t}\, x_0 + \sqrt{1-\alpha_t}\, \boldsymbol{\epsilon}$$ | $$d x_t = - \tfrac{1}{2} x_t\, dt + dW_t$$ |
 | Variance-exploding-Karras (VE-Karras) | $$\sigma$$ | $$z_\sigma = z_0 + \sigma\, \boldsymbol{\epsilon}$$ | $$dz_{\sigma} = \sqrt{2\sigma}\, dW_{\sigma}$$ |
-| Flow | $$s$$ | $$r_s = (1-s)\, r_0 + s\, \boldsymbol{\epsilon}$$ | $$dr_{s} = -\frac{r_s}{1-s}\, ds + \sqrt{\frac{2s}{1-s}}\, dW_{s}$$ |
+| Rectified flow | $$s$$ | $$r_s = (1-s)\, r_0 + s\, \boldsymbol{\epsilon}$$ | $$dr_{s} = -\frac{r_s}{1-s}\, ds + \sqrt{\frac{2s}{1-s}}\, dW_{s}$$ |
 
 These SDEs can all be viewed as different reparameterizations of time and state. For completeness, the underlying tranformation between time parametrizations and state variables are:
 
@@ -204,7 +204,7 @@ These SDEs can all be viewed as different reparameterizations of time and state.
 | --- | --- | --- | --- |
 | Variance-preserving (VP) | $$t$$ | $$[0, T]$$ | $$x_t$$ |
 | Variance-exploding-Karras (VE-Karras) | $$\sigma = \sqrt{e^{t} - 1}$$ | $$[0, \Sigma]$$ | $$z_{\sigma(t)} = x_t e^{\frac{t}{2}}$$ |
-| Flow | $$s= \dfrac{\sqrt{e^{t} - 1}}{1 + \sqrt{e^{t} - 1}}$$ | $$[0, 1]$$ | $$r_{s(t)} = x_t \dfrac{e^{\frac{t}{2}}}{1 + \sqrt{e^{t} - 1}} $$ |
+| Rectified flow | $$s= \dfrac{\sqrt{e^{t} - 1}}{1 + \sqrt{e^{t} - 1}}$$ | $$[0, 1]$$ | $$r_{s(t)} = x_t \dfrac{e^{\frac{t}{2}}}{1 + \sqrt{e^{t} - 1}} $$ |
 
 No matter which notation we choose, A forward diffusion step with a step size of $$\Delta t$$ acts as adding more noise to data, which is displayed in the following picture:
 
@@ -263,7 +263,7 @@ The same decomposition approach can be applied to other diffusion schemes. The f
 | --- | --- | --- | --- |
 | VP-SDE/<br>ODE | $$dx = \mathbf{s}_x\, d\tau + \sqrt{2}\, d W_\tau$$<br>$$dx = \frac{1}{2} \mathbf{s}_x\, d\tau + d W_\tau$$ | $$d x = - \tfrac{1}{2} x\, d\tau + dW_\tau$$ | $$dx = \left[ \frac{1}{2} x + \mathbf{s}_x \right] d\tau + dW_{\tau}$$<br>$$dx = \frac{1}{2} \left( x + \mathbf{s}_x \right) d\tau$$ |
 | VE-Karras | $$dz = \tau\, \mathbf{s}_z\, d\tau + \sqrt{2 \tau}\, d W_\tau$$ | $$dz = \sqrt{2\tau}\, dW_{\tau}$$ |  $$dz = \tau\, \mathbf{s}_z\, d\tau $$ |
-| Flow | $$dr = \frac{\tau}{1+\tau} \mathbf{s}_r\, d\tau + \sqrt{\frac{2\tau}{1+\tau}}\, d W_\tau$$  | $$dr = -\frac{r}{1-\tau}\, d\tau + \sqrt{\frac{2\tau}{1-\tau}}\, dW_{\tau}$$  |  $$dr = \frac{\tau\, \mathbf{s}_r + r}{1-\tau} d\tau$$ |
+| Rectified flow | $$dr = \frac{\tau}{1+\tau} \mathbf{s}_r\, d\tau + \sqrt{\frac{2\tau}{1+\tau}}\, d W_\tau$$  | $$dr = -\frac{r}{1-\tau}\, d\tau + \sqrt{\frac{2\tau}{1-\tau}}\, dW_{\tau}$$  |  $$dr = \frac{\tau\, \mathbf{s}_r + r}{1-\tau} d\tau$$ |
 
 Note that the $\mathbf{s}(\mathbf{x}_{t'}, t)$ term in the reverse process still depends on the forward time $t$; we need the relationship between the forward time $t$ and the reverse time $t'$ to close the equation. A single reverse-time step $dt'$ can be understood in two complementary ways:
 
@@ -306,7 +306,7 @@ The above analysis applies not only to SDE reverse processes but also to ODE rev
 | VP-SDE | $$t' = T - t$$ | $$t' \in [0, T]$$ | $$dx_{t'} = \left[ \frac{1}{2} x_{t'}+ \mathbf{s}(x_{t'}, T-t') \right] dt' + dW_{t'}$$ | $$\mathbf{s}(x, t) = \mathbf{s}_x(x, t)$$  |
 | VP-ODE | $$t' = T - t$$ | $$t' \in [0, T]$$ | $$dx_{t'} = \frac{1}{2} \left[ x_{t'} + \mathbf{s} (x_{t'}, T-t') \right] dt' $$ | $$ \mathbf{s}(x, t) = \mathbf{s}_x(x, t)$$  |
 | VE-Karras | $$\sigma' = \Sigma - \sigma$$ | $$\sigma' \in [0, \Sigma]$$ | $$dz_{\sigma'} = -\boldsymbol{\epsilon}(z_{\sigma'}, \Sigma-\sigma')d \sigma'$$ | $$\boldsymbol{\epsilon}(z, \sigma) =  -\sigma \mathbf{s}_z(z, \sigma) $$|
-| Flow | $$s' = 1 - s$$ | $$s' \in [0, 1]$$ | $$dr_{s'} = -\mathbf{v} (r_{s'}, 1-s') ds'$$ | $$\mathbf{v}(r, s) =  - \frac{s\, \mathbf{s}_r(r,s) + r_{s'}}{1-s} $$ |
+| Rectified flow | $$s' = 1 - s$$ | $$s' \in [0, 1]$$ | $$dr_{s'} = -\mathbf{v} (r_{s'}, 1-s') ds'$$ | $$\mathbf{v}(r, s) =  - \frac{s\, \mathbf{s}_r(r,s) + r_{s'}}{1-s} $$ |
 
 
 
@@ -631,7 +631,7 @@ $$
 Thus, along the forward diffusion process, the KL divergence between any two solutions of the same Fokker–Planck equation is **non-increasing**: diffusion strictly contracts KL (with equality only if the scores $\nabla\log p$ and $\nabla\log q$ coincide almost everywhere). This monotone decrease of $\mathrm{KL}(p_t \Vert q_t)$ justifies decomposing the global maximum-likelihood objective into local-in-time, squared-score terms associated with each diffusion step.
 </details>
 
-In practice, we approximate the score function $$\nabla \log q(\mathbf{x}, t)$$ using a neural network. For the standard score-based model, we directly model $\mathbf{s}_\theta(\mathbf{x}, t)$. For other formulations like VE-Karras and Flow models, we instead model related functions: $\boldsymbol{\epsilon}$ (noise prediction) or $\mathbf{v}$ (velocity field), which can be transformed to obtain the score.
+In practice, we approximate the score function $$\nabla \log q(\mathbf{x}, t)$$ using a neural network. For the standard score-based model, we directly model $\mathbf{s}_\theta(\mathbf{x}, t)$. For other formulations like VE-Karras and Rectified flow models, we instead model related functions: $\boldsymbol{\epsilon}$ (noise prediction) or $\mathbf{v}$ (velocity field), which can be transformed to obtain the score.
 
 
 The only thing remains to handle is the score of the true data distribution $$\nabla \log p(\mathbf{x}, t)$$, which should be approximated by an empirical value from samples since we don't know its value. In fact, we have
@@ -889,7 +889,7 @@ The following table list the loss for different parameterizations considered in 
         <td>$$\frac{1}{\sigma}\mathbb{E}_{\mathbf{z}_0 \sim p_0}\mathbb{E}_{\mathbf{z}_\sigma \sim p_\sigma(\cdot \mid \mathbf{z}_0)} \big\| \boldsymbol{\epsilon}_{\theta}(z_\sigma, \sigma) - \boldsymbol{\epsilon} \big\|^2$$</td>
       </tr>
       <tr>
-        <td>Flow</td>
+        <td>Rectified flow</td>
         <td>$$r_s = (1-s)\, r_0 + s\, \boldsymbol{\epsilon}$$</td>
         <td>$$\mathbf{v}_{\theta}(r_s, s)$$</td>
         <td>$$\frac{ -\mathbf{v}_{\theta}(r_s, s) (1-s) - r_s }{s}$$</td>
@@ -900,4 +900,24 @@ The following table list the loss for different parameterizations considered in 
   </table>
 </div>
 
+The table above shows the loss functions for different diffusion model formulations. In practice, the coefficient outside the L2 norm (such as $\frac{1}{2}$, $\frac{1}{\sigma}$, or $\frac{1-s}{s}$) is often omitted or reweighted using a specific schedule to improve training performance. This is because modifying this coefficient only changes the relative weighting of the loss across different time steps $t$, without affecting the optimal solution at any particular time $t$.
 
+Combining all results from previous discussion, we summarize the forward, reverse, and loss for each diffusion type:
+
+| **Name** | **Forward Process** | **Reverse Process** | **Loss (up to a weight factor)** |
+| --- | --- | --- | --- |
+| VP-SDE | $$x_t = \sqrt{\alpha_t}\, x_0 + \sqrt{1-\alpha_t}\, \boldsymbol{\epsilon}$$ | $$dx_{t'} = \left[ \frac{1}{2} x_{t'}+ \mathbf{s}(x_{t'}, T-t') \right] dt' + dW_{t'}$$ | $$\mathbb{E}_{\mathbf{x}_0 \sim p_0}\mathbb{E}_{\mathbf{x}_t \sim p_t(\cdot \mid \mathbf{x}_0)}\big\| -\frac{\boldsymbol{\epsilon}}{\sqrt{1-\alpha_t}} - \mathbf{s}_{\theta}(x_t, t) \big\|^2$$ |
+| VP-ODE | $$x_t = \sqrt{\alpha_t}\, x_0 + \sqrt{1-\alpha_t}\, \boldsymbol{\epsilon}$$ | $$dx_{t'} = \frac{1}{2} \left[ x_{t'} + \mathbf{s} (x_{t'}, T-t') \right] dt' $$ | $$\mathbb{E}_{\mathbf{x}_0 \sim p_0}\mathbb{E}_{\mathbf{x}_t \sim p_t(\cdot \mid \mathbf{x}_0)}\big\| -\frac{\boldsymbol{\epsilon}}{\sqrt{1-\alpha_t}} - \mathbf{s}_{\theta}(x_t, t) \big\|^2$$ |
+| VE-Karras | $$z_\sigma = z_0 + \sigma\, \boldsymbol{\epsilon}$$ | $$dz_{\sigma'} = -\boldsymbol{\epsilon}(z_{\sigma'}, \Sigma-\sigma')d \sigma'$$ | $$\mathbb{E}_{\mathbf{z}_0 \sim p_0}\mathbb{E}_{\mathbf{z}_\sigma \sim p_\sigma(\cdot \mid \mathbf{z}_0)} \big\| \boldsymbol{\epsilon}_{\theta}(z_\sigma, \sigma) - \boldsymbol{\epsilon} \big\|^2$$ |
+| Rectified flow | $$r_s = (1-s)\, r_0 + s\, \boldsymbol{\epsilon}$$ | $$dr_{s'} = -\mathbf{v} (r_{s'}, 1-s') ds'$$ | $$ \mathbb{E}_{\mathbf{r}_0 \sim p_0}\mathbb{E}_{\mathbf{r}_s \sim p_s(\cdot \mid \mathbf{r}_0)} \big\| \boldsymbol{\epsilon}- r_0 - \mathbf{v}_{\theta}(r_s, s) \big\|^2$$ |
+
+
+For the VE-Karras model, the loss trains the network $\boldsymbol{\epsilon}_\theta$ to directly predict the Gaussian noise $\boldsymbol{\epsilon}$ added to the data; this is often called the epsilon-prediction parameterization. Other choices such as x0-prediction or v-prediction are algebraically equivalent reformulations of the same underlying objective.
+
+For the rectified flow model, observe that with $r_s = (1-s)\, r_0 + s\, \boldsymbol{\epsilon}$ we have $r_1 = \boldsymbol{\epsilon}$, so the loss can be written as
+
+$$
+\big\| r_1 - r_0 - \mathbf{v}_{\theta}(r_s, s) \big\|^2 .
+$$
+
+If we interpret $r_0$ and $r_1$ as the particle positions at times $s=0$ and $s=1$, then $r_1 - r_0$ is the average velocity over $[0,1]$, which motivates viewing $\mathbf{v}_\theta$ as a velocity field and writing the reverse process as $dr = -\mathbf{v}(r,s)\, ds$. This has led to the intuition that rectified flows are trained on simple "straight lines" and are therefore conceptually simpler than general diffusion models. However, $\mathbf{v}_\theta(r,s)$ still depends on time $s$, so the velocity changes over time and trajectories are not truly straight in state–time space. Since this velocity is directly related to the score function (as shown in the table), rectified flow is best understood as a particular parameterization of diffusion models rather than a fundamentally simpler class.
