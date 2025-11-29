@@ -335,7 +335,7 @@ We examine the relationship between $$\mathbf{x}_{t}$$ in the forward diffusion 
 </div>
 
 <div class="caption">
-    Each horizontal row shows a Langevin dynamics step that maps a forward sample $\mathbf{x}_t$ to a new reverse sample $\mathbf{x}_{(T-t)'}$ from the **same** probability density.
+    Each horizontal row shows a Langevin dynamics step that maps a forward sample $\mathbf{x}_t$ to a new reverse sample $\mathbf{x}_{(T-t)'}$ from the same probability density.
 </div>
 
 **Each horizontal row in this picture corresponds to consecutive steps of Langevin dynamics, which alters the samples while maintaining the same probability density**. This illustrates the duality between the forward and reverse diffusion processes: while $$\mathbf{x}_t$$ (forward) and $$\mathbf{x}_{(T-t)'}$$ (reverse) are distinct samples, they obey the same probability distribution.
@@ -432,12 +432,11 @@ $$
 where the score functions $$\nabla \log p(\mathbf{x}, t)$$ and $$\nabla \log q(\mathbf{x}, t)$$ appears naturally inside the objective. 
 
 
-
 In practice, we model the $$\nabla \log q(\mathbf{x}, t)$$ (or its rescaled version) as a neural network $\mathbf{s}_\theta(\mathbf{x}, t)$. 
 
 
 <details markdown="1">
-<summary><em>Derivation of the Loss function:</em> (click to expand)</summary>
+<summary><em>Derivation Step 1 (optional): how the forward SDE induces the Fokker–Planck equation for $p_t(\mathbf{x})$</em> (click to expand)</summary>
 
 
 Given the SDE
@@ -500,6 +499,142 @@ $$
     + \frac{1}{2} g^2 \frac{\partial^2 p}{\partial x^2},
 $$
 which is the 1D specialization of the Fokker–Planck equation stated above.
+
+</details>
+
+
+<details markdown="1">
+<summary><em>Derivation Step 2 (optional): why this forward diffusion yields the squared-score objective above</em> (click to expand)</summary>
+
+We now analyze **how the KL divergence between two solutions of the same forward SDE evolves in time**. This will give the KL–contraction identity that underlies the objective written just above.
+
+Assume that both $p(\mathbf{x}, t)$ and $q(\mathbf{x}, t)$ satisfy the same Fokker–Planck equation with drift $f(\mathbf{x}, t)$ and diffusion strength $g(t)$:
+
+$$
+\frac{\partial p}{\partial t}
+= -\nabla \cdot \big(f p\big)
+  + \frac{1}{2} g(t)^2 \nabla^2 p,
+\qquad
+\frac{\partial q}{\partial t}
+= -\nabla \cdot \big(f q\big)
+  + \frac{1}{2} g(t)^2 \nabla^2 q.
+$$
+
+Define the KL divergence
+
+$$
+\mathrm{KL}\big(p_t \Vert q_t\big)
+= \int p(\mathbf{x}, t) \log \frac{p(\mathbf{x}, t)}{q(\mathbf{x}, t)}\,d\mathbf{x},
+$$
+
+and differentiating under the integral sign, we obtain
+
+$$
+\frac{d}{dt} \mathrm{KL}\big(p_t \Vert q_t\big)
+= \int \left( \log \frac{p}{q} \right) \partial_t p\, d\mathbf{x}
+   + \int p\,\frac{\partial_t q}{q}\, d\mathbf{x},
+$$
+
+where all functions are evaluated at $(\mathbf{x}, t)$ and the integrals are over $\mathbf{x}$. Using the Fokker–Planck operator $\mathcal{L}$ defined by
+
+$$
+\mathcal{L} u
+= -\nabla \cdot (f u) + \frac{1}{2} g(t)^2 \nabla^2 u,
+$$
+
+we can rewrite this as
+
+$$
+\frac{d}{dt} \mathrm{KL}\big(p_t \Vert q_t\big)
+= \int \left( \log \frac{p}{q} \right) \mathcal{L} p\, d\mathbf{x}
+   - \int \frac{p}{q}\,\mathcal{L} q\, d\mathbf{x}.
+$$
+
+
+
+Let $r = p/q$. Then $\log (p/q) = \log r$, and we can handle each term by integration by parts (assuming boundary terms vanish, e.g., in $\mathbb{R}^d$ with rapidly decaying densities).
+
+For the **drift part** of $\mathcal{L}$, we have
+
+$$
+\int \log r \, \big[-\nabla \cdot (f p)\big]\, d\mathbf{x}
+ = \int p \, f \cdot \nabla \log r\, d\mathbf{x},
+$$
+
+and
+
+$$
+\int r \, \big[-\nabla \cdot (f q)\big]\, d\mathbf{x}
+ = \int q \, f \cdot \nabla r\, d\mathbf{x}.
+$$
+
+A direct computation using $r = p/q$ shows that these two contributions cancel **exactly**:
+
+$$
+p\, f \cdot \nabla \log r
+ - q\, f \cdot \nabla r
+ = 0,
+$$
+
+so the drift does **not** contribute to the time derivative of KL.
+
+The **diffusion part** is responsible for KL contraction. Using $\nabla p = p \nabla \log p$, $\nabla q = q \nabla \log q$, and
+
+$$
+\nabla r = \nabla\left(\frac{p}{q}\right)
+         = p \left(\nabla \log p - \nabla \log q\right),
+$$
+
+one finds
+
+$$
+\int \log r \cdot \frac{1}{2} g(t)^2 \nabla^2 p\, d\mathbf{x}
+ = -\frac{1}{2} g(t)^2 \int \nabla \log r \cdot \nabla p\, d\mathbf{x},
+$$
+
+and
+
+$$
+\int r \cdot \frac{1}{2} g(t)^2 \nabla^2 q\, d\mathbf{x}
+ = -\frac{1}{2} g(t)^2 \int \nabla r \cdot \nabla q\, d\mathbf{x}.
+$$
+
+Substituting the expressions above and simplifying,
+
+$$
+\nabla \log r \cdot \nabla p
+ = p \left( \nabla \log p - \nabla \log q \right) \cdot \nabla \log p,
+$$
+
+$$
+\nabla r \cdot \nabla q
+ = p \left( \nabla \log p - \nabla \log q \right) \cdot \nabla \log q,
+$$
+
+so that the diffusion contribution to $\frac{d}{dt} \mathrm{KL}$ becomes
+
+$$
+-\frac{1}{2} g(t)^2 \int \nabla \log r \cdot \nabla p\, d\mathbf{x}
+ +\frac{1}{2} g(t)^2 \int \nabla r \cdot \nabla q\, d\mathbf{x}
+ = -\frac{1}{2} g(t)^2 \int p(\mathbf{x}, t)
+    \big\|\nabla \log p - \nabla \log q\big\|^2 \, d\mathbf{x}.
+$$
+
+
+
+Putting everything together, we obtain the key identity
+
+$$
+\frac{d}{dt} \mathrm{KL}\big(p_t \Vert q_t\big)
+ = -\frac{1}{2} g(t)^2
+   \int p(\mathbf{x}, t)\,
+        \big\|\nabla \log p(\mathbf{x}, t)
+              - \nabla \log q(\mathbf{x}, t)\big\|^2
+      d\mathbf{x}
+ \;\leq\; 0.
+$$
+
+ Thus, along the forward diffusion process, the KL divergence between any two solutions of the same Fokker–Planck equation is **non-increasing**: diffusion strictly contracts KL (unless $p_t = q_t$ in the sense that $\nabla \log p = \nabla \log q$ almost everywhere). Drift does not affect this contraction; it only transports mass without changing the “distance” between $p_t$ and $q_t$ in KL. This monotone decrease of $\mathrm{KL}(p_t \Vert q_t)$ over $t$ underlies many stability results for stochastic dynamics, and in diffusion models it justifies decomposing the global maximum-likelihood objective into local-in-time terms associated with each diffusion step.
 
 </details>
 
@@ -691,134 +826,7 @@ $$
 
 
 
-To make this precise, consider the **time derivative** of the KL divergence along the forward dynamics. Assume that both $p$ and $q$ satisfy the same Fokker–Planck equation with drift $f(\mathbf{x}, t)$ and diffusion strength $g(t)$:
 
-$$
-\frac{\partial p}{\partial t}
-= -\nabla \cdot \big(f p\big)
-  + \frac{1}{2} g(t)^2 \nabla^2 p,
-\qquad
-\frac{\partial q}{\partial t}
-= -\nabla \cdot \big(f q\big)
-  + \frac{1}{2} g(t)^2 \nabla^2 q.
-$$
-
-Writing the KL divergence as
-
-$$
-\mathrm{KL}\big(p_t \Vert q_t\big)
-= \int p(\mathbf{x}, t) \log \frac{p(\mathbf{x}, t)}{q(\mathbf{x}, t)}\,d\mathbf{x},
-$$
-
-and differentiating under the integral sign, we obtain
-
-$$
-\frac{d}{dt} \mathrm{KL}\big(p_t \Vert q_t\big)
-= \int \left( \log \frac{p}{q} \right) \partial_t p\, d\mathbf{x}
-   + \int p\,\frac{\partial_t q}{q}\, d\mathbf{x},
-$$
-
-where all functions are evaluated at $(\mathbf{x}, t)$ and the integrals are over $\mathbf{x}$. Using the Fokker–Planck operator $\mathcal{L}$ defined by
-
-$$
-\mathcal{L} u
-= -\nabla \cdot (f u) + \frac{1}{2} g(t)^2 \nabla^2 u,
-$$
-
-we can rewrite this as
-
-$$
-\frac{d}{dt} \mathrm{KL}\big(p_t \Vert q_t\big)
-= \int \left( \log \frac{p}{q} \right) \mathcal{L} p\, d\mathbf{x}
-   - \int \frac{p}{q}\,\mathcal{L} q\, d\mathbf{x}.
-$$
-
-<details>
-<summary><strong>Derivation: how KL changes under the Fokker–Planck equation</strong></summary>
-
-Let $r = p/q$. Then $\log (p/q) = \log r$, and we can handle each term by integration by parts (assuming boundary terms vanish, e.g., in $\mathbb{R}^d$ with rapidly decaying densities).
-
-For the **drift part** of $\mathcal{L}$, we have
-
-$$
-\int \log r \, \big[-\nabla \cdot (f p)\big]\, d\mathbf{x}
- = \int p \, f \cdot \nabla \log r\, d\mathbf{x},
-$$
-
-and
-
-$$
-\int r \, \big[-\nabla \cdot (f q)\big]\, d\mathbf{x}
- = \int q \, f \cdot \nabla r\, d\mathbf{x}.
-$$
-
-A direct computation using $r = p/q$ shows that these two contributions cancel **exactly**:
-
-$$
-p\, f \cdot \nabla \log r
- - q\, f \cdot \nabla r
- = 0,
-$$
-
-so the drift does **not** contribute to the time derivative of KL.
-
-The **diffusion part** is responsible for KL contraction. Using $\nabla p = p \nabla \log p$, $\nabla q = q \nabla \log q$, and
-
-$$
-\nabla r = \nabla\left(\frac{p}{q}\right)
-         = p \left(\nabla \log p - \nabla \log q\right),
-$$
-
-one finds
-
-$$
-\int \log r \cdot \frac{1}{2} g(t)^2 \nabla^2 p\, d\mathbf{x}
- = -\frac{1}{2} g(t)^2 \int \nabla \log r \cdot \nabla p\, d\mathbf{x},
-$$
-
-and
-
-$$
-\int r \cdot \frac{1}{2} g(t)^2 \nabla^2 q\, d\mathbf{x}
- = -\frac{1}{2} g(t)^2 \int \nabla r \cdot \nabla q\, d\mathbf{x}.
-$$
-
-Substituting the expressions above and simplifying,
-
-$$
-\nabla \log r \cdot \nabla p
- = p \left( \nabla \log p - \nabla \log q \right) \cdot \nabla \log p,
-$$
-
-$$
-\nabla r \cdot \nabla q
- = p \left( \nabla \log p - \nabla \log q \right) \cdot \nabla \log q,
-$$
-
-so that the diffusion contribution to $\frac{d}{dt} \mathrm{KL}$ becomes
-
-$$
--\frac{1}{2} g(t)^2 \int \nabla \log r \cdot \nabla p\, d\mathbf{x}
- +\frac{1}{2} g(t)^2 \int \nabla r \cdot \nabla q\, d\mathbf{x}
- = -\frac{1}{2} g(t)^2 \int p(\mathbf{x}, t)
-    \big\|\nabla \log p - \nabla \log q\big\|^2 \, d\mathbf{x}.
-$$
-
-</details>
-
-Putting everything together, we obtain the key identity
-
-$$
-\frac{d}{dt} \mathrm{KL}\big(p_t \Vert q_t\big)
- = -\frac{1}{2} g(t)^2
-   \int p(\mathbf{x}, t)\,
-        \big\|\nabla \log p(\mathbf{x}, t)
-              - \nabla \log q(\mathbf{x}, t)\big\|^2
-      d\mathbf{x}
- \;\leq\; 0.
-$$
-
- Thus, along the forward diffusion process, the KL divergence between any two solutions of the same Fokker–Planck equation is **non-increasing**: diffusion strictly contracts KL (unless $p_t = q_t$ in the sense that $\nabla \log p = \nabla \log q$ almost everywhere). Drift does not affect this contraction; it only transports mass without changing the “distance” between $p_t$ and $q_t$ in KL. This monotone decrease of $\mathrm{KL}(p_t \Vert q_t)$ over $t$ underlies many stability results for stochastic dynamics, and in diffusion models it justifies decomposing the global maximum-likelihood objective into local-in-time terms associated with each diffusion step.
 
 
 DDPM is trained to removes the noise $\bar{\boldsymbol{\epsilon}}_i$ from $\mathbf{x}_i$ in the forward diffusion process, by training a denoising neural network $\boldsymbol{\epsilon}_\theta( \mathbf{x}, t_i  )$ to predict and remove the noise $\bar{\boldsymbol{\epsilon}}_i $. This means that DDPM minimizes the **denoising objective** [^Ho2020DenoisingDP]:
