@@ -297,7 +297,7 @@ $$
 
 in which $t' \in [0,T]$ is the reverse time, $\mathbf{s}(\mathbf{x}, t) = \nabla_{\mathbf{x}} \log p_t(\mathbf{x})$ is the score function of the density of $\mathbf{x}_{t}$ in the forward process.
 
-The above analysis applies not only to SDE reverse processes but also to ODE reverse processes. The following table summarizes the reverse diffusion processes for several popular schemes, including their reverse time definitions and associated Langevin dynamics under the VP parameterization:
+The above analysis applies not only to SDE reverse processes but also to ODE reverse processes. The following table summarizes the reverse diffusion processes for other parameterizations:
 
 
 
@@ -307,6 +307,8 @@ The above analysis applies not only to SDE reverse processes but also to ODE rev
 | VP-ODE | $$t' = T - t$$ | $$t' \in [0, T]$$ | $$dx_{t'} = \frac{1}{2} \left[ x_{t'} + \mathbf{s}_x (x_{t'}, T-t') \right] dt' $$ | $$\mathbf{s}_x(x, t)$$  |
 | VE-Karras | $$\sigma' = \Sigma - \sigma$$ | $$\sigma' \in [0, \Sigma]$$ | $$dz_{\sigma'} = -\boldsymbol{\epsilon}(z_{\sigma'}, \Sigma-\sigma')d \sigma'$$ | $$\boldsymbol{\epsilon}(z, \sigma) =  -\sigma \mathbf{s}_z(z, \sigma) $$|
 | Flow | $$s' = 1 - s$$ | $$s' \in [0, 1]$$ | $$dr_{s'} = -\mathbf{v} (r_{s'}, 1-s') ds'$$ | $$\mathbf{v}(r, s) =  - \frac{s\, \mathbf{s}_r(r,s) + r_{s'}}{1-s} $$ |
+
+
 
 
 
@@ -328,7 +330,7 @@ We examine the relationship between $$\mathbf{x}_{t}$$ in the forward diffusion 
 
 <div class="row mt-3">
     <div class="col-md-10 offset-md-1 col-lg-8 offset-lg-2 mt-3 mt-md-0">
-        {% include figure.liquid path="assets/img/2026-04-27-rethinking-diffusion-Langevin/FastestDiffusionTheory_09.jpg" class="img-fluid rounded z-depth-1" %}
+        {% include figure.liquid path="assets/img/2026-04-27-rethinking-diffusion-Langevin/FastestDiffusionTheory_09.jpg" class="img-fluid rounded" %}
     </div>
 </div>
 
@@ -351,15 +353,15 @@ $$
 q_{t'}(\mathbf{x}) = p_{T-t'}(\mathbf{x}) 
 $$
 
-Diffusion models typically use a sufficiently large terminal time $$T$$, which ensures that the forward process distribution $$p_T(\mathbf{x})$$ converges to a standard Gaussian distribution $$\mathcal{N}(\mathbf{x}|\mathbf{0},I)$$. Consequently, the reverse process begins at $$t'=0$$ with this Gaussian noise distribution $$\mathcal{N}(\mathbf{0},I)$$ and, after evolving through the reverse time $$t'$$ from 0 to $$T$$, produces samples that follow the original data distribution:
+In diffusion models, the terminal time $$T$$ is chosen to be sufficiently large so that the forward process distribution $$p_T(\mathbf{x})$$ converges to a simple Gaussian distribution. This ensures that the reverse process can start from this well-defined Gaussian noise at $$t'=0$$. By then evolving the reverse process through time $$t'$$ from 0 to $$T$$, we obtain samples that follow the original data distribution:
 
 $$
 q_T(\mathbf{x}) = p_0(\mathbf{x}) \quad \text{(data distribution)}.  
 $$
 
-This establishes an exact correspondence between the forward diffusion process and the reverse diffusion process, indicating that the reverse diffusion process can generate image data from pure Gaussian noise.
+This means that **after evolving the reverse process from time $t'=0$ to $t'=T$, the resulting samples follow the exact same distribution as the original training data $p_0$**. This establishes a precise mathematical equivalence between the forward and reverse diffusion processes, demonstrating that the reverse process can effectively generate realistic image data starting from pure Gaussian noise.
 
-Now we have demonstrated that **reverse diffusion**—the dual of the forward process—can generate image data from noise. However, this requires access to the **score function** $\mathbf{s}(\mathbf{x}, t) = \nabla_{\mathbf{x}} \log p_t(\mathbf{x})$ at every timestep $t$. In practice, we approximate this function using a neural network.  In the next section, we will explain how to train such score networks.  
+Now we have demonstrated that **reverse diffusion**—the dual of the forward process—can generate image data from noise. However, this requires access to the score function $\mathbf{s}(\mathbf{x}, t) = \nabla_{\mathbf{x}} \log p_t(\mathbf{x})$ at every timestep $t$. In practice, we approximate this function using a neural network.  In the next section, we will explain how to train such score networks.  
 
 ## Training the Diffusion Model
 
