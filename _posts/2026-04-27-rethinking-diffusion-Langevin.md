@@ -848,16 +848,13 @@ $$
 
 
 
-This tells us that training the diffusion model, we only need to figure out the $$\nabla \log p(\mathbf{x}_t | \mathbf{x}_0)$$, then minimize the loss
+This tells us that training the diffusion model, we only need to figure out the $$\nabla \log p(\mathbf{x}_t \| \mathbf{x}_0)$$, then minimize the loss
 
 $$
 L_t=\mathbb{E}_{\mathbf{x}_0 \sim p_0}\,
    \mathbb{E}_{\mathbf{x}_t \sim p_t(\cdot \mid \mathbf{x}_0)}
             \big\|\nabla \log p(\mathbf{x}_t | \mathbf{x}_0)
-                  - \mathbf{s}_\theta\big\|^2 = \text{argmin}_{\mathbf{s}_\theta}
-   \mathbb{E}_{\mathbf{x} \sim p(\mathbf{x}, t)}
-            \big\|\nabla \log p(\mathbf{x}, t)
-                  - \mathbf{s}_\theta\big\|^2
+                  - \mathbf{s}_\theta\big\|^2 
 $$
 
 The following table list the loss for different parameterizations considered in this article:
@@ -869,9 +866,9 @@ The following table list the loss for different parameterizations considered in 
         <th><strong>Name</strong></th>
         <th><strong>Relation between initial and noisy variable</strong></th>
         <th><strong>function modeled by NN</strong></th>
-        <th><strong>$$\mathbf{s}_\theta$$ in terms of NN</strong></th>
-        <th><strong>$$\nabla \log p(x_t \mid x_0)$$</strong></th>
-        <th><strong>loss $$L_t$$</strong></th>
+        <th><strong>$\mathbf{s}_\theta$ in terms of NN</strong></th>
+        <th><strong>$\nabla \log p(x_t \mid x_0)$</strong></th>
+        <th><strong>loss $L_t$</strong></th>
       </tr>
     </thead>
     <tbody>
