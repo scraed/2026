@@ -854,6 +854,13 @@ $$
 DDPM is trained to removes the noise $\bar{\boldsymbol{\epsilon}}_i$ from $\mathbf{x}_i$ in the forward diffusion process, by training a denoising neural network $\boldsymbol{\epsilon}_\theta( \mathbf{x}, t_i  )$ to predict and remove the noise $\bar{\boldsymbol{\epsilon}}_i $. This means that DDPM minimizes the **denoising objective** [^Ho2020DenoisingDP]:
 
 
+| **Name** | **Relation between initial and noisy variable** | **g(·)** | **Score** |
+| --- | --- | --- | --- |
+| Variance-preserving (VP) | $$x_t = \sqrt{\alpha_t}\, x_0 + \sqrt{1-\alpha_t}\, \boldsymbol{\epsilon}$$ | $$g(t) = 1$$ | $$\nabla_{x_t} \log p(x_t \mid x_0) = -\frac{\boldsymbol{\epsilon}}{\sqrt{1-\alpha_t}}$$ |
+| Variance-exploding-Karras (VE-Karras) | $$z_\sigma = z_0 + \sigma\, \boldsymbol{\epsilon}$$ | $$g(\sigma) = \sqrt{2\sigma}$$ | $$\nabla_{z_\sigma} \log p(z_\sigma \mid z_0) = -\frac{\boldsymbol{\epsilon}}{\sigma}$$ |
+| Flow | $$r_s = (1-s)\, r_0 + s\, \boldsymbol{\epsilon}$$ | $$g(s) = \sqrt{\frac{2s}{1-s}}$$ | $$\nabla_{r_s} \log p(r_s \mid r_0) = -\frac{\boldsymbol{\epsilon}}{s}$$ |
+
+
 Note: please use the table of contents as defined in the front matter rather than the traditional markdown styling.
 
 ## Equations
