@@ -432,7 +432,6 @@ $$
 where the score functions $$\nabla \log p(\mathbf{x}, t)$$ and $$\nabla \log q(\mathbf{x}, t)$$ appears naturally inside the objective. 
 
 
-In practice, we model the $$\nabla \log q(\mathbf{x}, t)$$ (or its rescaled version) as a neural network $\mathbf{s}_\theta(\mathbf{x}, t)$. 
 
 
 <details markdown="1">
@@ -456,7 +455,7 @@ $$
 
 This PDE shows how **drift** $f$ and **diffusion** $g$ jointly shape the distribution. Rigorous derivations can be found in standard references; here we only sketch an intuitive 1D argument for the drift part:
 
-1. **Drift term $f$.** Start with a 1D motion with **constant velocity** $v$, so $dx = v\,dt$. After time $t$, a particle now at position $x$ must have come from $x - vt$ at time $0$, so
+**Drift term $f$.** Start with a 1D motion with **constant velocity** $v$, so $dx = v\,dt$. After time $t$, a particle now at position $x$ must have come from $x - vt$ at time $0$, so
 
 $$
 p(x, t) = p(x - vt, 0).
@@ -480,13 +479,14 @@ Here we write $f(x, t)$ inside the derivative, not outside, because it guarantee
 integrating over $x$ and assuming $p$ vanishes at $\pm \infty$ gives
 $\frac{d}{dt}\int p(x, t)\,dx = 0$, so $\int p(x, t)\,dx = 1$ for all $t$.
 
-2. **Noise term $g\,dW$.** Consider now the pure diffusion SDE $dx = g\,dW$ with constant $g$ and initial condition $x(0) = 0$. At time $t$, the accumulated Brownian motion from $0$ to $t$ is Gaussian with variance $t$, so $x(t)$ is Gaussian with variance $g^2 t$ and density
+**Noise term $g\,dW$.** Consider now the pure diffusion SDE $dx = g\,dW$ with constant $g$ and initial condition $x(0) = 0$. At time $t$, the accumulated Brownian motion from $0$ to $t$ is Gaussian with variance $t$, so $x(t)$ is Gaussian with variance $g^2 t$ and density
 
 $$
 p(x, t) = \frac{1}{\sqrt{2\pi g^2 t}} \exp\!\left(-\frac{x^2}{2 g^2 t}\right).
 $$
 
 One can check directly that this density satisfies the diffusion equation
+
 $$
 \frac{\partial p}{\partial t} - \frac{1}{2} g^2 \frac{\partial^2 p}{\partial x^2} = 0.
 $$
@@ -498,6 +498,7 @@ $$
   = -\frac{\partial}{\partial x} \left[f(x, t)\, p\right]
     + \frac{1}{2} g^2 \frac{\partial^2 p}{\partial x^2},
 $$
+
 which is the 1D specialization of the Fokker–Planck equation stated above.
 
 </details>
@@ -506,7 +507,8 @@ which is the 1D specialization of the Fokker–Planck equation stated above.
 <details markdown="1">
 <summary><em>Derivation Step 2 (optional): why this forward diffusion yields the squared-score objective above</em> (click to expand)</summary>
 
-We now analyze **how the KL divergence between two solutions of the same forward SDE evolves in time**. This will give the KL–contraction identity that underlies the objective written just above.
+We now analyze **how the KL divergence between two solutions of the Fokker–Planck equation evolves in time**.
+We now analyze **how the KL divergence between two solutions of the same Fokker–Planck equation evolves in time**.
 
 Assume that both $p(\mathbf{x}, t)$ and $q(\mathbf{x}, t)$ satisfy the same Fokker–Planck equation with drift $f(\mathbf{x}, t)$ and diffusion strength $g(t)$:
 
@@ -520,123 +522,115 @@ $$
   + \frac{1}{2} g(t)^2 \nabla^2 q.
 $$
 
-Define the KL divergence
+Define
 
 $$
 \mathrm{KL}\big(p_t \Vert q_t\big)
-= \int p(\mathbf{x}, t) \log \frac{p(\mathbf{x}, t)}{q(\mathbf{x}, t)}\,d\mathbf{x},
+:= \int p(\mathbf{x}, t)\,\log\frac{p(\mathbf{x}, t)}{q(\mathbf{x}, t)}\,d\mathbf{x}.
 $$
 
-and differentiating under the integral sign, we obtain
+**Step 1: Differentiate the KL.**  
+Differentiating under the integral sign and using $\int \partial_t p\,d\mathbf{x}=0$ (mass conservation), we obtain
 
 $$
-\frac{d}{dt} \mathrm{KL}\big(p_t \Vert q_t\big)
-= \int \left( \log \frac{p}{q} \right) \partial_t p\, d\mathbf{x}
-   + \int p\,\frac{\partial_t q}{q}\, d\mathbf{x},
+\frac{d}{dt}\mathrm{KL}\big(p_t \Vert q_t\big)
+= \int \left(\log\frac{p}{q}\right)\partial_t p\,d\mathbf{x}
+  - \int \frac{p}{q}\,\partial_t q\,d\mathbf{x}.
 $$
 
-where all functions are evaluated at $(\mathbf{x}, t)$ and the integrals are over $\mathbf{x}$. Using the Fokker–Planck operator $\mathcal{L}$ defined by
-
+Introduce the Fokker–Planck operator
 $$
-\mathcal{L} u
-= -\nabla \cdot (f u) + \frac{1}{2} g(t)^2 \nabla^2 u,
+\mathcal{L}u
+:= -\nabla\cdot(fu) + \frac{1}{2}g(t)^2\nabla^2 u,
 $$
-
-we can rewrite this as
-
+so that $\partial_t p = \mathcal{L}p$ and $\partial_t q = \mathcal{L}q$. Let $r = p/q$. Then
 $$
-\frac{d}{dt} \mathrm{KL}\big(p_t \Vert q_t\big)
-= \int \left( \log \frac{p}{q} \right) \mathcal{L} p\, d\mathbf{x}
-   - \int \frac{p}{q}\,\mathcal{L} q\, d\mathbf{x}.
+\frac{d}{dt}\mathrm{KL}\big(p_t \Vert q_t\big)
+= \int \log r\,\mathcal{L}p\,d\mathbf{x}
+  - \int r\,\mathcal{L}q\,d\mathbf{x}.
 $$
 
-
-
-Let $r = p/q$. Then $\log (p/q) = \log r$, and we can handle each term by integration by parts (assuming boundary terms vanish, e.g., in $\mathbb{R}^d$ with rapidly decaying densities).
-
-For the **drift part** of $\mathcal{L}$, we have
+**Step 2: Drift does not change the KL.**  
+For the drift operator $-\nabla\cdot(fu)$, integration by parts (with vanishing boundary terms) gives
 
 $$
-\int \log r \, \big[-\nabla \cdot (f p)\big]\, d\mathbf{x}
- = \int p \, f \cdot \nabla \log r\, d\mathbf{x},
-$$
-
-and
-
-$$
-\int r \, \big[-\nabla \cdot (f q)\big]\, d\mathbf{x}
- = \int q \, f \cdot \nabla r\, d\mathbf{x}.
-$$
-
-A direct computation using $r = p/q$ shows that these two contributions cancel **exactly**:
-
-$$
-p\, f \cdot \nabla \log r
- - q\, f \cdot \nabla r
- = 0,
-$$
-
-so the drift does **not** contribute to the time derivative of KL.
-
-The **diffusion part** is responsible for KL contraction. Using $\nabla p = p \nabla \log p$, $\nabla q = q \nabla \log q$, and
-
-$$
-\nabla r = \nabla\left(\frac{p}{q}\right)
-         = p \left(\nabla \log p - \nabla \log q\right),
-$$
-
-one finds
-
-$$
-\int \log r \cdot \frac{1}{2} g(t)^2 \nabla^2 p\, d\mathbf{x}
- = -\frac{1}{2} g(t)^2 \int \nabla \log r \cdot \nabla p\, d\mathbf{x},
-$$
-
-and
-
-$$
-\int r \cdot \frac{1}{2} g(t)^2 \nabla^2 q\, d\mathbf{x}
- = -\frac{1}{2} g(t)^2 \int \nabla r \cdot \nabla q\, d\mathbf{x}.
-$$
-
-Substituting the expressions above and simplifying,
-
-$$
-\nabla \log r \cdot \nabla p
- = p \left( \nabla \log p - \nabla \log q \right) \cdot \nabla \log p,
+\int \log r\,\big[-\nabla\cdot(fp)\big]\,d\mathbf{x}
+ = \int p\,f\cdot\nabla\log r\,d\mathbf{x},
 $$
 
 $$
-\nabla r \cdot \nabla q
- = p \left( \nabla \log p - \nabla \log q \right) \cdot \nabla \log q,
+\int r\,\big[-\nabla\cdot(fq)\big]\,d\mathbf{x}
+ = \int q\,f\cdot\nabla r\,d\mathbf{x}.
 $$
 
-so that the diffusion contribution to $\frac{d}{dt} \mathrm{KL}$ becomes
+Using $r = p/q$ and $\nabla\log r = \nabla r / r$, one checks
 
 $$
--\frac{1}{2} g(t)^2 \int \nabla \log r \cdot \nabla p\, d\mathbf{x}
- +\frac{1}{2} g(t)^2 \int \nabla r \cdot \nabla q\, d\mathbf{x}
- = -\frac{1}{2} g(t)^2 \int p(\mathbf{x}, t)
-    \big\|\nabla \log p - \nabla \log q\big\|^2 \, d\mathbf{x}.
+p\,f\cdot\nabla\log r - q\,f\cdot\nabla r = 0,
 $$
 
+so the **drift part cancels exactly** and does not affect $\mathrm{KL}(p_t\Vert q_t)$.
 
-
-Putting everything together, we obtain the key identity
+**Step 3: Diffusion decreases the KL.**  
+For the diffusion operator $\tfrac{1}{2}g(t)^2\nabla^2 u$, integration by parts yields
 
 $$
-\frac{d}{dt} \mathrm{KL}\big(p_t \Vert q_t\big)
- = -\frac{1}{2} g(t)^2
-   \int p(\mathbf{x}, t)\,
-        \big\|\nabla \log p(\mathbf{x}, t)
-              - \nabla \log q(\mathbf{x}, t)\big\|^2
+\int \log r\cdot\frac{1}{2}g(t)^2\nabla^2 p\,d\mathbf{x}
+ = -\frac{1}{2}g(t)^2\int \nabla\log r\cdot\nabla p\,d\mathbf{x},
+$$
+
+$$
+\int r\cdot\frac{1}{2}g(t)^2\nabla^2 q\,d\mathbf{x}
+ = -\frac{1}{2}g(t)^2\int \nabla r\cdot\nabla q\,d\mathbf{x}.
+$$
+
+Using
+
+$$
+\nabla p = p\,\nabla\log p, \qquad
+\nabla q = q\,\nabla\log q,\qquad
+\nabla r = \nabla\!\left(\frac{p}{q}\right)
+         = r\big(\nabla\log p - \nabla\log q\big),
+$$
+
+we obtain
+
+$$
+\nabla\log r\cdot\nabla p
+= p\big(\nabla\log p - \nabla\log q\big)\cdot\nabla\log p,
+$$
+
+$$
+\nabla r\cdot\nabla q
+= p\big(\nabla\log p - \nabla\log q\big)\cdot\nabla\log q.
+$$
+
+Subtracting these contributions gives
+
+$$
+-\frac{1}{2}g(t)^2\int \nabla\log r\cdot\nabla p\,d\mathbf{x}
++\frac{1}{2}g(t)^2\int \nabla r\cdot\nabla q\,d\mathbf{x}
+= -\frac{1}{2}g(t)^2\int p(\mathbf{x},t)
+   \big\|\nabla\log p - \nabla\log q\big\|^2\,d\mathbf{x}.
+$$
+
+**Step 4: Conclusion.**  
+Putting drift and diffusion together,
+
+$$
+\frac{d}{dt}\mathrm{KL}\big(p_t\Vert q_t\big)
+= -\frac{1}{2}g(t)^2
+   \int p(\mathbf{x},t)\,
+        \big\|\nabla\log p(\mathbf{x},t)
+              - \nabla\log q(\mathbf{x},t)\big\|^2
       d\mathbf{x}
- \;\leq\; 0.
+\;\le 0.
 $$
 
- Thus, along the forward diffusion process, the KL divergence between any two solutions of the same Fokker–Planck equation is **non-increasing**: diffusion strictly contracts KL (unless $p_t = q_t$ in the sense that $\nabla \log p = \nabla \log q$ almost everywhere). Drift does not affect this contraction; it only transports mass without changing the “distance” between $p_t$ and $q_t$ in KL. This monotone decrease of $\mathrm{KL}(p_t \Vert q_t)$ over $t$ underlies many stability results for stochastic dynamics, and in diffusion models it justifies decomposing the global maximum-likelihood objective into local-in-time terms associated with each diffusion step.
-
+Thus, along the forward diffusion process, the KL divergence between any two solutions of the same Fokker–Planck equation is **non-increasing**: diffusion strictly contracts KL (with equality only if the scores $\nabla\log p$ and $\nabla\log q$ coincide almost everywhere). This monotone decrease of $\mathrm{KL}(p_t \Vert q_t)$ justifies decomposing the global maximum-likelihood objective into local-in-time, squared-score terms associated with each diffusion step.
 </details>
+
+In practice, we model the $$\nabla \log q(\mathbf{x}, t)$$ (or its rescaled version) as a neural network $\mathbf{s}_\theta(\mathbf{x}, t)$. 
 
 
 The only thing remains to handle is the score of the true data distribution $$\nabla \log p(\mathbf{x}, t)$$, which should be approximated by an empirical value from samples since we don't know its vallue. In fact, we have
@@ -650,6 +644,7 @@ $$
             \big\|\nabla \log p(\mathbf{x}, t)
                   - \mathbf{s}_\theta\big\|^2
 $$
+
 where the LHS is the denoising score matching (DSM) loss while RHS is the score matching loss.
 
 <details markdown="1">
@@ -659,6 +654,7 @@ We now prove that the *denoising score matching* (DSM) loss and the *score match
 
 **Step 1: Define the two losses.**  
 Let us write the *denoising score matching* (DSM) loss at time $t$ as
+
 $$
 L_{\text{DSM}}(\mathbf{s}_\theta)
 := \mathbb{E}_{\mathbf{x}_0 \sim p_0}\,
@@ -668,7 +664,9 @@ L_{\text{DSM}}(\mathbf{s}_\theta)
       - \mathbf{s}_\theta(\mathbf{x}_t, t)
    \big\|^2,
 $$
+
 and the *score matching* (SM) loss on the marginal $p_t(\mathbf{x}_t)$ as
+
 $$
 L_{\text{SM}}(\mathbf{s}_\theta)
 := \mathbb{E}_{\mathbf{x}_t \sim p_t}
@@ -677,21 +675,25 @@ L_{\text{SM}}(\mathbf{s}_\theta)
       - \mathbf{s}_\theta(\mathbf{x}_t, t)
    \big\|^2.
 $$
+
 Here $p_t(\mathbf{x}_t) = \int p_t(\mathbf{x}_t \mid \mathbf{x}_0)\,p_0(\mathbf{x}_0)\,d\mathbf{x}_0$ is the marginal of the forward process at time $t$.
 
 **Step 2: Introduce conditional and marginal scores.**  
 Define the conditional score
+
 $$
 \mathbf{s}(\mathbf{x}_t \mid \mathbf{x}_0)
 := \nabla_{\mathbf{x}_t} \log p_t(\mathbf{x}_t \mid \mathbf{x}_0),
 $$
 and the marginal score
+
 $$
 \mathbf{s}(\mathbf{x}_t, t)
 := \nabla_{\mathbf{x}_t} \log p_t(\mathbf{x}_t).
 $$
 **Step 3: Expand both objectives.**  
 Using $\|\mathbf{a}-\mathbf{b}\|^2 = \|\mathbf{a}\|^2 + \|\mathbf{b}\|^2 - 2\langle \mathbf{a}, \mathbf{b}\rangle$, we can expand both objectives. For DSM,
+
 $$
 \begin{aligned}
 L_{\text{DSM}}(\mathbf{s}_\theta)
@@ -707,7 +709,9 @@ L_{\text{DSM}}(\mathbf{s}_\theta)
        \big\|\mathbf{s}(\mathbf{x}_t \mid \mathbf{x}_0)\big\|^2,
 \end{aligned}
 $$
+
 where expectations are taken under the joint $p_0(\mathbf{x}_0)\,p_t(\mathbf{x}_t \mid \mathbf{x}_0)$. Similarly, for SM we have
+
 $$
 \begin{aligned}
 L_{\text{SM}}(\mathbf{s}_\theta)
@@ -726,6 +730,7 @@ $$
 
 **Step 4: Match the first and last terms.**  
 The first terms coincide, because the marginal of the joint distribution is exactly $p_t(\mathbf{x}_t)$:
+
 $$
 \mathbb{E}_{\mathbf{x}_0, \mathbf{x}_t}
   \big\|\mathbf{s}_\theta(\mathbf{x}_t, t)\big\|^2
@@ -735,6 +740,7 @@ $$
  = \mathbb{E}_{\mathbf{x}_t}
      \big\|\mathbf{s}_\theta(\mathbf{x}_t, t)\big\|^2.
 $$
+
 The last terms,
 $\mathbb{E}_{\mathbf{x}_0, \mathbf{x}_t}\|\mathbf{s}(\mathbf{x}_t \mid \mathbf{x}_0)\|^2$
 and
@@ -743,6 +749,7 @@ do **not** depend on $\mathbf{s}_\theta$ at all, so they can only shift the loss
 
 **Step 5: Handle the cross term.**  
 The only subtle point is the cross term. Because the inner product is linear, it is enough to prove that, for any (scalar) test function $f(\mathbf{x}_t)$,
+
 $$
 \mathbb{E}_{\mathbf{x}_0, \mathbf{x}_t}
   \big[ f(\mathbf{x}_t)\,\mathbf{s}(\mathbf{x}_t \mid \mathbf{x}_0) \big]
@@ -750,16 +757,20 @@ $$
 \mathbb{E}_{\mathbf{x}_t}
   \big[ f(\mathbf{x}_t)\,\mathbf{s}(\mathbf{x}_t, t) \big],
 $$
+
 and then apply this to each coordinate of $\mathbf{s}_\theta(\mathbf{x}_t, t)$.
 
 By definition of the score,
+
 $$
 \mathbf{s}(\mathbf{x}_t \mid \mathbf{x}_0)
 = \nabla_{\mathbf{x}_t} \log p_t(\mathbf{x}_t \mid \mathbf{x}_0)
 = \frac{\nabla_{\mathbf{x}_t} p_t(\mathbf{x}_t \mid \mathbf{x}_0)}
        {p_t(\mathbf{x}_t \mid \mathbf{x}_0)}.
 $$
+
 Therefore,
+
 $$
 \begin{aligned}
 \mathbb{E}_{\mathbf{x}_0, \mathbf{x}_t}
@@ -778,7 +789,9 @@ $$
      \,d\mathbf{x}_t\,d\mathbf{x}_0.
 \end{aligned}
 $$
+
 Under mild regularity conditions we can interchange the order of integration and differentiation, obtaining
+
 $$
 \begin{aligned}
 \mathbb{E}_{\mathbf{x}_0, \mathbf{x}_t}
@@ -799,7 +812,9 @@ $$
      \big[ f(\mathbf{x}_t)\,\mathbf{s}(\mathbf{x}_t, t) \big].
 \end{aligned}
 $$
+
 Taking $f(\mathbf{x}_t)$ to be each component of $\mathbf{s}_\theta(\mathbf{x}_t, t)$ shows that the DSM and SM cross terms are identical:
+
 $$
 \mathbb{E}_{\mathbf{x}_0, \mathbf{x}_t}
   \big\langle
@@ -815,14 +830,18 @@ $$
 $$
 
 **Conclusion.** Putting everything together, we have
+
 $$
 L_{\text{DSM}}(\mathbf{s}_\theta)
 = L_{\text{SM}}(\mathbf{s}_\theta) + C,
 $$
+
 where $C$ is a constant independent of $\mathbf{s}_\theta$. Hence both objectives are minimized by the same function, namely the true marginal score
+
 $$
 \mathbf{s}_\theta^\star(\mathbf{x}_t, t) = \nabla_{\mathbf{x}_t} \log p_t(\mathbf{x}_t).
 $$
+
 </details>
 
 
