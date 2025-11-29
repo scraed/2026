@@ -639,10 +639,6 @@ $$
 </details>
 
 
-
-
-
-
 The only thing remains to handle is the score of the true data distribution $$\nabla \log p(\mathbf{x}, t)$$, which should be approximated by an empirical value from samples since we don't know its vallue. In fact, we have
 
 $$
@@ -657,8 +653,11 @@ $$
 where the LHS is the denoising score matching (DSM) loss while RHS is the score matching loss.
 
 <details markdown="1">
-<summary><em>Proof</em> (click to expand)</summary>
+<summary><em>Derivation Step 3 (optional): equivalence between DSM and SM losses</em> (click to expand)</summary>
 
+We now prove that the *denoising score matching* (DSM) loss and the *score matching* (SM) loss at time $t$ have the same minimizer.
+
+**Step 1: Define the two losses.**  
 Let us write the *denoising score matching* (DSM) loss at time $t$ as
 $$
 L_{\text{DSM}}(\mathbf{s}_\theta)
@@ -680,6 +679,7 @@ L_{\text{SM}}(\mathbf{s}_\theta)
 $$
 Here $p_t(\mathbf{x}_t) = \int p_t(\mathbf{x}_t \mid \mathbf{x}_0)\,p_0(\mathbf{x}_0)\,d\mathbf{x}_0$ is the marginal of the forward process at time $t$.
 
+**Step 2: Introduce conditional and marginal scores.**  
 Define the conditional score
 $$
 \mathbf{s}(\mathbf{x}_t \mid \mathbf{x}_0)
@@ -690,6 +690,7 @@ $$
 \mathbf{s}(\mathbf{x}_t, t)
 := \nabla_{\mathbf{x}_t} \log p_t(\mathbf{x}_t).
 $$
+**Step 3: Expand both objectives.**  
 Using $\|\mathbf{a}-\mathbf{b}\|^2 = \|\mathbf{a}\|^2 + \|\mathbf{b}\|^2 - 2\langle \mathbf{a}, \mathbf{b}\rangle$, we can expand both objectives. For DSM,
 $$
 \begin{aligned}
@@ -723,6 +724,7 @@ L_{\text{SM}}(\mathbf{s}_\theta)
 \end{aligned}
 $$
 
+**Step 4: Match the first and last terms.**  
 The first terms coincide, because the marginal of the joint distribution is exactly $p_t(\mathbf{x}_t)$:
 $$
 \mathbb{E}_{\mathbf{x}_0, \mathbf{x}_t}
@@ -739,6 +741,7 @@ and
 $\mathbb{E}_{\mathbf{x}_t}\|\mathbf{s}(\mathbf{x}_t, t)\|^2$,
 do **not** depend on $\mathbf{s}_\theta$ at all, so they can only shift the loss by a constant.
 
+**Step 5: Handle the cross term.**  
 The only subtle point is the cross term. Because the inner product is linear, it is enough to prove that, for any (scalar) test function $f(\mathbf{x}_t)$,
 $$
 \mathbb{E}_{\mathbf{x}_0, \mathbf{x}_t}
@@ -811,7 +814,7 @@ $$
   \big\rangle.
 $$
 
-Putting everything together, we have
+**Conclusion.** Putting everything together, we have
 $$
 L_{\text{DSM}}(\mathbf{s}_\theta)
 = L_{\text{SM}}(\mathbf{s}_\theta) + C,
