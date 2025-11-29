@@ -5,7 +5,7 @@ description: >
   Diffusion models are often introduced from fragmented perspectives, such as VAEs, score matching, or flow matching, accompanied by dense and technically demanding mathematical derivations that can take a long time to grasp. This article offers a fresh Langevin perspective on the core theory of diffusion models, presenting a simpler, clearer, and more intuitive approach to the following questions:
   1. How does the reverse process invert the forward process to generate data from pure noise?
   2. How can ODE-based and SDE-based diffusion models be unified under a single framework?
-  3. Why are diffusion models theoretically superior to VAEs?
+  3. Why are diffusion models theoretically superior to ordinary VAEs?
   4. How can Denoising, Score Matching, and Flow Matching training objectives be unified and derived from first principles?
   We demonstrate that the Langevin perspective offers clear and straightforward answers to these questions, providing a comprehensive understanding of diffusion model theory in just a few hours. This approach has strong pedagogical value for both learners and experienced researchers seeking deeper intuition.
 date: 2026-04-27
@@ -145,7 +145,7 @@ where $$\mathbf{s}(\mathbf{x}) = \nabla_{\mathbf{x}} \log p(\mathbf{x})$$ is the
 
 
 <details markdown="1">
-<summary><em>If you accept that $p(\mathbf{x})$ is the stationary distribution of Langevin dynamics, skip this. Otherwise, see the short argument below:</em> (click to expand)</summary>
+<summary><em>Optional: Derivation that $p(\mathbf{x})$ is the stationary distribution of Langevin dynamics</em> (click to expand)</summary>
 
 1. Set $g(t) = 1$ by rescaling time as $t' = \int_0^t g(\tau) d\tau$: under this change of variables, $d\mathbf{x}_t = g(t)\,\mathbf{s}(\mathbf{x}_t)dt + \sqrt{2g(t)}\,d\mathbf{W}_t$ becomes the same equation with $g(t')=1$, so $g(t)$ only fixes the time unit and does not change the stationary distribution. 
 
@@ -192,9 +192,9 @@ where $$t \in [0,T]$$ is the forward diffusion time, $$\mathbf{x}_t$$ is the noi
 
 In practice, diffusion models are usually instantiated by choosing specific parameterizations of this SDE. The most common ones are the **variance-preserving (VP)** process, implemented in DDPMs as an Ornstein–Uhlenbeck dynamics that gently pulls samples toward the origin while injecting noise so that the marginal converges to a standard Gaussian; the **variance-exploding (VE)** process, where there is no restoring drift and the noise scale grows with time so that the variance “explodes”; and **flow-matching** formulations, which view generation as following a time-dependent flow that implements an “straight line” interpolation between data and noise under a carefully designed schedule.
 
-The table below summarizes these three forward processes in terms of their noise-level, closed-form noising relations (with $$\boldsymbol{\epsilon} \sim \mathcal{N}(\mathbf{0}, I)$$), and their corresponding SDEs expressed in terms of their respective time parameters:
+The table below summarizes these three forward processes of different model types, as well as their corresponding SDEs expressed in terms of their respective time parameters:
 
-| **Name** | **Noise-level parameter** | **Relation between initial and noisy variable** | **Forward SDE** |
+| **Model Type** | **Noise-level parameter** | **Relation between initial and noisy variable** | **Forward SDE** |
 | --- | --- | --- | --- |
 | Variance-preserving (VP) | $$\alpha_t = e^{-t}$$ | $$x_t = \sqrt{\alpha_t}\, x_0 + \sqrt{1-\alpha_t}\, \boldsymbol{\epsilon}$$ | $$d x_t = - \tfrac{1}{2} x_t\, dt + dW_t$$ |
 | Variance-exploding-Karras (VE-Karras) | $$\sigma$$ | $$z_\sigma = z_0 + \sigma\, \boldsymbol{\epsilon}$$ | $$dz_{\sigma} = \sqrt{2\sigma}\, dW_{\sigma}$$ |
@@ -202,7 +202,7 @@ The table below summarizes these three forward processes in terms of their noise
 
 These SDEs can all be viewed as different reparameterizations of time and state. For completeness, the underlying tranformation between time parametrizations and state variables are:
 
-| **Name** | **Time variable** | **Time domain** | **State variable notation** |
+| **Model Type** | **Time variable** | **Time domain** | **State variable notation** |
 | --- | --- | --- | --- |
 | Variance-preserving (VP) | $$t$$ | $$[0, T]$$ | $$x_t$$ |
 | Variance-exploding-Karras (VE-Karras) | $$\sigma = \sqrt{e^{t} - 1}$$ | $$[0, \Sigma]$$ | $$z_{\sigma(t)} = x_t e^{\frac{t}{2}}$$ |
@@ -248,7 +248,8 @@ $$
 
 where $\mathbf{s}(\mathbf{x}, t) = \nabla_{\mathbf{x}} \log p_t(\mathbf{x})$ is the score function of $p_t(\mathbf{x})$. We have utilized the property that $$\sqrt{2}\, d\mathbf{W}_\tau = \sqrt{2 dt} \boldsymbol{\epsilon} = \sqrt{dt} \boldsymbol{\epsilon}_1 + \sqrt{dt} \boldsymbol{\epsilon}_2 = d\mathbf{W}_\tau^{(1)} + d\mathbf{W}_\tau^{(2)}$$. 
 
-The "Forward" part in this decomposition corresponds to the forward diffusion process, effectively **increasing the forward diffusion time $t$ by $d\tau$**, bringing the distribution to $p_{t + d\tau}(\mathbf{x})$. Since the forward and reverse components combine to form an "identity" operation, the "Reverse" part must reverse the forward process—**decreasing the forward diffusion time $t$ by $d\tau$** and restoring the distribution back to $p_t(\mathbf{x})$.
+The "Forward" part in this decomposition corresponds to the forward diffusion process, effectively **increasing the forward diffusion time $t$ by $d\tau$**, bringing the distribution to $p_{t + d\tau}(\mathbf{x})$. Since the forward and reverse components combine to form an "identity" operation, the "Reverse" part must reverse the forward process—**decreasing the forward diffusion time $t$ by $d\tau$** and restoring the distribution back to $p_t(\mathbf{x})$—which answers the question **"How does the reverse process invert the forward process to generate data from pure noise?"**
+
 
 
 Now we can read the reverse process according to the reverse part in the equation above, and a reverse diffusion time $t'$ different from the forward diffusion time $t$:
@@ -261,19 +262,22 @@ The reverse diffusion process itself is also a standalone SDE that advances the 
 
 The same decomposition approach can be applied to other diffusion schemes. The following table summarizes how each parameterization relates its Langevin dynamics to its corresponding forward and reverse processes:
 
-| **Name** | **Langevin dynamics** | **Forward Split** | **Reverse Split** |
+| **Model Type** | **Langevin dynamics** | **Forward Split** | **Reverse Split** |
 | --- | --- | --- | --- |
 | VP-SDE/<br>ODE | $$dx = \mathbf{s}_x\, d\tau + \sqrt{2}\, d W_\tau$$<br>$$dx = \frac{1}{2} \mathbf{s}_x\, d\tau + d W_\tau$$ | $$d x = - \tfrac{1}{2} x\, d\tau + dW_\tau$$ | $$dx = \left[ \frac{1}{2} x + \mathbf{s}_x \right] d\tau + dW_{\tau}$$<br>$$dx = \frac{1}{2} \left( x + \mathbf{s}_x \right) d\tau$$ |
 | VE-Karras | $$dz = \tau\, \mathbf{s}_z\, d\tau + \sqrt{2 \tau}\, d W_\tau$$ | $$dz = \sqrt{2\tau}\, dW_{\tau}$$ |  $$dz = \tau\, \mathbf{s}_z\, d\tau $$ |
 | Rectified flow | $$dr = \frac{\tau}{1+\tau} \mathbf{s}_r\, d\tau + \sqrt{\frac{2\tau}{1+\tau}}\, d W_\tau$$  | $$dr = -\frac{r}{1-\tau}\, d\tau + \sqrt{\frac{2\tau}{1-\tau}}\, dW_{\tau}$$  |  $$dr = \frac{\tau\, \mathbf{s}_r + r}{1-\tau} d\tau$$ |
 
-Note that the $\mathbf{s}(\mathbf{x}_{t'}, t)$ term in the reverse process still depends on the forward time $t$; we need the relationship between the forward time $t$ and the reverse time $t'$ to close the equation. A single reverse-time step $dt'$ can be understood in two complementary ways:
+A key observation from this table is that we present two distinct splittings for the VP model: the SDE and ODE versions. Both are essentially decompositions of different Langevin dynamics, differing only in their time scaling functions $g(\tau)$. The ODE version corresponds to a splitting where the reverse process contains no stochastic term $dW$, effectively eliminating the Brownian noise component. This directly answers the question **"How can ODE-based and SDE-based diffusion models be unified under a single framework?"**
+
+Besides the decomposition of Langevin dynamics, we still have one problem: note that the $\mathbf{s}(\mathbf{x}_{t'}, t)$ term in the reverse process still depends on the forward time $t$, not the reverse time $t'$; we need the relationship between the forward time $t$ and the reverse time $t'$ to close the equation. 
+
+Note that a single reverse-time step $dt'$ can be understood in two complementary ways:
 
 1. **As an undoing of the forward diffusion:** one step of the reverse diffusion process with $dt' = \Delta t$ removes a small amount of noise and therefore **reduces** the forward diffusion time by $\Delta t$.
 
 
 2. **As forward evolution in its own clock:** the reverse diffusion process is itself a well-defined SDE/ODE in the variable $t'$, so one step with $dt' = \Delta t$ simply **advances** the reverse diffusion time from $t'$ to $t' + \Delta t$:
-
 
 
 Together, these two viewpoints determine how the forward and reverse clocks are related. Since a positive reverse-time step $dt' > 0$ both **decreases** the forward time $t$ and **increases** the reverse time $t'$, their infinitesimal increments must satisfy
@@ -299,11 +303,9 @@ $$
 
 in which $t' \in [0,T]$ is the reverse time, $\mathbf{s}(\mathbf{x}, t) = \nabla_{\mathbf{x}} \log p_t(\mathbf{x})$ is the score function of the density of $\mathbf{x}_{t}$ in the forward process.
 
-The above analysis applies not only to SDE reverse processes but also to ODE reverse processes. The following table summarizes the reverse diffusion processes for other parameterizations:
+The above analysis applies not only to SDE reverse processes but also to ODE reverse processes. The following table summarizes the reverse diffusion processes for different model types:
 
-
-
-| **Name** | **Reverse Time** | **Reverse time domain** | **Reverse Process** | **Relation to Score** |
+| **Model Type** | **Reverse Time** | **Reverse time domain** | **Reverse Process** | **Relation to Score** |
 | --- | --- | --- | --- | --- |
 | VP-SDE | $$t' = T - t$$ | $$t' \in [0, T]$$ | $$dx_{t'} = \left[ \frac{1}{2} x_{t'}+ \mathbf{s}(x_{t'}, T-t') \right] dt' + dW_{t'}$$ | $$\mathbf{s}(x, t) = \mathbf{s}_x(x, t)$$  |
 | VP-ODE | $$t' = T - t$$ | $$t' \in [0, T]$$ | $$dx_{t'} = \frac{1}{2} \left[ x_{t'} + \mathbf{s} (x_{t'}, T-t') \right] dt' $$ | $$ \mathbf{s}(x, t) = \mathbf{s}_x(x, t)$$  |
@@ -361,7 +363,7 @@ $$
 q_T(\mathbf{x}) = p_0(\mathbf{x}) \quad \text{(data distribution)}.  
 $$
 
-This means that **after evolving the reverse process from time $t'=0$ to $t'=T$, the resulting samples follow the exact same distribution as the original training data $p_0$**. This establishes a precise mathematical equivalence between the forward and reverse diffusion processes, demonstrating that the reverse process can effectively generate realistic image data starting from pure Gaussian noise.
+This result means that if we run the reverse process from time \(t' = 0\) to \(t' = T\), the final samples follow exactly the same distribution as the original training data \(p_0\). In other words, the forward and reverse processes form an exact prior–posterior pair: the forward process maps data to noise, and the reverse process maps noise back to data. In practice, training introduces approximation error, but the theoretical target is exact equality. Ordinary VAEs, by contrast, only require the decoder to approximate the encoder’s posterior, with no guarantee of exactness even at the ELBO optimum. This clarifies **Why are diffusion models theoretically superior to ordinary VAEs**.
 
 Now we have demonstrated that **reverse diffusion**—the dual of the forward process—can generate image data from noise. However, this requires access to the score function $\mathbf{s}(\mathbf{x}, t) = \nabla_{\mathbf{x}} \log p_t(\mathbf{x})$ at every timestep $t$. In practice, we approximate this function using a neural network.  In the next section, we will explain how to train such score networks.  
 
@@ -865,7 +867,7 @@ The following table list the loss for different parameterizations considered in 
   <table>
     <thead>
       <tr>
-        <th><strong>Name</strong></th>
+        <th><strong>Model Type</strong></th>
         <th><strong>Relation between initial and noisy variable</strong></th>
         <th><strong>function modeled by NN</strong></th>
         <th><strong>$\mathbf{s}_\theta$ in terms of NN</strong></th>
@@ -902,7 +904,10 @@ The following table list the loss for different parameterizations considered in 
   </table>
 </div>
 
-The table above shows the loss functions for different diffusion model formulations. In practice, the coefficient outside the L2 norm (such as $\frac{1}{2}$, $\frac{1}{\sigma}$, or $\frac{1-s}{s}$) is often omitted or reweighted using a specific schedule to improve training performance. This is because modifying this coefficient only changes the relative weighting of the loss across different time steps $t$, without affecting the optimal solution at any particular time $t$.
+The table above shows the loss functions for different diffusion model types. For the VP model, the loss represents score matching that trains the score function. For the VE-Karras model, the loss is a denoising objective with a noise prediction model $\epsilon_\theta$. For the Rectified flow model, the loss is flow matching. These training objectives are now unified under the same maximum likelihood framework, answering the question: **"How can Denoising, Score Matching, and Flow Matching training objectives be unified and derived from first principles?"**
+
+
+A note on loss weighting: In practice, the coefficient outside the L2 norm (such as $\frac{1}{2}$, $\frac{1}{\sigma}$, or $\frac{1-s}{s}$) is often omitted or replaced with a custom weighting schedule to improve training performance. This is valid because modifying this coefficient only changes the relative importance of the loss across different time steps $t$—it does not affect the optimal solution at any individual time $t$. In other words, reweighting adjusts how much we prioritize learning at different noise levels, but the target (the true score or velocity) remains unchanged.
 
 Combining all results from previous discussion, we summarize the forward, reverse, and loss for each diffusion type:
 
@@ -910,7 +915,7 @@ Combining all results from previous discussion, we summarize the forward, revers
   <table>
     <thead>
       <tr>
-        <th><strong>Name</strong></th>
+        <th><strong>Model Type</strong></th>
         <th><strong>Forward Process</strong></th>
         <th><strong>Reverse Process</strong></th>
         <th><strong>Loss (up to a weight factor)</strong></th>
@@ -955,3 +960,8 @@ $$
 $$
 
 If we interpret $r_0$ and $r_1$ as the particle positions at times $s=0$ and $s=1$, then $r_1 - r_0$ is the average velocity over $[0,1]$, which motivates viewing $$\mathbf{v}_\theta$$ as a velocity field and writing the reverse process as $dr = -\mathbf{v}(r,s)\, ds$. This has led to the intuition that rectified flows are trained on simple "straight lines" and are therefore conceptually simpler than general diffusion models. However, $$\mathbf{v}_\theta(r,s)$$ still depends on time $s$, so the velocity changes over time and trajectories are not truly straight in state–time space. Since this velocity is directly related to the score function (as shown in the table), rectified flow is best understood as a particular parameterization of diffusion models rather than a fundamentally simpler class.
+
+
+### Conclusion
+
+From the Langevin perspective, diffusion models become conceptually simple: the forward and reverse processes are just a carefully chosen split of Langevin dynamics, which itself is an "identity map". This viewpoint simultaneously explains how sampling inverts noising, unifies SDE and ODE formulations as different splittings of the same dynamics, and clarifies why diffusion models implement exact maximum likelihood in a way ordinary VAEs do not. It also shows a simple way to demonstrate that denoising, score matching, and flow matching are not competing “recipes,” but equivalent ways of estimating the same underlying score field that governs Langevin dynamics. We hope this perspective helps demystify diffusion models to learners, so that new variants can be understood not as disconnected tricks, but as different parameterizations and discretizations of a single, coherent Langevin story.
