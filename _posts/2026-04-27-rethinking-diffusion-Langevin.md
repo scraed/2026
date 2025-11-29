@@ -743,9 +743,9 @@ $$
 $$
 
 The last terms,
-$\mathbb{E}_{\mathbf{x}_0, \mathbf{x}_t}\|\mathbf{s}(\mathbf{x}_t \mid \mathbf{x}_0)\|^2$
+$$\mathbb{E}_{\mathbf{x}_0, \mathbf{x}_t}\|\mathbf{s}(\mathbf{x}_t \mid \mathbf{x}_0)\|^2$$
 and
-$\mathbb{E}_{\mathbf{x}_t}\|\mathbf{s}(\mathbf{x}_t, t)\|^2$,
+$$\mathbb{E}_{\mathbf{x}_t}\|\mathbf{s}(\mathbf{x}_t, t)\|^2$$,
 do **not** depend on $\mathbf{s}_\theta$ at all, so they can only shift the loss by a constant.
 
 **Step 5: Handle the cross term.**  
@@ -814,7 +814,7 @@ $$
 \end{aligned}
 $$
 
-Taking $f(\mathbf{x}_t)$ to be each component of $\mathbf{s}_\theta(\mathbf{x}_t, t)$ shows that the DSM and SM cross terms are identical:
+Taking $$f(\mathbf{x}_t)$$ to be each component of $$\mathbf{s}_\theta(\mathbf{x}_t, t)$$ shows that the DSM and SM cross terms are identical:
 
 $$
 \mathbb{E}_{\mathbf{x}_0, \mathbf{x}_t}
@@ -855,11 +855,11 @@ $$
 DDPM is trained to removes the noise $\bar{\boldsymbol{\epsilon}}_i$ from $\mathbf{x}_i$ in the forward diffusion process, by training a denoising neural network $\boldsymbol{\epsilon}_\theta( \mathbf{x}, t_i  )$ to predict and remove the noise $\bar{\boldsymbol{\epsilon}}_i $. This means that DDPM minimizes the **denoising objective** [^Ho2020DenoisingDP]:
 
 
-| **Name** | **Relation between initial and noisy variable** | **g(·)** | **Score** |
-| --- | --- | --- | --- |
-| Variance-preserving (VP) | $$x_t = \sqrt{\alpha_t}\, x_0 + \sqrt{1-\alpha_t}\, \boldsymbol{\epsilon}$$ | $$g(t) = 1$$ | $$\nabla_{x_t} \log p(x_t \mid x_0) = -\frac{\boldsymbol{\epsilon}}{\sqrt{1-\alpha_t}}$$ |
-| Variance-exploding-Karras (VE-Karras) | $$z_\sigma = z_0 + \sigma\, \boldsymbol{\epsilon}$$ | $$g(\sigma) = \sqrt{2\sigma}$$ | $$\nabla_{z_\sigma} \log p(z_\sigma \mid z_0) = -\frac{\boldsymbol{\epsilon}}{\sigma}$$ |
-| Flow | $$r_s = (1-s)\, r_0 + s\, \boldsymbol{\epsilon}$$ | $$g(s) = \sqrt{\frac{2s}{1-s}}$$ | $$\nabla_{r_s} \log p(r_s \mid r_0) = -\frac{\boldsymbol{\epsilon}}{s}$$ |
+| **Name** | **Relation between initial and noisy variable** | **$$\nabla \log p(x_t \mid x_0)$$** | **$$\nabla \log q(x_t)$$** | **loss $$L_t$$** |
+| --- | --- | --- | --- | --- |
+| Variance-preserving (VP) | $$x_t = \sqrt{\alpha_t}\, x_0 + \sqrt{1-\alpha_t}\, \boldsymbol{\epsilon}$$ | $$-\frac{\boldsymbol{\epsilon}}{\sqrt{1-\alpha_t}}$$ | $$\mathbf{s}_x(x_t, t)$$ | $$\left\| -\frac{\boldsymbol{\epsilon}}{\sqrt{1-\alpha_t}} - \mathbf{s}_x(x_t, t) \right\|^2$$ |
+| Variance-exploding-Karras (VE-Karras) | $$z_\sigma = z_0 + \sigma\, \boldsymbol{\epsilon}$$ | $$-\frac{\boldsymbol{\epsilon}}{\sigma}$$ | $$-\frac{\boldsymbol{\epsilon}(z_\sigma, \sigma)}{\sigma}$$ | $$\frac{2}{\sigma} \left\| \boldsymbol{\epsilon}(z_\sigma, \sigma) - \boldsymbol{\epsilon} \right\|^2$$ |
+| Flow | $$r_s = (1-s)\, r_0 + s\, \boldsymbol{\epsilon}$$ | $$-\frac{\boldsymbol{\epsilon}}{s}$$ | $$\frac{ -\mathbf{v}(r_s, s) (1-s) - r_s }{s}$$ | $$\frac{2(1-s)}{s} \left\|  \boldsymbol{\epsilon} - r_0  -\mathbf{v}(r_s, s)  \right\|^2$$ |
 
 
 Note: please use the table of contents as defined in the front matter rather than the traditional markdown styling.
