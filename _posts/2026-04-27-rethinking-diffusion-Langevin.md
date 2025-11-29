@@ -422,7 +422,7 @@ L_t
           \big\|\nabla \log p(\mathbf{x}, t)
                 - \nabla \log q(\mathbf{x}, t)\big\|^2
         d\mathbf{x} \\
-  &\propto \mathbb{E}_{\mathbf{x} \sim p(\mathbf{x}, t)}
+  &= \frac{1}{2} g(t)^2 \mathbb{E}_{\mathbf{x} \sim p(\mathbf{x}, t)}
             \big\|\nabla \log p(\mathbf{x}, t)
                   - \nabla \log q(\mathbf{x}, t)\big\|^2
 \end{align*}
@@ -851,7 +851,7 @@ $$
 This tells us that training the diffusion model, we only need to figure out the $$\nabla \log p(\mathbf{x}_t \| \mathbf{x}_0)$$, then minimize the loss
 
 $$
-L_t=\mathbb{E}_{\mathbf{x}_0 \sim p_0}\,
+L_t= \frac{1}{2} g(t)^2\mathbb{E}_{\mathbf{x}_0 \sim p_0}\,
    \mathbb{E}_{\mathbf{x}_t \sim p_t(\cdot \mid \mathbf{x}_0)}
             \big\|\nabla \log p(\mathbf{x}_t | \mathbf{x}_0)
                   - \mathbf{s}_\theta\big\|^2 
@@ -894,7 +894,7 @@ The following table list the loss for different parameterizations considered in 
         <td>$$\mathbf{v}_{\theta}(r_s, s)$$</td>
         <td>$$\frac{ -\mathbf{v}_{\theta}(r_s, s) (1-s) - r_s }{s}$$</td>
         <td>$$-\frac{\boldsymbol{\epsilon}}{s}$$</td>
-        <td>$$\frac{1-s}{s} \mathbb{E}_{\mathbf{r}_0 \sim p_0}\mathbb{E}_{\mathbf{r}_s \sim p_s(\cdot \mid \mathbf{r}_0)} \big\| \mathbf{v}_{\theta}(r_s, s) + r_0 - \boldsymbol{\epsilon} \big\|^2$$</td>
+        <td>$$\frac{1-s}{s} \mathbb{E}_{\mathbf{r}_0 \sim p_0}\mathbb{E}_{\mathbf{r}_s \sim p_s(\cdot \mid \mathbf{r}_0)} \big\| \boldsymbol{\epsilon}- r_0 - \mathbf{v}_{\theta}(r_s, s)    \big\|^2$$</td>
       </tr>
     </tbody>
   </table>
