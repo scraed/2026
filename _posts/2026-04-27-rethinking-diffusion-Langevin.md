@@ -659,7 +659,7 @@ Let us write the *denoising score matching* (DSM) loss at time $t$ as
 
 $$
 L_{\text{DSM}}(\mathbf{s}_\theta)
-:= \mathbb{E}_{\mathbf{x}_0 \sim p_0}\,
+= \mathbb{E}_{\mathbf{x}_0 \sim p_0}\,
    \mathbb{E}_{\mathbf{x}_t \sim p_t(\cdot \mid \mathbf{x}_0)}
    \big\|
       \nabla_{\mathbf{x}_t} \log p_t(\mathbf{x}_t \mid \mathbf{x}_0)
@@ -671,7 +671,7 @@ and the *score matching* (SM) loss on the marginal $p_t(\mathbf{x}_t)$ as
 
 $$
 L_{\text{SM}}(\mathbf{s}_\theta)
-:= \mathbb{E}_{\mathbf{x}_t \sim p_t}
+= \mathbb{E}_{\mathbf{x}_t \sim p_t}
    \big\|
       \nabla_{\mathbf{x}_t} \log p_t(\mathbf{x}_t)
       - \mathbf{s}_\theta(\mathbf{x}_t, t)
@@ -858,9 +858,9 @@ DDPM is trained to removes the noise $\bar{\boldsymbol{\epsilon}}_i$ from $\math
 
 | **Name** | **function modeled by NN** | **\mathbf{s}_\theta$$ in terms of NN** | **$$\nabla \log p(x_t \mid x_0)$$** | **loss $$L_t$$** |
 | --- | --- | --- | --- | --- |
-| Variance-preserving (VP) | $$\mathbf{s}_{\theta}(x_t, t)$$ | $$\mathbf{s}_{\theta}(x_t, t)$$ | $$-\frac{\boldsymbol{\epsilon}}{\sqrt{1-\alpha_t}}$$ | $$\left\| -\frac{\boldsymbol{\epsilon}}{\sqrt{1-\alpha_t}} - \mathbf{s}_{\theta}(x_t, t) \right\|^2$$ |
-| Variance-exploding-Karras (VE-Karras) | $$\boldsymbol{\epsilon}_{\theta}(z_\sigma, \sigma)$$ | $$-\frac{\boldsymbol{\epsilon}_{\theta}(z_\sigma, \sigma)}{\sigma}$$ | $$-\frac{\boldsymbol{\epsilon}}{\sigma}$$ | $$\frac{2}{\sigma} \left\| \boldsymbol{\epsilon}_{\theta}(z_\sigma, \sigma) - \boldsymbol{\epsilon} \right\|^2$$ |
-| Flow | $$\mathbf{v}_{\theta}(r_s, s)$$ | $$\frac{ -\mathbf{v}_{\theta}(r_s, s) (1-s) - r_s }{s}$$ | $$-\frac{\boldsymbol{\epsilon}}{s}$$ | $$\frac{2(1-s)}{s} \left\| \mathbf{v}_{\theta}(r_s, s) + r_0 - \boldsymbol{\epsilon} \right\|^2$$ |
+| Variance-preserving (VP) | $$\mathbf{s}_{\theta}(x_t, t)$$ | $$\mathbf{s}_{\theta}(x_t, t)$$ | $$-\frac{\boldsymbol{\epsilon}}{\sqrt{1-\alpha_t}}$$ | $$\frac{1}{2}\left\| -\frac{\boldsymbol{\epsilon}}{\sqrt{1-\alpha_t}} - \mathbf{s}_{\theta}(x_t, t) \right\|^2$$ |
+| Variance-exploding-Karras (VE-Karras) | $$\boldsymbol{\epsilon}_{\theta}(z_\sigma, \sigma)$$ | $$-\frac{\boldsymbol{\epsilon}_{\theta}(z_\sigma, \sigma)}{\sigma}$$ | $$-\frac{\boldsymbol{\epsilon}}{\sigma}$$ | $$\frac{1}{\sigma} \left\| \boldsymbol{\epsilon}_{\theta}(z_\sigma, \sigma) - \boldsymbol{\epsilon} \right\|^2$$ |
+| Flow | $$\mathbf{v}_{\theta}(r_s, s)$$ | $$\frac{ -\mathbf{v}_{\theta}(r_s, s) (1-s) - r_s }{s}$$ | $$-\frac{\boldsymbol{\epsilon}}{s}$$ | $$\frac{1-s}{s} \left\| \mathbf{v}_{\theta}(r_s, s) + r_0 - \boldsymbol{\epsilon} \right\|^2$$ |
 
 
 Note: please use the table of contents as defined in the front matter rather than the traditional markdown styling.
