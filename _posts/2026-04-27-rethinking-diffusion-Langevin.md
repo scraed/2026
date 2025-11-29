@@ -2,12 +2,12 @@
 layout: distill
 title: Rethinking the Diffusion Model from a Langevin Perspective
 description: >
-  Diffusion models are typically introduced through fragmented perspectives involving VAEs, score matching, or flow matching, with dense, technically demanding mathematical derivations. This article presents a fresh Langevin perspective on the core theory of diffusion models, offering a simpler, cleaner, and more intuitive approach to the following questions:
-  1. Why are diffusion models more than just VAEs?
-  2. What is the difference between ODE and SDE framework?
-  3. How can VAE, Score Matching, and Flow Matching be unified under Maximum Likelihood?
-  4. Why should neural networks model score functions (or their variants), and how can we generalize to discrete diffusion models where score functions don't exist?
-  We demonstrate that the Langevin perspective provides strong pedagogical value for both learners and experienced researchers seeking deeper intuition.
+  Diffusion models are often introduced from fragmented perspectives, such as VAEs, score matching, or flow matching, accompanied by dense and technically demanding mathematical derivations that can take a long time to grasp. This article offers a fresh Langevin perspective on the core theory of diffusion models, presenting a simpler, clearer, and more intuitive approach to the following questions:
+  1. How does the reverse process invert the forward process to generate data from pure noise?
+  2. How can ODE-based and SDE-based diffusion models be unified under a single framework?
+  3. Why are diffusion models theoretically superior to VAEs?
+  4. How can Denoising, Score Matching, and Flow Matching training objectives be unified and derived from first principles?
+  We demonstrate that the Langevin perspective offers clear and straightforward answers to these questions, providing a comprehensive understanding of diffusion model theory in just a few hours. This approach has strong pedagogical value for both learners and experienced researchers seeking deeper intuition.
 date: 2026-04-27
 future: true
 htmlwidgets: true
@@ -114,12 +114,14 @@ Modern diffusion models are built upon two fundamental processes: the forward pr
 
 The VAE perspective interprets the forward and reverse diffusion processes as an encoder and decoder, respectively, and using the Evidence Lower Bound (ELBO) as the training objective <d-cite key="Luo2022UnderstandingDM"></d-cite><d-cite key="Ho2020DenoisingDP"></d-cite>.  While this approach is intuitive for much of the machine learning community, it involves dense mathematical derivations of the reverse processes and often blurs a crucial intuition: in VAEs, encoder and decoder are approximations of a prior-posterior pair, whereas in diffusion models, the prior and posterior are an exact prior-posterior pair. 
 
-The score-based perspective <d-cite key="Song2020ScoreBasedGM"></d-cite> usually starts from the mathematical exactness of the forward and reverse process pair from the point of view of stochastic equations. It typically introduces the forward process first and treats the reverse process as an oracle, often citing Anderson (1982) <d-cite key="Anderson1982ReversetimeDE"></d-cite>. However, fully grasping the derivation of the reverse process requires familiarity with advanced mathematical concepts like the Kolmogorov equations and the continuity equation, making this approach less accessible. Moreover, the choice of score matching objective is often treated as a given rather than derived from first principles, which obscures its connection to maximum likelihood.
+The score-based perspective <d-cite key="Song2020ScoreBasedGM"></d-cite> usually starts from the mathematical exactness of the forward and reverse process pair from the point of view of stochastic equations. It typically introduces the forward process first and treats the reverse process as an oracle, often citing Anderson (1982) <d-cite key="Anderson1982ReversetimeDE"></d-cite>. Fully understanding the reverse process requires familiarity with advanced mathematical concepts like the Kolmogorov equations and the continuity equation, making this approach less accessible. Moreover, the choice of score matching objective is often treated as a given rather than derived from first principles, which obscures its connection to ELBO and flow matching.
 
 
-A third valuable perspective is the flow-based viewpoint <d-cite key="liu2022flow"></d-cite>, which has become increasingly popular in modern diffusion models. This approach is theoretically equivalent to both the VAE and score-based frameworks, but it distinguishes itself by emphasizing an intuitive and visually accessible straight-line interpolation between data and noise. While this simplicity makes the flow-based perspective appealing and approachable, it also carries the risk of oversimplification, potentially overlooking the intricate pairing between the forward and reverse processes that underpin the theoretical foundation of diffusion models.
+A third valuable perspective is the flow-based viewpoint <d-cite key="liu2022flow"></d-cite>, which has become increasingly popular in modern diffusion models. This approach is theoretically equivalent to both the VAE and score-based frameworks <d-cite key="gao2025diffusion"></d-cite>, but it distinguishes itself by emphasizing an intuitive and formally accessible straight-line interpolation between data and noise. While this simplicity makes the flow-based perspective appealing and approachable, it also carries the risk of oversimplification, since the sampling path of a flow model is, in fact, not straight but curved, just like in other perspectives of diffusion models.
 
-In this article, we aims to offer a perspective that is both mathematically simple and nuanced: the Langevin perspective. This approach maintains a emphasis on the exactness of the forward and reverse processes, while relying only on fundamental techinques of stochastic differential equations (SDEs). The central insight is encapsulated in the following triangle relationship:
+In this article, we aim to offer a perspective that is both mathematically simple and nuanced: the Langevin perspective. This approach, relying only on fundamental techniques of stochastic differential equations (SDEs), gives a simple explanation of the paired relation between the forward and reverse processes, as well as a first-principles derivation of denoising, score matching, and flow matching objectives. 
+
+The central insight of the Langevin perspective is captured by the following triangular relationship:
 
 <div class="row mt-3">
     <div class="col-md-12 col-lg-10 offset-lg-1 mt-3 mt-md-0">
@@ -127,7 +129,7 @@ In this article, we aims to offer a perspective that is both mathematically simp
     </div>
 </div>
 
-which illustrates the connection among the forward, reverse diffusion process and the Langevin dynamics.
+which illustrates that the forward and reverse diffusion steps are a split of a step of Langevin dynamics.
 
 # Langevin Dynamics as 'Identity' Operation
 
