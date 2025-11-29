@@ -638,7 +638,8 @@ The only thing remains to handle is the score of the true data distribution $$\n
 
 $$
 \text{argmin}_{\mathbf{s}_\theta}
-   \mathbb{E}_{\mathbf{x} \sim p(\mathbf{x}, 0)}
+   \mathbb{E}_{\mathbf{x}_0 \sim p_0}\,
+   \mathbb{E}_{\mathbf{x}_t \sim p_t(\cdot \mid \mathbf{x}_0)}
             \big\|\nabla \log p(\mathbf{x}_t | \mathbf{x}_0)
                   - \mathbf{s}_\theta\big\|^2 = \text{argmin}_{\mathbf{s}_\theta}
    \mathbb{E}_{\mathbf{x} \sim p(\mathbf{x}, t)}
