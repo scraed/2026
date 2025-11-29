@@ -301,10 +301,10 @@ The above analysis applies not only to SDE reverse processes but also to ODE rev
 
 
 
-| **Name** | **Reverse Time** | **Reverse time domain** | **Reverse Process** | **Function modeled by NN** |
+| **Name** | **Reverse Time** | **Reverse time domain** | **Reverse Process** | **Relation to Score** |
 | --- | --- | --- | --- | --- |
-| VP-SDE | $$t' = T - t$$ | $$t' \in [0, T]$$ | $$dx_{t'} = \left[ \frac{1}{2} x_{t'}+ \mathbf{s}_x(x_{t'}, T-t') \right] dt' + dW_{t'}$$ | $$\mathbf{s}_x(x, t)$$  |
-| VP-ODE | $$t' = T - t$$ | $$t' \in [0, T]$$ | $$dx_{t'} = \frac{1}{2} \left[ x_{t'} + \mathbf{s}_x (x_{t'}, T-t') \right] dt' $$ | $$\mathbf{s}_x(x, t)$$  |
+| VP-SDE | $$t' = T - t$$ | $$t' \in [0, T]$$ | $$dx_{t'} = \left[ \frac{1}{2} x_{t'}+ \mathbf{s}(x_{t'}, T-t') \right] dt' + dW_{t'}$$ | $$\mathbf{s}(x, t) = \mathbf{s}_x(x, t)$$  |
+| VP-ODE | $$t' = T - t$$ | $$t' \in [0, T]$$ | $$dx_{t'} = \frac{1}{2} \left[ x_{t'} + \mathbf{s} (x_{t'}, T-t') \right] dt' $$ | $$ \mathbf{s}(x, t) = \mathbf{s}_x(x, t)$$  |
 | VE-Karras | $$\sigma' = \Sigma - \sigma$$ | $$\sigma' \in [0, \Sigma]$$ | $$dz_{\sigma'} = -\boldsymbol{\epsilon}(z_{\sigma'}, \Sigma-\sigma')d \sigma'$$ | $$\boldsymbol{\epsilon}(z, \sigma) =  -\sigma \mathbf{s}_z(z, \sigma) $$|
 | Flow | $$s' = 1 - s$$ | $$s' \in [0, 1]$$ | $$dr_{s'} = -\mathbf{v} (r_{s'}, 1-s') ds'$$ | $$\mathbf{v}(r, s) =  - \frac{s\, \mathbf{s}_r(r,s) + r_{s'}}{1-s} $$ |
 
@@ -855,11 +855,11 @@ $$
 DDPM is trained to removes the noise $\bar{\boldsymbol{\epsilon}}_i$ from $\mathbf{x}_i$ in the forward diffusion process, by training a denoising neural network $\boldsymbol{\epsilon}_\theta( \mathbf{x}, t_i  )$ to predict and remove the noise $\bar{\boldsymbol{\epsilon}}_i $. This means that DDPM minimizes the **denoising objective** [^Ho2020DenoisingDP]:
 
 
-| **Name** | **Relation between initial and noisy variable** | **$$\nabla \log p(x_t \mid x_0)$$** | **$$\nabla \log q(x_t)$$** | **loss $$L_t$$** |
+| **Name** | **function modeled by NN** | **\mathbf{s}_\theta$$ in terms of NN** | **$$\nabla \log p(x_t \mid x_0)$$** | **loss $$L_t$$** |
 | --- | --- | --- | --- | --- |
-| Variance-preserving (VP) | $$x_t = \sqrt{\alpha_t}\, x_0 + \sqrt{1-\alpha_t}\, \boldsymbol{\epsilon}$$ | $$-\frac{\boldsymbol{\epsilon}}{\sqrt{1-\alpha_t}}$$ | $$\mathbf{s}_x(x_t, t)$$ | $$\left\| -\frac{\boldsymbol{\epsilon}}{\sqrt{1-\alpha_t}} - \mathbf{s}_x(x_t, t) \right\|^2$$ |
-| Variance-exploding-Karras (VE-Karras) | $$z_\sigma = z_0 + \sigma\, \boldsymbol{\epsilon}$$ | $$-\frac{\boldsymbol{\epsilon}}{\sigma}$$ | $$-\frac{\boldsymbol{\epsilon}(z_\sigma, \sigma)}{\sigma}$$ | $$\frac{2}{\sigma} \left\| \boldsymbol{\epsilon}(z_\sigma, \sigma) - \boldsymbol{\epsilon} \right\|^2$$ |
-| Flow | $$r_s = (1-s)\, r_0 + s\, \boldsymbol{\epsilon}$$ | $$-\frac{\boldsymbol{\epsilon}}{s}$$ | $$\frac{ -\mathbf{v}(r_s, s) (1-s) - r_s }{s}$$ | $$\frac{2(1-s)}{s} \left\|  \boldsymbol{\epsilon} - r_0  -\mathbf{v}(r_s, s)  \right\|^2$$ |
+| Variance-preserving (VP) | $$\mathbf{s}_{\theta}(x_t, t)$$ | $$\mathbf{s}_{\theta}(x_t, t)$$ | $$-\frac{\boldsymbol{\epsilon}}{\sqrt{1-\alpha_t}}$$ | $$\left\| -\frac{\boldsymbol{\epsilon}}{\sqrt{1-\alpha_t}} - \mathbf{s}_{\theta}(x_t, t) \right\|^2$$ |
+| Variance-exploding-Karras (VE-Karras) | $$\boldsymbol{\epsilon}_{\theta}(z_\sigma, \sigma)$$ | $$-\frac{\boldsymbol{\epsilon}_{\theta}(z_\sigma, \sigma)}{\sigma}$$ | $$-\frac{\boldsymbol{\epsilon}}{\sigma}$$ | $$\frac{2}{\sigma} \left\| \boldsymbol{\epsilon}_{\theta}(z_\sigma, \sigma) - \boldsymbol{\epsilon} \right\|^2$$ |
+| Flow | $$\mathbf{v}_{\theta}(r_s, s)$$ | $$\frac{ -\mathbf{v}_{\theta}(r_s, s) (1-s) - r_s }{s}$$ | $$-\frac{\boldsymbol{\epsilon}}{s}$$ | $$\frac{2(1-s)}{s} \left\| \mathbf{v}_{\theta}(r_s, s) + r_0 - \boldsymbol{\epsilon} \right\|^2$$ |
 
 
 Note: please use the table of contents as defined in the front matter rather than the traditional markdown styling.
