@@ -1,8 +1,8 @@
 ---
 layout: distill
 title: Rethinking the Diffusion Model from a Langevin Perspective
-description: >
-  Diffusion models are often introduced from multiple perspectives—such as VAEs, score matching, or flow matching—accompanied by dense and technically demanding mathematics that can be difficult for beginners to grasp. This article offers a fresh Langevin perspective on diffusion models to lower the technical barrier, aiming to present diffusion models in a simpler, clearer, and more intuitive way while addressing the following questions:
+description:
+  Diffusion models are often introduced from multiple perspectives—such as VAEs, score matching, or flow matching—accompanied by dense and technically demanding mathematics that can be difficult for beginners to grasp. This article offers a fresh Langevin perspective on diffusion models to lower the technical barrier, aiming to present diffusion models in a simpler, clearer, and more intuitive way while addressing the following questions
   1. How does the reverse process invert the forward process to generate data from pure noise?
   2. How can ODE-based and SDE-based diffusion models be unified under a single framework?
   3. Why are diffusion models theoretically superior to ordinary VAEs?
