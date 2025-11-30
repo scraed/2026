@@ -83,6 +83,17 @@ ninja.data = [{
             window.location.href = "/2026/blog/2026/wait-do-we-need-to-wait/";
           
         },
+      },{id: "post-tracing-the-principles-behind-modern-diffusion-models",
+        
+          title: "Tracing the Principles Behind Modern Diffusion Models",
+        
+        description: "Diffusion models can feel like a jungle of acronyms, but the core idea is simple: start from noise and gradually move a cloud of samples until it looks like real data. This post gives an intuition-first tour showing that DDPMs, score-based models, and flow matching are the same recipe with different prediction targets, all rooted in the change-of-variable rule from calculus and powered by one shared “conditional trick” that turns learning into supervised regression. Finally, we zoom out to the speed problem and show how flow map models aim to replace many tiny denoising steps with a few big, accurate jumps toward real-time generation.",
+        section: "Posts",
+        handler: () => {
+          
+            window.location.href = "/2026/blog/2026/tracing-principles-behind-modern-diffusion-models/";
+          
+        },
       },{id: "post-symbolism-outside-connectionism-inside-the-trend-of-fusing-llms-and-automatic-programs-with-symbolic-intermediate-representations",
         
           title: "Symbolism Outside, Connectionism Inside: The Trend of Fusing LLMs and Automatic Programs with...",
@@ -92,6 +103,17 @@ ninja.data = [{
         handler: () => {
           
             window.location.href = "/2026/blog/2026/symbolic-connect/";
+          
+        },
+      },{id: "post-speeding-up-training-of-model-free-reinforcement-learning-a-comparative-evaluation-for-fast-and-accurate-learning",
+        
+          title: "Speeding up Training of Model-Free Reinforcement Learning :A Comparative Evaluation for Fast and...",
+        
+        description: "Reinforcement Learning (RL) represents a powerful framework for solving sequential decision-making problems in dynamic environments across diverse domains, such as control of robots or optimization of profit. However, its practical implementation requires navigating a variety of software packages, encompassing deep learning libraries (e.g., TensorFlow, PyTorch, JAX/Flax), environment frameworks (e.g., Gymnasium, Numpy), and hyperparameter optimization techniques and libraries. This post critically evaluates the common PyTorch, Gymnasium, and NumPy RL stack by comparing it to a faster alternative:JAX/Flax for both of model training and environment simulation. A Gridworld example evaluating both training speed and accuracy is utilized to test each of these packages. Additionally, we complement our example by a comprehensive tracking and monitoring of the training process using MLflow along with a thorough hyperparameters optimization via Optuna. The post concludes with a discussion of the results and final recommendations for optimal use cases of each of these packages.",
+        section: "Posts",
+        handler: () => {
+          
+            window.location.href = "/2026/blog/2026/speeding-up-rl/";
           
         },
       },{id: "post-getting-sac-to-work-on-a-massive-parallel-simulator-an-rl-journey-with-off-policy-algorithms",
@@ -109,7 +131,7 @@ ninja.data = [{
         
           title: "Rethinking the Diffusion Model from a Langevin Perspective",
         
-        description: "Diffusion models are often introduced from fragmented perspectives, such as VAEs, score matching, or flow matching, accompanied by dense and technically demanding mathematical derivations that can take a long time to grasp. This article offers a fresh Langevin perspective on the core theory of diffusion models, presenting a simpler, clearer, and more intuitive approach to the following questions: 1. How does the reverse process invert the forward process to generate data from pure noise? 2. How can ODE-based and SDE-based diffusion models be unified under a single framework? 3. Why are diffusion models theoretically superior to ordinary VAEs? 4. How can Denoising, Score Matching, and Flow Matching training objectives be unified and derived from first principles? We demonstrate that the Langevin perspective offers clear and straightforward answers to these questions, providing a comprehensive understanding of diffusion model theory in just a few hours. This approach has strong pedagogical value for both learners and experienced researchers seeking deeper intuition.",
+        description: "Diffusion models are often introduced from multiple perspectives—such as VAEs, score matching, or flow matching—accompanied by dense and technically demanding mathematics that can be difficult for beginners to grasp. This article offers a fresh Langevin perspective on diffusion models to lower the technical barrier, aiming to present diffusion models in a simpler, clearer, and more intuitive way while addressing the following questions: 1. How does the reverse process invert the forward process to generate data from pure noise? 2. How can ODE-based and SDE-based diffusion models be unified under a single framework? 3. Why are diffusion models theoretically superior to ordinary VAEs? 4. How can Denoising, Score Matching, and Flow Matching training objectives be unified and derived from first principles? We demonstrate that the Langevin perspective offers clear and straightforward answers to these questions, providing pedagogical value for both learners and experienced researchers seeking deeper intuition.",
         section: "Posts",
         handler: () => {
           
@@ -226,6 +248,17 @@ ninja.data = [{
             window.location.href = "/2026/blog/2026/introduction-to-stochastic-interpolants/";
           
         },
+      },{id: "post-from-trajectories-to-operators-a-unified-flow-map-perspective-on-generative-modeling",
+        
+          title: "From Trajectories to Operators — A Unified Flow Map Perspective on Generative Modeling...",
+        
+        description: "In this post, we reframe continuous-time generative modeling from integrating trajectories to learning two-time operators (flow maps). This operator view unifies diffusion, flow matching, and consistency models, and suggests a practical diagnostic — semigroup-consistent jumps yield both step-robust generation and low compositional drift. We derive Eulerian/Lagrangian distillation objectives and use inpainting experiments to show why semigroup-consistent jumps can be both step-robust and composition-stable.",
+        section: "Posts",
+        handler: () => {
+          
+            window.location.href = "/2026/blog/2026/flow-map-learning/";
+          
+        },
       },{id: "post-evalcards-for-standardized-evaluation-reporting",
         
           title: "EvalCards for Standardized Evaluation Reporting",
@@ -235,6 +268,17 @@ ninja.data = [{
         handler: () => {
           
             window.location.href = "/2026/blog/2026/evalcards/";
+          
+        },
+      },{id: "post-elastic-weight-consolidation-ewc-nuts-and-bolts",
+        
+          title: "Elastic Weight Consolidation (EWC): Nuts and Bolts",
+        
+        description: "A theoretical deep-dive into the Elastic Weight Consolidation method for continual learning, explaining the mathematical foundations and intuitions behind this influential approach to preventing catastrophic forgetting.",
+        section: "Posts",
+        handler: () => {
+          
+            window.location.href = "/2026/blog/2026/elastic-weight-consolidation-nuts-bolts/";
           
         },
       },{id: "post-ai-fundamentals-valuing-ai-agents-amp-data-assets",
