@@ -27,7 +27,6 @@ authors:
     url: "https://en.wikipedia.org/wiki/Albert_Einstein"
     affiliations:
       name: Department of Mathematics, Hong Kong University of Science and Technology
-authors:
   - name: Yuan Lan
     url: "https://en.wikipedia.org/wiki/Albert_Einstein"
     affiliations:
