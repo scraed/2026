@@ -72,42 +72,6 @@ _styles: >
     text-align: center;
     font-size: 16px;
   }
-  details {
-    background: transparent !important;
-    border: 1px solid rgba(0, 0, 0, 0.08);
-    border-radius: 4px;
-    padding: 0.75rem 1rem;
-    margin: 1rem 0;
-  }
-  details > summary {
-    cursor: pointer;
-    font-weight: 500;
-    list-style: none;
-    background: transparent !important;
-  }
-  details[open] {
-    background: transparent !important;
-  }
-  /* Make Mermaid diagrams match article background (remove pink) and center them */
-  .mermaid, svg.mermaid {
-    background: transparent !important;
-    background-color: transparent !important;
-    margin-left: auto;
-    margin-right: auto;
-    display: block;
-    text-align: center;
-  }
-  /* Remove box fill/border for nodes (formulas) */
-  .mermaid .node rect,
-  .mermaid .node polygon {
-    fill: transparent !important;
-    stroke: transparent !important;
-  }
-  /* Remove background for edge labels such as "Forward" */
-  .mermaid .edgeLabel rect {
-    fill: transparent !important;
-    stroke: transparent !important;
-  }
 ---
 
 Modern diffusion models <d-cite key="gregor2015draw"></d-cite> are built upon two fundamental processes: the forward process, which gradually corrupts data with noise during training, and the reverse process, which generates data by sampling from noise. The development of diffusion models has diverged into several valuable perspectives, illuminating different aspects of these processes. Most interpretations fall into three main frameworks: the Variational Autoencoder (VAE) perspective, the score-based perspective, and the flow-based perspective. Although there are many tutorials available, learning the core theory of diffusion models remains challenging for beginners due to mathematically dense derivations and fragmented intuitions scattered across these different perspectives. 
