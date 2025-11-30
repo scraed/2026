@@ -1,9 +1,13 @@
 ---
 layout: distill
-title: Sample Blog Post
-description: Your blog post's abstract.
-  Please add your abstract or summary here and not in the main body of your text.
-  Do not include math/latex or hyperlinks.
+title: Rethinking the Diffusion Model from a Langevin Perspective
+description: >
+  Diffusion models are often introduced from multiple perspectives—such as VAEs, score matching, or flow matching—accompanied by dense and technically demanding mathematics that can be difficult for beginners to grasp. This article offers a fresh Langevin perspective on diffusion models to lower the technical barrier, aiming to present diffusion models in a simpler, clearer, and more intuitive way while addressing the following questions:
+  1. How does the reverse process invert the forward process to generate data from pure noise?
+  2. How can ODE-based and SDE-based diffusion models be unified under a single framework?
+  3. Why are diffusion models theoretically superior to ordinary VAEs?
+  4. How can Denoising, Score Matching, and Flow Matching training objectives be unified and derived from first principles?
+  We demonstrate that the Langevin perspective offers clear and straightforward answers to these questions, providing pedagogical value for both learners and experienced researchers seeking deeper intuition.
 date: 2026-04-27
 future: true
 htmlwidgets: true
@@ -19,21 +23,19 @@ mermaid:
 #   - name: Anonymous
 
 authors:
-  - name: Albert Einstein
+  - name: Candi Zheng
     url: "https://en.wikipedia.org/wiki/Albert_Einstein"
     affiliations:
-      name: IAS, Princeton
-  - name: Boris Podolsky
-    url: "https://en.wikipedia.org/wiki/Boris_Podolsky"
+      name: Department of Mathematics, Hong Kong University of Science and Technology
+authors:
+  - name: Yuan Lan
+    url: "https://en.wikipedia.org/wiki/Albert_Einstein"
     affiliations:
-      name: IAS, Princeton
-  - name: Nathan Rosen
-    url: "https://en.wikipedia.org/wiki/Nathan_Rosen"
-    affiliations:
-      name: IAS, Princeton
+      name: Theory Lab, Huawei Technology Limited
+
 
 # must be the exact same name as your blogpost
-bibliography: 2026-04-27-distill-example-copy.bib
+bibliography: 2026-04-27-rethinking-diffusion-Langevin.bib
 
 # Add a table of contents to your post.
 #   - make sure that TOC names match the actual section names
@@ -69,6 +71,42 @@ _styles: >
     margin: 12px 0;
     text-align: center;
     font-size: 16px;
+  }
+  details {
+    background: transparent !important;
+    border: 1px solid rgba(0, 0, 0, 0.08);
+    border-radius: 4px;
+    padding: 0.75rem 1rem;
+    margin: 1rem 0;
+  }
+  details > summary {
+    cursor: pointer;
+    font-weight: 500;
+    list-style: none;
+    background: transparent !important;
+  }
+  details[open] {
+    background: transparent !important;
+  }
+  /* Make Mermaid diagrams match article background (remove pink) and center them */
+  .mermaid, svg.mermaid {
+    background: transparent !important;
+    background-color: transparent !important;
+    margin-left: auto;
+    margin-right: auto;
+    display: block;
+    text-align: center;
+  }
+  /* Remove box fill/border for nodes (formulas) */
+  .mermaid .node rect,
+  .mermaid .node polygon {
+    fill: transparent !important;
+    stroke: transparent !important;
+  }
+  /* Remove background for edge labels such as "Forward" */
+  .mermaid .edgeLabel rect {
+    fill: transparent !important;
+    stroke: transparent !important;
   }
 ---
 
