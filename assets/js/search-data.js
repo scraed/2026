@@ -303,6 +303,17 @@ ninja.data = [{
             window.location.href = "/2026/blog/2026/distill-example/";
           
         },
+      },{id: "post-rethinking-the-diffusion-model-from-a-langevin-perspective-bbb",
+        
+          title: "Rethinking the Diffusion Model from a Langevin Perspective bbb",
+        
+        description: "Diffusion models are often introduced from multiple perspectives—such as VAEs, score matching, or flow matching—accompanied by dense and technically demanding mathematics that can be difficult for beginners to grasp. This article offers a fresh Langevin perspective on diffusion models to lower the technical barrier, aiming to present diffusion models in a simpler, clearer, and more intuitive way while addressing the following questions: 1. How does the reverse process invert the forward process to generate data from pure noise? 2. How can ODE-based and SDE-based diffusion models be unified under a single framework? 3. Why are diffusion models theoretically superior to ordinary VAEs? 4. How can Denoising, Score Matching, and Flow Matching training objectives be unified and derived from first principles? We demonstrate that the Langevin perspective offers clear and straightforward answers to these questions, providing pedagogical value for both learners and experienced researchers seeking deeper intuition.",
+        section: "Posts",
+        handler: () => {
+          
+            window.location.href = "/2026/blog/2026/distill-example-copy/";
+          
+        },
       },{id: "post-from-u-nets-to-dits-the-architectural-evolution-of-text-to-image-diffusion-models-2021-2025",
         
           title: "From U-Nets to DiTs: The Architectural Evolution of Text-to-Image Diffusion Models (2021–2025)",
