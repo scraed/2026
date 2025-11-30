@@ -98,7 +98,7 @@ ninja.data = [{
         
           title: "Symbolism Outside, Connectionism Inside: The Trend of Fusing LLMs and Automatic Programs with...",
         
-        description: "This blog introduces the trend of fusing Large Language Models (LLMs) with external symbolic programs as a new paradigm in modern and future artificial intelligence (AI). This paradigm regards LLM output as a symbolic intermediate representation (IR), which is interpreted and executed by external symbolic programs to achieve the desired behavior. We firstly review and summarize the diverse applications of this paradigm. Then we introduce the more possible usages of this paradigm, from synthesizing grounded training data to composing modular systems of specialized neural networks. Finally, we introduce the frontier of this approach: applying formal methods to automatically verify the LLM&#39;s internal reasoning processes and outputs.",
+        description: "TThe history of Artificial Intelligence (AI) has largely been defined by a dichotomy: the flexible, probabilistic learning of Connectionism versus the rigorous, compositional logic of Symbolism. However, the emergence of Large Language Models (LLMs) is fostering a synthesis of these paradigms through a fundamental architectural shift: the move from Dense Monoliths to Modular, Routed Systems. This shift is fractal. At the Macro level, LLMs function as central planners, using symbolic protocols to orchestrate external tools and specialized neural agents. Simultaneously, at the Micro level, the models themselves are evolving into sparse, modular structures (such as Mixture-of-Experts) governed by internal routing mechanisms. In this post, we explore this transition toward Symbolic Routing. We discuss how this paradigm enables us to build societies of neural agents, discover latent modularity within dense networks, and leverage these structures to synthesize grounded training data and formally verify AI reasoning.",
         section: "Posts",
         handler: () => {
           
@@ -301,17 +301,6 @@ ninja.data = [{
         handler: () => {
           
             window.location.href = "/2026/blog/2026/distill-example/";
-          
-        },
-      },{id: "post-sample-blog-post",
-        
-          title: "Sample Blog Post",
-        
-        description: "Your blog post&#39;s abstract. Please add your abstract or summary here and not in the main body of your text. Do not include math/latex or hyperlinks.",
-        section: "Posts",
-        handler: () => {
-          
-            window.location.href = "/2026/blog/2026/distill-example-copy/";
           
         },
       },{id: "post-from-u-nets-to-dits-the-architectural-evolution-of-text-to-image-diffusion-models-2021-2025",
