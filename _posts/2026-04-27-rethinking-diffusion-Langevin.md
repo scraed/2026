@@ -41,16 +41,18 @@ bibliography: 2026-04-27-rethinking-diffusion-Langevin.bib
 #     for hyperlinks within the post to work correctly.
 #   - please use this format rather than manually creating a markdown table of contents.
 toc:
-  - name: Langevin Dynamics as 'Identity' Operation
-  - name: Spliting the Identity: Forward and Reverse Processes in diffusion models
+  - name: Equations
+  - name: Images and Figures
     subsections:
-      - name: The Forward Diffusion Process for training
-      - name: The Reverse Diffusion Process for Sampling
-      - name: Forward-Reverse Duality
-  - name: Training the Diffusion Model
-    subsections:
-      - name: Maximal likelihood Training of Diffusion Models
-      - name: Conclusion
+      - name: Interactive Figures
+  - name: Citations
+  - name: Footnotes
+  - name: Code Blocks
+  - name: Diagrams
+  - name: Tweets
+  - name: Layouts
+  - name: Other Typography?
+
 
 # Below is an example of injecting additional post-specific styles.
 # This is used in the 'Layouts' section of this post.
@@ -202,7 +204,8 @@ The table below summarizes these three forward processes of different model type
 
 </div>
 
-These SDEs can all be viewed as different reparameterizations of time and state. For completeness, the underlying tranformation between time parametrizations and state variables are:
+Each forward process has a characteristic way of mixing data and noise: The VP model uses the Ornstein–Uhlenbeck (OU) process, blending the data with noise in a geometric (Pythagorean) fashion. The VE-Karras model adds noise directly to the data without a restoring drift, while the Rectified flow model creates a straight-line interpolation between data and noise. Despite their differences, all these SDEs are fundamentally equivalent—they differ only by how time and state are reparameterized. For clarity, the table below shows the transformations between time parameters and state variables for each model:
+
 
 <div style="overflow-x: auto; max-width: 100%;" markdown="1">
 
@@ -213,6 +216,7 @@ These SDEs can all be viewed as different reparameterizations of time and state.
 | Rectified flow | $$s= \dfrac{\sqrt{e^{t} - 1}}{1 + \sqrt{e^{t} - 1}}$$ | $$[0, 1]$$ | $$r_{s(t)} = x_t \dfrac{e^{\frac{t}{2}}}{1 + \sqrt{e^{t} - 1}} $$ |
 
 </div>
+
 No matter which notation we choose, A forward diffusion step with a step size of $$\Delta t$$ acts as adding more noise to data, which is displayed in the following picture:
 
 <div class="row mt-3">
