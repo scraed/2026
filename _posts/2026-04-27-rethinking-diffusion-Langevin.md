@@ -41,18 +41,16 @@ bibliography: 2026-04-27-rethinking-diffusion-Langevin.bib
 #     for hyperlinks within the post to work correctly.
 #   - please use this format rather than manually creating a markdown table of contents.
 toc:
-  - name: Equations
-  - name: Images and Figures
+  - name: Langevin Dynamics as 'Identity' Operation
+  - name: "Spliting the Identity: Forward and Reverse Processes in diffusion models"
     subsections:
-      - name: Interactive Figures
-  - name: Citations
-  - name: Footnotes
-  - name: Code Blocks
-  - name: Diagrams
-  - name: Tweets
-  - name: Layouts
-  - name: Other Typography?
-
+      - name: The Forward Diffusion Process for training
+      - name: The Reverse Diffusion Process for Sampling
+      - name: Forward-Reverse Duality
+  - name: Training the Diffusion Model
+    subsections:
+      - name: Maximal likelihood Training of Diffusion Models
+      - name: Conclusion
 
 # Below is an example of injecting additional post-specific styles.
 # This is used in the 'Layouts' section of this post.
