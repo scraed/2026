@@ -41,17 +41,16 @@ bibliography: 2026-04-27-rethinking-diffusion-Langevin.bib
 #     for hyperlinks within the post to work correctly.
 #   - please use this format rather than manually creating a markdown table of contents.
 toc:
-  - name: Equations
-  - name: Images and Figures
+  - name: Langevin Dynamics as 'Identity' Operation
+  - name: Spliting the Identity: Forward and Reverse Processes in diffusion models
     subsections:
-      - name: Interactive Figures
-  - name: Citations
-  - name: Footnotes
-  - name: Code Blocks
-  - name: Diagrams
-  - name: Tweets
-  - name: Layouts
-  - name: Other Typography?
+      - name: The Forward Diffusion Process for training
+      - name: The Reverse Diffusion Process for Sampling
+      - name: Forward-Reverse Duality
+  - name: Training the Diffusion Model
+    subsections:
+      - name: Maximal likelihood Training of Diffusion Models
+      - name: Conclusion
 
 # Below is an example of injecting additional post-specific styles.
 # This is used in the 'Layouts' section of this post.
@@ -123,7 +122,7 @@ The central insight of the Langevin perspective is captured by the following tri
 
 <div class="row mt-3">
     <div class="col-md-12 col-lg-10 offset-lg-1 mt-3 mt-md-0">
-        {% include figure.liquid path="assets/img/2026-04-27-rethinking-diffusion-Langevin/forward-reverse-langevin.png" class="img-fluid rounded z-depth-1" %}
+        {% include figure.liquid path="assets/img/2026-04-27-rethinking-diffusion-Langevin/forward-reverse-langevin.png" class="img-fluid rounded" %}
     </div>
 </div>
 
@@ -131,13 +130,13 @@ which illustrates that the forward and reverse diffusion steps are a split of a 
 
 # Langevin Dynamics as 'Identity' Operation
 
-**Langevin Dynamics** is a special diffusion process that can generate samples from a probability distribution $$p(\mathbf{x})$$. It is defined as:
+Langevin Dynamics is a special diffusion process that can generate samples from a probability distribution $$p(\mathbf{x})$$. It is defined as:
 
 $$
 d\mathbf{x}_t = g(t)\, \mathbf{s}(\mathbf{x}_t) dt + \sqrt{2 g(t)}\, d\mathbf{W}_t, 
 $$
 
-where $$\mathbf{s}(\mathbf{x}) = \nabla_{\mathbf{x}} \log p(\mathbf{x})$$ is the score function of $$p(\mathbf{x})$$, $g(t)$ is an arbitrary positive function satisfying $\int_0^\infty g(t) dt = \infty$ to ensure ergodicity. The $d\mathbf{W}$ term is a Brownian noise what can be treated as $\sqrt{dt} \boldsymbol{\epsilon}$, where $\boldsymbol{\epsilon}$ is a standard Gaussian noise. This dynamics is often used as a Monte Carlo sampler to draw samples from $$p(\mathbf{x})$$, since $$p(\mathbf{x})$$ is its stationary distribution—the distribution that $$\mathbf{x}_t$$ converges to and and remains at as $$t \to \infty$$, regardless of the initial distribution of $$\mathbf{x}_0$$. 
+where $$\mathbf{s}(\mathbf{x}) = \nabla_{\mathbf{x}} \log p(\mathbf{x})$$ is the score function of $$p(\mathbf{x})$$, $g(t)$ is an arbitrary positive function satisfying $s = \int_0^\infty g(t) dt = \infty$. The $d\mathbf{W}$ term is a Brownian noise what can be treated as $\sqrt{dt} \boldsymbol{\epsilon}$, where $\boldsymbol{\epsilon}$ is a standard Gaussian noise. This dynamics is often used as a Monte Carlo sampler to draw samples from $$p(\mathbf{x})$$, since $$p(\mathbf{x})$$ is its **stationary distribution**—the distribution that $$\mathbf{x}_t$$ converges to and and remains at as $$t \to \infty$$, regardless of the initial distribution of $$\mathbf{x}_0$$. 
 
 
 
@@ -145,13 +144,14 @@ where $$\mathbf{s}(\mathbf{x}) = \nabla_{\mathbf{x}} \log p(\mathbf{x})$$ is the
 <details markdown="1">
 <summary><em>Optional: Derivation that $p(\mathbf{x})$ is the stationary distribution of Langevin dynamics</em> (click to expand)</summary>
 
-1. Set $g(t) = 1$ by rescaling time as $t' = \int_0^t g(\tau) d\tau$: under this change of variables, $d\mathbf{x}_t = g(t)\,\mathbf{s}(\mathbf{x}_t)dt + \sqrt{2g(t)}\,d\mathbf{W}_t$ becomes the same equation with $g(t')=1$, so $g(t)$ only fixes the time unit and does not change the stationary distribution. 
+1. Set $g(t) = 1$ by rescaling time as $t' = \int_0^t g(\tau)\, d\tau$. Under this change of variables, the dynamics become $d\mathbf{x}_{t'} = \mathbf{s}(\mathbf{x}_{t'})\, dt' + \sqrt{2}\, d\mathbf{W}_{t'}$, which is equivalent to the case $g(t') = 1$. Thus, $g(t)$ only sets the time unit and does not affect the stationary distribution.
 
-2. Write the dynamics in “energy” form as $$d\mathbf{x}_t = -\nabla E(\mathbf{x})\,dt + \sqrt{2}\,d\mathbf{W}_t$$. The random term $d\mathbf{W}_t$ perturbs the system toward equilibrium, where states with the same energy $E(\mathbf{x})$ have equal probability. Thus, the stationary distribution is $p(\mathbf{x}) = f(E(\mathbf{x}))$ for some function $f$.
 
-3. Consider $N$ independent copies $\mathbf{x}_1, \dots, \mathbf{x}_N$. Their joint density is the product $p(\mathbf{x}_1) \cdots p(\mathbf{x}_N)$. Treating them as a single system, the total energy is additive: $E(\mathbf{x}_1, \dots, \mathbf{x}_N) = \sum E(\mathbf{x}_i)$. So the joint stationary density must also be $g(\sum E(\mathbf{x}_i))$ for some function $g$. The only function satisfying both the product (independence) and sum (additivity) forms for all $N$ is the exponential: $f(E) = e^{-\beta E}$, yielding $p(\mathbf{x}) \propto e^{-\beta E(\mathbf{x})}$.
+2. Write the dynamics in “energy” form as $$d\mathbf{x}_t = -\nabla E(\mathbf{x})\,dt + \sqrt{2}\,d\mathbf{W}_t$$. The random term $d\mathbf{W}_t$ perturbs the system toward equilibrium, where states with the same energy $E(\mathbf{x})$ should have equal probability. Thus, the stationary distribution is $p(\mathbf{x}) = f(E(\mathbf{x}))$ for some function $f$.
 
-4. To find $\beta$, take $E(\mathbf{x}) = \frac{1}{2} \|\mathbf{x}\|^2$, giving the Ornstein–Uhlenbeck process $d\mathbf{x}_t = -\mathbf{x}\,dt + \sqrt{2}\,d\mathbf{W}_t$ with known stationary $\mathcal{N}(0, I)$, density $\propto e^{-\frac{1}{2} \|\mathbf{x}\|^2}$. Matching forms gives $\beta = 1$.
+3. Consider $N$ independent copies $\mathbf{x}_1, \dots, \mathbf{x}_N$. Their joint density is the product $f(E(\mathbf{x}_1)) \cdots f(E(\mathbf{x}_N))$. When treating them as a single system, the total energy is additive: $E(\mathbf{x}_1, \dots, \mathbf{x}_N) = \sum E(\mathbf{x}_i)$. Therefore, the joint stationary density must also be $g(\sum E(\mathbf{x}_i))$ for some function $g$. The only function $f$ that turns products into additions is the exponential: $f(E) = e^{-\beta E}$. This yields $p(\mathbf{x}) \propto e^{-\beta E(\mathbf{x})}$.
+
+4. To find $\beta$, take $E(\mathbf{x}) = \frac{1}{2} \|\mathbf{x}\|^2$, giving the well known Ornstein–Uhlenbeck process  $d\mathbf{x}_t = -\mathbf{x}\,dt + \sqrt{2}\,d\mathbf{W}_t$ <d-cite key="OrnsteinUhlenbeckWikipedia"></d-cite> with known stationary $\mathcal{N}(0, I)$, density $\propto e^{-\frac{1}{2} \|\mathbf{x}\|^2}$. Matching forms gives $\beta = 1$.
 
 Thus, the dynamics $$d\mathbf{x}_t = -\nabla E(\mathbf{x})\,dt + \sqrt{2}\,d\mathbf{W}_t$$ has stationary distribution $$\propto e^{-E(\mathbf{x})}$$, and $$d\mathbf{x}_t = \nabla_{\mathbf{x}} \log p(\mathbf{x}) \, dt + \sqrt{2} \, d\mathbf{W}_t$$ has stationary distribution $p(\mathbf{x})$. 
 
@@ -192,13 +192,19 @@ In practice, diffusion models are usually instantiated by choosing specific para
 
 The table below summarizes these three forward processes of different model types, as well as their corresponding SDEs expressed in terms of their respective time parameters:
 
+<div style="overflow-x: auto; max-width: 100%;" markdown="1">
+
 | **Model Type** | **Noise-level parameter** | **Relation between initial and noisy variable** | **Forward SDE** |
 | --- | --- | --- | --- |
 | Variance-preserving (VP) | $$\alpha_t = e^{-t}$$ | $$x_t = \sqrt{\alpha_t}\, x_0 + \sqrt{1-\alpha_t}\, \boldsymbol{\epsilon}$$ | $$d x_t = - \tfrac{1}{2} x_t\, dt + dW_t$$ |
 | Variance-exploding-Karras (VE-Karras) | $$\sigma$$ | $$z_\sigma = z_0 + \sigma\, \boldsymbol{\epsilon}$$ | $$dz_{\sigma} = \sqrt{2\sigma}\, dW_{\sigma}$$ |
 | Rectified flow | $$s$$ | $$r_s = (1-s)\, r_0 + s\, \boldsymbol{\epsilon}$$ | $$dr_{s} = -\frac{r_s}{1-s}\, ds + \sqrt{\frac{2s}{1-s}}\, dW_{s}$$ |
 
+</div>
+
 These SDEs can all be viewed as different reparameterizations of time and state. For completeness, the underlying tranformation between time parametrizations and state variables are:
+
+<div style="overflow-x: auto; max-width: 100%;" markdown="1">
 
 | **Model Type** | **Time variable** | **Time domain** | **State variable notation** |
 | --- | --- | --- | --- |
@@ -206,6 +212,7 @@ These SDEs can all be viewed as different reparameterizations of time and state.
 | Variance-exploding-Karras (VE-Karras) | $$\sigma = \sqrt{e^{t} - 1}$$ | $$[0, \Sigma]$$ | $$z_{\sigma(t)} = x_t e^{\frac{t}{2}}$$ |
 | Rectified flow | $$s= \dfrac{\sqrt{e^{t} - 1}}{1 + \sqrt{e^{t} - 1}}$$ | $$[0, 1]$$ | $$r_{s(t)} = x_t \dfrac{e^{\frac{t}{2}}}{1 + \sqrt{e^{t} - 1}} $$ |
 
+</div>
 No matter which notation we choose, A forward diffusion step with a step size of $$\Delta t$$ acts as adding more noise to data, which is displayed in the following picture:
 
 <div class="row mt-3">
@@ -260,12 +267,15 @@ The reverse diffusion process itself is also a standalone SDE that advances the 
 
 The same decomposition approach can be applied to other diffusion schemes. The following table summarizes how each parameterization relates its Langevin dynamics to its corresponding forward and reverse processes:
 
+<div style="overflow-x: auto; max-width: 100%;" markdown="1">
+
 | **Model Type** | **Langevin dynamics** | **Forward Split** | **Reverse Split** |
 | --- | --- | --- | --- |
 | VP-SDE/<br>ODE | $$dx = \mathbf{s}_x\, d\tau + \sqrt{2}\, d W_\tau$$<br>$$dx = \frac{1}{2} \mathbf{s}_x\, d\tau + d W_\tau$$ | $$d x = - \tfrac{1}{2} x\, d\tau + dW_\tau$$ | $$dx = \left[ \frac{1}{2} x + \mathbf{s}_x \right] d\tau + dW_{\tau}$$<br>$$dx = \frac{1}{2} \left( x + \mathbf{s}_x \right) d\tau$$ |
 | VE-Karras | $$dz = \tau\, \mathbf{s}_z\, d\tau + \sqrt{2 \tau}\, d W_\tau$$ | $$dz = \sqrt{2\tau}\, dW_{\tau}$$ |  $$dz = \tau\, \mathbf{s}_z\, d\tau $$ |
 | Rectified flow | $$dr = \frac{\tau}{1+\tau} \mathbf{s}_r\, d\tau + \sqrt{\frac{2\tau}{1+\tau}}\, d W_\tau$$  | $$dr = -\frac{r}{1-\tau}\, d\tau + \sqrt{\frac{2\tau}{1-\tau}}\, dW_{\tau}$$  |  $$dr = \frac{\tau\, \mathbf{s}_r + r}{1-\tau} d\tau$$ |
 
+</div>
 A key observation from this table is that we present two distinct splittings for the VP model: the SDE and ODE versions. Both are essentially decompositions of different Langevin dynamics, differing only in their time scaling functions $g(\tau)$. The ODE version corresponds to a splitting where the reverse process contains no stochastic term $dW$, effectively eliminating the Brownian noise component. This directly answers the question **"How can ODE-based and SDE-based diffusion models be unified under a single framework?"**
 
 Besides the decomposition of Langevin dynamics, we still have one problem: note that the $\mathbf{s}(\mathbf{x}_{t'}, t)$ term in the reverse process still depends on the forward time $t$, not the reverse time $t'$; we need the relationship between the forward time $t$ and the reverse time $t'$ to close the equation. 
@@ -303,6 +313,8 @@ in which $t' \in [0,T]$ is the reverse time, $\mathbf{s}(\mathbf{x}, t) = \nabla
 
 The above analysis applies not only to SDE reverse processes but also to ODE reverse processes. The following table summarizes the reverse diffusion processes for different model types:
 
+<div style="overflow-x: auto; max-width: 100%;" markdown="1">
+
 | **Model Type** | **Reverse Time** | **Reverse time domain** | **Reverse Process** | **Relation to Score** |
 | --- | --- | --- | --- | --- |
 | VP-SDE | $$t' = T - t$$ | $$t' \in [0, T]$$ | $$dx_{t'} = \left[ \frac{1}{2} x_{t'}+ \mathbf{s}(x_{t'}, T-t') \right] dt' + dW_{t'}$$ | $$\mathbf{s}(x, t) = \mathbf{s}_x(x, t)$$  |
@@ -310,6 +322,7 @@ The above analysis applies not only to SDE reverse processes but also to ODE rev
 | VE-Karras | $$\sigma' = \Sigma - \sigma$$ | $$\sigma' \in [0, \Sigma]$$ | $$dz_{\sigma'} = -\boldsymbol{\epsilon}(z_{\sigma'}, \Sigma-\sigma')d \sigma'$$ | $$\boldsymbol{\epsilon}(z, \sigma) =  -\sigma \mathbf{s}_z(z, \sigma) $$|
 | Rectified flow | $$s' = 1 - s$$ | $$s' \in [0, 1]$$ | $$dr_{s'} = -\mathbf{v} (r_{s'}, 1-s') ds'$$ | $$\mathbf{v}(r, s) =  - \frac{s\, \mathbf{s}_r(r,s) + r_{s'}}{1-s} $$ |
 
+</div>
 
 
 
@@ -861,45 +874,12 @@ $$
 
 The following table list the loss for different parameterizations considered in this article:
 
-<div style="overflow-x: auto;">
-  <table>
-    <thead>
-      <tr>
-        <th><strong>Model Type</strong></th>
-        <th><strong>Relation between initial and noisy variable</strong></th>
-        <th><strong>function modeled by NN</strong></th>
-        <th><strong>$\mathbf{s}_\theta$ in terms of NN</strong></th>
-        <th><strong>$\nabla \log p(x_t \mid x_0)$</strong></th>
-        <th><strong>loss $L_t$</strong></th>
-      </tr>
-    </thead>
-    <tbody>
-      <tr>
-        <td>Variance-preserving (VP)</td>
-        <td>$$x_t = \sqrt{\alpha_t}\, x_0 + \sqrt{1-\alpha_t}\, \boldsymbol{\epsilon}$$</td>
-        <td>$$\mathbf{s}_{\theta}(x_t, t)$$</td>
-        <td>$$\mathbf{s}_{\theta}(x_t, t)$$</td>
-        <td>$$-\frac{\boldsymbol{\epsilon}}{\sqrt{1-\alpha_t}}$$</td>
-        <td>$$\frac{1}{2}\mathbb{E}_{\mathbf{x}_0 \sim p_0}\mathbb{E}_{\mathbf{x}_t \sim p_t(\cdot \mid \mathbf{x}_0)}\big\| -\frac{\boldsymbol{\epsilon}}{\sqrt{1-\alpha_t}} - \mathbf{s}_{\theta}(x_t, t) \big\|^2$$</td>
-      </tr>
-      <tr>
-        <td>Variance-exploding-Karras (VE-Karras)</td>
-        <td>$$z_\sigma = z_0 + \sigma\, \boldsymbol{\epsilon}$$</td>
-        <td>$$\boldsymbol{\epsilon}_{\theta}(z_\sigma, \sigma)$$</td>
-        <td>$$-\frac{\boldsymbol{\epsilon}_{\theta}(z_\sigma, \sigma)}{\sigma}$$</td>
-        <td>$$-\frac{\boldsymbol{\epsilon}}{\sigma}$$</td>
-        <td>$$\frac{1}{\sigma}\mathbb{E}_{\mathbf{z}_0 \sim p_0}\mathbb{E}_{\mathbf{z}_\sigma \sim p_\sigma(\cdot \mid \mathbf{z}_0)} \big\| \boldsymbol{\epsilon}_{\theta}(z_\sigma, \sigma) - \boldsymbol{\epsilon} \big\|^2$$</td>
-      </tr>
-      <tr>
-        <td>Rectified flow</td>
-        <td>$$r_s = (1-s)\, r_0 + s\, \boldsymbol{\epsilon}$$</td>
-        <td>$$\mathbf{v}_{\theta}(r_s, s)$$</td>
-        <td>$$\frac{ -\mathbf{v}_{\theta}(r_s, s) (1-s) - r_s }{s}$$</td>
-        <td>$$-\frac{\boldsymbol{\epsilon}}{s}$$</td>
-        <td>$$\frac{1-s}{s} \mathbb{E}_{\mathbf{r}_0 \sim p_0}\mathbb{E}_{\mathbf{r}_s \sim p_s(\cdot \mid \mathbf{r}_0)} \big\| \boldsymbol{\epsilon}- r_0 - \mathbf{v}_{\theta}(r_s, s)    \big\|^2$$</td>
-      </tr>
-    </tbody>
-  </table>
+<div style="overflow-x: auto; max-width: 100%;" markdown="1">
+| **Model Type** | **Relation between initial and noisy variable** | **Function modeled by NN** | **$\mathbf{s}_\theta$ in terms of NN** | **$\nabla \log p(x_t \mid x_0)$** | **Loss $L_t$** |
+| --- | --- | --- | --- | --- | --- |
+| Variance-preserving (VP) | $$x_t = \sqrt{\alpha_t}\, x_0 + \sqrt{1-\alpha_t}\, \boldsymbol{\epsilon}$$ | $$\mathbf{s}_{\theta}(x_t, t)$$ | $$\mathbf{s}_{\theta}(x_t, t)$$ | $$-\frac{\boldsymbol{\epsilon}}{\sqrt{1-\alpha_t}}$$ | $$\frac{1}{2}\mathbb{E}_{\mathbf{x}_0 \sim p_0}\mathbb{E}_{\mathbf{x}_t \sim p_t(\cdot \mid \mathbf{x}_0)}\big\| -\frac{\boldsymbol{\epsilon}}{\sqrt{1-\alpha_t}} - \mathbf{s}_{\theta}(x_t, t) \big\|^2$$ |
+| Variance-exploding-Karras (VE-Karras) | $$z_\sigma = z_0 + \sigma\, \boldsymbol{\epsilon}$$ | $$\boldsymbol{\epsilon}_{\theta}(z_\sigma, \sigma)$$ | $$-\frac{\boldsymbol{\epsilon}_{\theta}(z_\sigma, \sigma)}{\sigma}$$ | $$-\frac{\boldsymbol{\epsilon}}{\sigma}$$ | $$\frac{1}{\sigma}\mathbb{E}_{\mathbf{z}_0 \sim p_0}\mathbb{E}_{\mathbf{z}_\sigma \sim p_\sigma(\cdot \mid \mathbf{z}_0)} \big\| \boldsymbol{\epsilon}_{\theta}(z_\sigma, \sigma) - \boldsymbol{\epsilon} \big\|^2$$ |
+| Rectified flow | $$r_s = (1-s)\, r_0 + s\, \boldsymbol{\epsilon}$$ | $$\mathbf{v}_{\theta}(r_s, s)$$ | $$\frac{ -\mathbf{v}_{\theta}(r_s, s) (1-s) - r_s }{s}$$ | $$-\frac{\boldsymbol{\epsilon}}{s}$$ | $$\frac{1-s}{s} \mathbb{E}_{\mathbf{r}_0 \sim p_0}\mathbb{E}_{\mathbf{r}_s \sim p_s(\cdot \mid \mathbf{r}_0)} \big\| \boldsymbol{\epsilon}- r_0 - \mathbf{v}_{\theta}(r_s, s)    \big\|^2$$ |
 </div>
 
 The table above shows the loss functions for different diffusion model types. For the VP model, the loss represents score matching that trains the score function. For the VE-Karras model, the loss is a denoising objective with a noise prediction model $\epsilon_\theta$. For the Rectified flow model, the loss is flow matching. These training objectives are now unified under the same maximum likelihood framework, answering the question: **"How can Denoising, Score Matching, and Flow Matching training objectives be unified and derived from first principles?"**
@@ -909,43 +889,15 @@ A note on loss weighting: In practice, the coefficient outside the L2 norm (such
 
 Combining all results from previous discussion, we summarize the forward, reverse, and loss for each diffusion type:
 
-<div style="overflow-x: auto;">
-  <table>
-    <thead>
-      <tr>
-        <th><strong>Model Type</strong></th>
-        <th><strong>Forward Process</strong></th>
-        <th><strong>Reverse Process</strong></th>
-        <th><strong>Loss (up to a weight factor)</strong></th>
-      </tr>
-    </thead>
-    <tbody>
-      <tr>
-        <td>VP-SDE</td>
-        <td>$$x_t = \sqrt{\alpha_t}\, x_0 + \sqrt{1-\alpha_t}\, \boldsymbol{\epsilon}$$</td>
-        <td>$$dx_{t'} = \left[ \frac{1}{2} x_{t'}+ \mathbf{s}(x_{t'}, T-t') \right] dt' + dW_{t'}$$</td>
-        <td>$$\mathbb{E}_{\mathbf{x}_0 \sim p_0}\mathbb{E}_{\mathbf{x}_t \sim p_t(\cdot \mid \mathbf{x}_0)}\big\| -\frac{\boldsymbol{\epsilon}}{\sqrt{1-\alpha_t}} - \mathbf{s}_{\theta}(x_t, t) \big\|^2$$</td>
-      </tr>
-      <tr>
-        <td>VP-ODE</td>
-        <td>$$x_t = \sqrt{\alpha_t}\, x_0 + \sqrt{1-\alpha_t}\, \boldsymbol{\epsilon}$$</td>
-        <td>$$dx_{t'} = \frac{1}{2} \left[ x_{t'} + \mathbf{s} (x_{t'}, T-t') \right] dt' $$</td>
-        <td>$$\mathbb{E}_{\mathbf{x}_0 \sim p_0}\mathbb{E}_{\mathbf{x}_t \sim p_t(\cdot \mid \mathbf{x}_0)}\big\| -\frac{\boldsymbol{\epsilon}}{\sqrt{1-\alpha_t}} - \mathbf{s}_{\theta}(x_t, t) \big\|^2$$</td>
-      </tr>
-      <tr>
-        <td>VE-Karras</td>
-        <td>$$z_\sigma = z_0 + \sigma\, \boldsymbol{\epsilon}$$</td>
-        <td>$$dz_{\sigma'} = -\boldsymbol{\epsilon}(z_{\sigma'}, \Sigma-\sigma')d \sigma'$$</td>
-        <td>$$\mathbb{E}_{\mathbf{z}_0 \sim p_0}\mathbb{E}_{\mathbf{z}_\sigma \sim p_\sigma(\cdot \mid \mathbf{z}_0)} \big\| \boldsymbol{\epsilon}_{\theta}(z_\sigma, \sigma) - \boldsymbol{\epsilon} \big\|^2$$</td>
-      </tr>
-      <tr>
-        <td>Rectified flow</td>
-        <td>$$r_s = (1-s)\, r_0 + s\, \boldsymbol{\epsilon}$$</td>
-        <td>$$dr_{s'} = -\mathbf{v} (r_{s'}, 1-s') ds'$$</td>
-        <td>$$ \mathbb{E}_{\mathbf{r}_0 \sim p_0}\mathbb{E}_{\mathbf{r}_s \sim p_s(\cdot \mid \mathbf{r}_0)} \big\| \boldsymbol{\epsilon}- r_0 - \mathbf{v}_{\theta}(r_s, s) \big\|^2$$</td>
-      </tr>
-    </tbody>
-  </table>
+<div style="overflow-x: auto; max-width: 100%;" markdown="1">
+
+| **Model Type** | **Forward Process** | **Reverse Process** | **Loss (up to a weight factor)** |
+| --- | --- | --- | --- |
+| VP-SDE | $$x_t = \sqrt{\alpha_t}\, x_0 + \sqrt{1-\alpha_t}\, \boldsymbol{\epsilon}$$ | $$dx_{t'} = \left[ \frac{1}{2} x_{t'}+ \mathbf{s}(x_{t'}, T-t') \right] dt' + dW_{t'}$$ | $$\mathbb{E}_{\mathbf{x}_0 \sim p_0}\mathbb{E}_{\mathbf{x}_t \sim p_t(\cdot \mid \mathbf{x}_0)}\big\| -\frac{\boldsymbol{\epsilon}}{\sqrt{1-\alpha_t}} - \mathbf{s}_{\theta}(x_t, t) \big\|^2$$ |
+| VP-ODE | $$x_t = \sqrt{\alpha_t}\, x_0 + \sqrt{1-\alpha_t}\, \boldsymbol{\epsilon}$$ | $$dx_{t'} = \frac{1}{2} \left[ x_{t'} + \mathbf{s} (x_{t'}, T-t') \right] dt' $$ | $$\mathbb{E}_{\mathbf{x}_0 \sim p_0}\mathbb{E}_{\mathbf{x}_t \sim p_t(\cdot \mid \mathbf{x}_0)}\big\| -\frac{\boldsymbol{\epsilon}}{\sqrt{1-\alpha_t}} - \mathbf{s}_{\theta}(x_t, t) \big\|^2$$ |
+| VE-Karras | $$z_\sigma = z_0 + \sigma\, \boldsymbol{\epsilon}$$ | $$dz_{\sigma'} = -\boldsymbol{\epsilon}(z_{\sigma'}, \Sigma-\sigma')d \sigma'$$ | $$\mathbb{E}_{\mathbf{z}_0 \sim p_0}\mathbb{E}_{\mathbf{z}_\sigma \sim p_\sigma(\cdot \mid \mathbf{z}_0)} \big\| \boldsymbol{\epsilon}_{\theta}(z_\sigma, \sigma) - \boldsymbol{\epsilon} \big\|^2$$ |
+| Rectified flow | $$r_s = (1-s)\, r_0 + s\, \boldsymbol{\epsilon}$$ | $$dr_{s'} = -\mathbf{v} (r_{s'}, 1-s') ds'$$ | $$ \mathbb{E}_{\mathbf{r}_0 \sim p_0}\mathbb{E}_{\mathbf{r}_s \sim p_s(\cdot \mid \mathbf{r}_0)} \big\| \boldsymbol{\epsilon}- r_0 - \mathbf{v}_{\theta}(r_s, s) \big\|^2$$ |
+
 </div>
 
 
