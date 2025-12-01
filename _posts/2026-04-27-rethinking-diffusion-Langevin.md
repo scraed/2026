@@ -246,6 +246,8 @@ The concept behind the reverse process is intuitive: since Langevin dynamics act
 
 To formalize this, consider the VP case with the following Langevin dynamics for $p_t(\mathbf{x})$ with a time variable $\tau$, distinguished from the forward diffusion time $t$. This dynamics can be decomposed into forward and reverse components as follows:  
 
+<div style="overflow-x: auto; max-width: 100%;" markdown="1">
+
 $$
 \begin{split}  
 d\mathbf{x}_\tau &= \mathbf{s}(\mathbf{x}_\tau, t) d\tau + \sqrt{2}\, d\mathbf{W}_\tau, \\
@@ -253,7 +255,9 @@ d\mathbf{x}_\tau &= \mathbf{s}(\mathbf{x}_\tau, t) d\tau + \sqrt{2}\, d\mathbf{W
 \end{split}  
 $$
 
-where $\mathbf{s}(\mathbf{x}, t) = \nabla_{\mathbf{x}} \log p_t(\mathbf{x})$ is the score function of $p_t(\mathbf{x})$. We have utilized the property that $$\sqrt{2}\, d\mathbf{W}_\tau = \sqrt{2 dt} \boldsymbol{\epsilon} = \sqrt{dt} \boldsymbol{\epsilon}_1 + \sqrt{dt} \boldsymbol{\epsilon}_2 = d\mathbf{W}_\tau^{(1)} + d\mathbf{W}_\tau^{(2)}$$. 
+</div>
+
+where $\mathbf{s}(\mathbf{x}, t) = \nabla_{\mathbf{x}} \log p_t(\mathbf{x})$ is the score function of $p_t(\mathbf{x})$. Here, we split the noise term $\sqrt{2}\, d\mathbf{W}_\tau$ into two independent Gaussian increments, $d\mathbf{W}_\tau^{(1)}$ and $d\mathbf{W}_\tau^{(2)}$, such that their sum equals the original noise: $$\sqrt{2}\, d\mathbf{W}_\tau = d\mathbf{W}_\tau^{(1)} + d\mathbf{W}_\tau^{(2)}.$$
 
 The "Forward" part in this decomposition corresponds to the forward diffusion process, effectively **increasing the forward diffusion time $t$ by $d\tau$**, bringing the distribution to $p_{t + d\tau}(\mathbf{x})$. Since the forward and reverse components combine to form an "identity" operation, the "Reverse" part must reverse the forward process—**decreasing the forward diffusion time $t$ by $d\tau$** and restoring the distribution back to $p_t(\mathbf{x})$—which answers the question **"How does the reverse process invert the forward process to generate data from pure noise?"**
 
