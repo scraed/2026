@@ -72,7 +72,18 @@ ninja.data = [{
               handler: () => {
                 window.location.href = "https://iclr-blog-track.github.io/home/";
               },
-            },{id: "post-wait-do-we-need-to-wait-revisiting-budget-forcing-for-sequential-test-time-scaling",
+            },{id: "post-fans-frequency-adaptive-noise-shaping-for-diffusion-models",
+        
+          title: "FANS - Frequency-Adaptive Noise Shaping for Diffusion Models",
+        
+        description: "Diffusion models have achieved remarkable success in generative modeling, yet they often struggle with spectral bias,the tendency to prioritize low-frequency patterns while inadequately learning high-frequency details. This limitation stems from the uniform noise scheduling employed during training, which allocates equal denoising capacity across all frequencies regardless of the dataset&#39;s spectral characteristics. We introduce Frequency-Adaptive Noise Shaping (FANS), a principled framework that addresses this fundamental limitation by dynamically shaping noise distributions according to dataset-specific frequency importance. FANS operates on a simple insight - different datasets exhibit distinct spectral signatures, and noise scheduling should reflect these differences. The framework integrates seamlessly with existing diffusion architectures through a simple modification to the noise sampling procedure during training and inference.We validate FANS on synthetic datasets with controlled spectral properties as well as real world data (CIFAR10, CelebA, Texture, MultimodalUniverse) where we demonstrate consistent improvements over vanilla DDPM baselines. Our experiments reveal that FANS particularly excels on high-frequency-rich datasets, producing sharper, more detailed samples while maintaining comparable performance for standard natural image datasets like CIFAR10 and CelebA.",
+        section: "Posts",
+        handler: () => {
+          
+            window.location.href = "/2026/blog/2026/fans/";
+          
+        },
+      },{id: "post-wait-do-we-need-to-wait-revisiting-budget-forcing-for-sequential-test-time-scaling",
         
           title: "Wait, Do We Need to Wait? Revisiting Budget Forcing for Sequential Test-Time Scaling...",
         
@@ -81,6 +92,39 @@ ninja.data = [{
         handler: () => {
           
             window.location.href = "/2026/blog/2026/wait-do-we-need-to-wait/";
+          
+        },
+      },{id: "post-using-large-language-models-to-simulate-and-predict-human-decision-making",
+        
+          title: "Using Large Language Models to Simulate and Predict Human Decision-Making",
+        
+        description: "We explore how large language models can be used to predict human decisions in language-based persuasion games, comparing direct prompting, LLM-based data generation, and hybrid methods that mix synthetic and human data.",
+        section: "Posts",
+        handler: () => {
+          
+            window.location.href = "/2026/blog/2026/using-large-language-models-to-simulate-and-predict-human-decision-making/";
+          
+        },
+      },{id: "post-what-and-what-not-are-calibrated-uncertainties-actually-useful-for",
+        
+          title: "What (and What Not) are Calibrated Uncertainties Actually Useful for?",
+        
+        description: "The blogpost clarifies the usefulness of having a model with calibrated probabilities, something that is not often stated in the calibration literature. I shows that a calibrated model can be relied on to estimate average loss/reward, however, good calibration does not mean that a model is useful for per-sample decision making.",
+        section: "Posts",
+        handler: () => {
+          
+            window.location.href = "/2026/blog/2026/useful-calibrated-uncertainties/";
+          
+        },
+      },{id: "post-is-your-algorithm-unlearning-or-untraining",
+        
+          title: "Is your algorithm Unlearning or Untraining?",
+        
+        description: "Machine unlearning aims to post-process a trained model in order to remove the influence of specific training examples or higher-level knowledge. We argue that the term unlearning is overloaded, with different use cases belonging to distinct problem formulations. This issue causes confusion in the community: it is often unclear what the goals of different proposed methods are, when they are expected to work, how they should be evaluated, and what baselines they should be compared against. To address this, we establish a fundamental distinction between two notions that we identify as Unlearning and Untraining, aiming to guide the field towards disambiguating technical definitions, to unlock more progress in clarifying goals, designing evaluation metrics for each, and ultimately better algorithms.",
+        section: "Posts",
+        handler: () => {
+          
+            window.location.href = "/2026/blog/2026/unlearning-or-untraining/";
           
         },
       },{id: "post-tracing-the-principles-behind-modern-diffusion-models",
@@ -116,17 +160,6 @@ ninja.data = [{
             window.location.href = "/2026/blog/2026/speeding-up-rl/";
           
         },
-      },{id: "post-getting-sac-to-work-on-a-massive-parallel-simulator-an-rl-journey-with-off-policy-algorithms",
-        
-          title: "Getting SAC to Work on a Massive Parallel Simulator: An RL Journey With...",
-        
-        description: "This post details how to get the Soft-Actor Critic (SAC) and other off-policy reinforcement learning algorithms to work on massively parallel simulators (e.g., Isaac Sim with thousands of robots simulated in parallel). In addition to tuning SAC for speed, the post also explores why SAC fails where PPO succeeds, highlighting a common problem in task design that many codebases share.",
-        section: "Posts",
-        handler: () => {
-          
-            window.location.href = "/2026/blog/2026/sac-massive-sim/";
-          
-        },
       },{id: "post-rethinking-the-diffusion-model-from-a-langevin-perspective",
         
           title: "Rethinking the Diffusion Model from a Langevin Perspective",
@@ -136,6 +169,17 @@ ninja.data = [{
         handler: () => {
           
             window.location.href = "/2026/blog/2026/rethinking-diffusion-Langevin/";
+          
+        },
+      },{id: "post-from-remote-sensing-foundation-models-to-world-models-a-pathway-in-the-perspective-of-generative-modeling",
+        
+          title: "From Remote Sensing Foundation Models to World Models: A pathway in the perspective...",
+        
+        description: "This blog post explores the pathway from remote sensing foundation models to world models through the lens of Generative Modeling, arguing that true understanding of the physical world comes from the ability to recreate it.",
+        section: "Posts",
+        handler: () => {
+          
+            window.location.href = "/2026/blog/2026/remote-sensing-foundation-models-to-world-models/";
           
         },
       },{id: "post-pushing-meta-continual-learning-algorithms-to-the-limit",
@@ -171,17 +215,6 @@ ninja.data = [{
             window.location.href = "/2026/blog/2026/model-misspecification-in-sbi/";
           
         },
-      },{id: "post-do-language-models-really-learn-to-mislead-humans-via-rlhf",
-        
-          title: "Do Language Models Really Learn to Mislead Humans via RLHF?",
-        
-        description: "This post details an investigation of claims in Language Models Learn to Mislead Humans Via RLHF (ICLR 2025) that RLHF may unintentionally lead LLM agents to mislead humans (U-Sophistry). We found that the misleading behavior in the paper is the result of an unrealistic experimental setup and not of U-Sophistry, and can therefore be categorized as intentional misleading (I-Sophistry).",
-        section: "Posts",
-        handler: () => {
-          
-            window.location.href = "/2026/blog/2026/mislead-lm/";
-          
-        },
       },{id: "post-misalignments-and-rl-failure-modes-in-the-early-stage-of-superintelligence",
         
           title: "Misalignments and RL Failure Modes in the Early Stage of Superintelligence",
@@ -202,28 +235,6 @@ ninja.data = [{
         handler: () => {
           
             window.location.href = "/2026/blog/2026/measuregen/";
-          
-        },
-      },{id: "post-research-directions-in-multimodal-chain-of-thought-mcot-with-sketching",
-        
-          title: "Research Directions in Multimodal Chain-of-Thought (MCoT) with Sketching",
-        
-        description: "This article explores adding sketching to Multimodal Chain-of-Thought (MCoT)reasoning to enhance AI capabilities. It reviews past methods, identifies key gaps such as the lack of sketch-rationale datasets, and proposes advancing the field through targeted data collection, unified multimodal models, and reinforcement learning. Ethical considerations include mitigating cultural bias and visual misrepresentation in generated sketches.",
-        section: "Posts",
-        handler: () => {
-          
-            window.location.href = "/2026/blog/2026/mcot-sketching/";
-          
-        },
-      },{id: "post-from-reinforce-to-dr-grpo-a-unified-perspective-on-llm-post-training",
-        
-          title: "From REINFORCE to Dr. GRPO: A Unified Perspective on LLM Post-Training",
-        
-        description: "Recently, many reinforcement learning (RL) algorithms have been applied to improve the post-training of large language models (LLMs). In this article, we aim to provide a unified perspective on the objectives of these RL algorithms, exploring how they relate to each other through the Policy Gradient Theorem — the fundamental theorem of policy gradient methods.",
-        section: "Posts",
-        handler: () => {
-          
-            window.location.href = "/2026/blog/2026/llm-post-training/";
           
         },
       },{id: "post-are-dilemmas-and-conflicts-in-llm-alignment-solvable-a-view-from-priority-graph",
@@ -259,6 +270,17 @@ ninja.data = [{
             window.location.href = "/2026/blog/2026/introduction-to-stochastic-interpolants/";
           
         },
+      },{id: "post-generative-ai-archaeology",
+        
+          title: "Generative AI Archaeology",
+        
+        description: "We document the rise of the Generative AI Archaeologist, whose tools include linear algebra and probability theory, jailbreaking, and debuggers, compared to the metal detectors, pickaxes, and radar surveys of traditional archaeology. GenAI Archaeologists have reported findings both through luck by observing unexpected behaviour in publicly accessible models, and by exploiting the mathematical properties of models. In this blog, we survey five types of findings unearthed by GenAI Archaeologists and discuss the status of those findings.",
+        section: "Posts",
+        handler: () => {
+          
+            window.location.href = "/2026/blog/2026/genai-archaeology/";
+          
+        },
       },{id: "post-from-trajectories-to-operators-a-unified-flow-map-perspective-on-generative-modeling",
         
           title: "From Trajectories to Operators — A Unified Flow Map Perspective on Generative Modeling...",
@@ -268,6 +290,28 @@ ninja.data = [{
         handler: () => {
           
             window.location.href = "/2026/blog/2026/flow-map-learning/";
+          
+        },
+      },{id: "post-understanding-and-fixing-bottlenecks-in-state-space-models-what-recency-and-over-smoothing-tell-us",
+        
+          title: "Understanding and Fixing Bottlenecks in State Space Models: What Recency and Over-Smoothing Tell...",
+        
+        description: "This work analyzes how recency bias and hidden-state over-smoothing emerge in modern State Space Models, revealing the bottlenecks that limit their ability to capture long-range dependencies.",
+        section: "Posts",
+        handler: () => {
+          
+            window.location.href = "/2026/blog/2026/fixing-bottlenecks-in-state-space-models/";
+          
+        },
+      },{id: "post-the-effect-of-feature-resolution-on-embedding-dimension",
+        
+          title: "The effect of feature resolution on embedding dimension",
+        
+        description: "High-dimensional data can be compressed into lower-dimensional embeddings while retaining a relatively large amount of relevant information, a phenomenon which, despite its widespread use, we struggle to fully explain. In this post, we use a common property of datasets - a limit on the number of features per data point - to show how a slight uniform dependence between features can be exploited to reduce the required dimensions by at least a third, while sacrificing no information about the features. To do so, we introduce the concepts of dataset resolution and feature composition of a dataset, and analyse how a set of orderings of the dataset affect the types of partitions we can create of the dataset.",
+        section: "Posts",
+        handler: () => {
+          
+            window.location.href = "/2026/blog/2026/feature-reduction/";
           
         },
       },{id: "post-evalcards-for-standardized-evaluation-reporting",
@@ -336,28 +380,6 @@ ninja.data = [{
             window.location.href = "/2026/blog/2026/diffusion-architecture-evolution/";
           
         },
-      },{id: "post-defining-and-quantifying-compositional-structure",
-        
-          title: "Defining and quantifying compositional structure",
-        
-        description: "Compositionality is thought to be crucial in human cognition and AI, but we lack a scientific understanding of what it is. What kind of data is compositionally structured? Can we mathematically quantify the amount and character of compositional structure? This blog post introduces a novel approach for doing so, building off of existing tools from algorithmic information theory that formalize notions of complexity and structure. The mathematical definition of compositionality that we&#39;ll come to is rigorous, precise, and general, and the hope is that it can inspire novel research directions in AI for uncovering compositional structure in natural data.",
-        section: "Posts",
-        handler: () => {
-          
-            window.location.href = "/2026/blog/2026/compositionality/";
-          
-        },
-      },{id: "post-chunktabpfn-training-free-long-context",
-        
-          title: "ChunkTabPFN: Training-free Long Context",
-        
-        description: "Tabular foundation models struggle with large datasets due to the quadratic attention. While methods like FlashAttention promise scalability, practical challenges persist in their application to tabular foundation models. Our work resolves these hurdles, enabling efficient attention, and reveals that contrary to the eariler reports, TabPFN&#39;s performance improves with larger contexts, highlighting its inherent robustness and minimal fine-tuning needs when scaling to complex, long datasets from the TabArena benchmark.",
-        section: "Posts",
-        handler: () => {
-          
-            window.location.href = "/2026/blog/2026/chunked-tabpfn/";
-          
-        },
       },{id: "post-budget-alignment-making-models-reason-in-the-user-39-s-language",
         
           title: "Budget Alignment: Making Models Reason in the User&#39;s Language",
@@ -367,6 +389,17 @@ ninja.data = [{
         handler: () => {
           
             window.location.href = "/2026/blog/2026/budget-alignment/";
+          
+        },
+      },{id: "post-beyond-the-rerun-why-reproducibility-is-failing-science",
+        
+          title: "Beyond the Rerun: Why Reproducibility is Failing Science",
+        
+        description: "Is reproducibility enough? We discuss the current reproducibility crisis and the limitations that focusing solely on this aspect of scientific project quality imposes on science. We propose a broader approach to the problem of scientific debt and outline practical actions researchers can take in their research. We also draw attention to the need for community action on the issue.",
+        section: "Posts",
+        handler: () => {
+          
+            window.location.href = "/2026/blog/2026/beyond-the-rerun/";
           
         },
       },{id: "books-the-godfather",
