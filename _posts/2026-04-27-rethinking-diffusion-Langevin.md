@@ -187,7 +187,7 @@ An enhancement to Langevin dynamics is the Annealed Langevin dynamics <d-cite ke
 
 Diffusion models take this concept a step further by completely separating the training and inference processes: one process trains the model at different noise levels, while another process samples from noise to generate data.
 
-### The Forward Diffusion Process for training
+## The Forward Diffusion Process for training
 
 The forward diffusion process in DDPM generates the necessary training data: clean images and their progressively noised counterparts. In continuous time, a very general way to describe such a process is by an Itô SDE of the form
 
@@ -237,7 +237,7 @@ No matter which notation we choose, A forward diffusion step with a step size of
 </div>
 
 
-### The Reverse Diffusion Process for Sampling
+## The Reverse Diffusion Process for Sampling
 
 The reverse diffusion process is the conjugate of the forward process. While the forward process evolves $p_t(\mathbf{x})$ toward Gaussian noise, the reverse process reverses this evolution, restoring Gaussian noise to $p_t$.
 
@@ -411,18 +411,11 @@ Training the reverse diffusion process involves addressing two fundamental quest
 
 The core mathematical object to model is the **score function**—the gradient of the log-probability density. However, contemporary implementations often parameterize the model to predict alternative quantities such as noise, clean data, or flow velocity. While these different parameterizations are mathematically equivalent (being rescaled versions of the same underlying score function), it is less transparent how the they should be explicitly incorporated into the same training objective.
 
-The variational autoencoder (VAE) perspective addresses the training objective by maximizing the Evidence Lower Bound (ELBO), a principled but approximate surrogate for maximum likelihood. While ELBO provides a systematic way to derive training objectives, this perspective can obscure the fact that diffusion models inherently perform true maximum likelihood estimation, distinguishing them from conventional VAEs and contributing to their empirical success.
-
-
-Alternatively, the score matching perspective motivates the use of **denoised score matching**, a method closely connected to maximum likelihood (see Lyu, S. (2009), *Interpretation and generalization of score matching*). However, employing the score function as a prior assumption—rather than deriving its necessity from first principles—limits the generality of this approach. Specifically, it becomes difficult to extend score matching to more general or discrete diffusion systems, where the notion of a continuous score function becomes less transparent.
-
-The flow matching perspective recasts score matching as "velocity learning" along straight lines, which simplifies the formalism. However, while this approach is easier to understand from first glance, it does not clarify the connection to maximum likelihood.
-
-To address these shortcomings, our goal is to derive the training objective directly from first principles, beginning with the maximum likelihood framework itself. By doing so, we reveal the fundamental connection between diffusion model loss and exact maximum likelihood, without presupposing the existence or explicit usage of the score function.
+Our goal is to derive the training objective directly from first principles, beginning with the maximum likelihood framework. By doing so, we reveal the fundamental connection between diffusion model loss and exact maximum likelihood, without presupposing the existence or explicit usage of the score function.
 
 ### Maximal likelihood Training of Diffusion Models
 
-We now aims to unify different parametrization of diffusion model under the maximum likelihood training framework. Suppose we have two distributions $p(\mathbf{x}, t)$ and $q(\mathbf{x}, t)$ that both evolve under the same forward diffusion process. Think of $p$ as the **true data distribution** pushed forward by the diffusion dynamics, and $q$ as the **model distribution**. At any fixed time $t$, their Kullback–Leibler (KL) divergence is
+Suppose we have two distributions $p(\mathbf{x}, t)$ and $q(\mathbf{x}, t)$ that both evolve under the same forward diffusion process. Think of $p$ as the **true data distribution** pushed forward by the diffusion dynamics, and $q$ as the **model distribution**. At any fixed time $t$, their Kullback–Leibler (KL) divergence is
 
 $$
 \mathrm{KL}\big(p_t \Vert q_t\big)
