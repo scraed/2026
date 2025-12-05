@@ -237,6 +237,17 @@ ninja.data = [{
             window.location.href = "/2026/blog/2026/performative-prediction/";
           
         },
+      },{id: "post-neural-audio-codecs-how-to-get-audio-into-llms",
+        
+          title: "Neural audio codecs: how to get audio into LLMs",
+        
+        description: "A look at why audio is harder to model than text and how we can make it easier with neural audio codecs. With a codec, we can turn audio into larger discrete tokens, train models to predict continuations for these tokens, and then decode those back into audio.",
+        section: "Posts",
+        handler: () => {
+          
+            window.location.href = "/2026/blog/2026/neural-audio-codecs/";
+          
+        },
       },{id: "post-misalignments-and-rl-failure-modes-in-the-early-stage-of-superintelligence",
         
           title: "Misalignments and RL Failure Modes in the Early Stage of Superintelligence",
