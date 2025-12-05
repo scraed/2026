@@ -19,18 +19,9 @@ mermaid:
   zoomable: true
 
 # Anonymize when submitting
-# authors:
-#   - name: Anonymous
-
 authors:
-  - name: Candi Zheng
-    url: "https://en.wikipedia.org/wiki/Albert_Einstein"
-    affiliations:
-      name: Department of Mathematics, Hong Kong University of Science and Technology
-  - name: Yuan Lan
-    url: "https://en.wikipedia.org/wiki/Albert_Einstein"
-    affiliations:
-      name: Theory Lab, Huawei Technology Limited
+  - name: Anonymous
+
 
 
 # must be the exact same name as your blogpost
