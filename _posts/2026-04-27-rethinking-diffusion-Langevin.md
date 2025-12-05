@@ -405,7 +405,7 @@ In other words, the forward and reverse processes form an exact prior–posterio
 
 Now we have demonstrated that **reverse diffusion**—the dual of the forward process—can generate image data from noise. However, this requires access to the score function $\mathbf{s}(\mathbf{x}, t) = \nabla_{\mathbf{x}} \log p_t(\mathbf{x})$ at every timestep $t$. In practice, we approximate this function using a neural network.  In the next section, we will explain how to train such score networks.  
 
-## Training the Diffusion Model
+# Training the Diffusion Model
 
 Training the reverse diffusion process involves addressing two fundamental questions: (1) What mathematical quantity should we model, and (2) What objective function should guide the training? 
 
@@ -413,7 +413,7 @@ The core mathematical object to model is the **score function**—the gradient o
 
 Our goal is to derive the training objective directly from first principles, beginning with the maximum likelihood framework. By doing so, we reveal the fundamental connection between diffusion model loss and exact maximum likelihood, without presupposing the existence or explicit usage of the score function.
 
-### Maximal likelihood Training of Diffusion Models
+## Maximal likelihood Training of Diffusion Models
 
 Suppose we have two distributions $p(\mathbf{x}, t)$ and $q(\mathbf{x}, t)$ that both evolve under the same forward diffusion process. Think of $p$ as the **true data distribution** pushed forward by the diffusion dynamics, and $q$ as the **model distribution**. At any fixed time $t$, their Kullback–Leibler (KL) divergence is
 
