@@ -192,15 +192,15 @@ where $$t \in [0,T]$$ is the forward diffusion time, $$\mathbf{x}_t$$ is the noi
 
 In practice, diffusion models are usually instantiated by choosing specific parameterizations of this SDE. The most common ones are the **variance-preserving (VP)** process, implemented in DDPMs as an Ornstein–Uhlenbeck dynamics that gently pulls samples toward the origin while injecting noise so that the marginal converges to a standard Gaussian; the **variance-exploding (VE)** process, where there is no restoring drift and the noise scale grows with time so that the variance “explodes”; and **flow-matching** formulations, which view generation as following a time-dependent flow that implements an “straight line” interpolation between data and noise under a carefully designed schedule.
 
-The table below summarizes these three forward processes of different model types, as well as their corresponding SDEs expressed in terms of their respective time parameters:
+The table below summarizes these three forward processes of different model types, as well as their corresponding SDEs expressed in terms of their respective noise-levels. In what follows, we adopt Karras'<d-cite key="Karras2022Elucidating"></d-cite> notation for the VE parameterization .
 
 <div style="overflow-x: auto; max-width: 100%;" markdown="1">
 
-| **Model Type** | **Noise-level parameter** | **Relation between initial and noisy variable** | **Forward SDE** |
+| **Model Type** | **Forward SDE** | **Noise-level parameter** | **Relation between initial and noisy variable** |
 | --- | --- | --- | --- |
-| Variance-preserving (VP) | $$\alpha_t = e^{-t}$$ | $$x_t = \sqrt{\alpha_t}\, x_0 + \sqrt{1-\alpha_t}\, \boldsymbol{\epsilon}$$ | $$d x_t = - \tfrac{1}{2} x_t\, dt + dW_t$$ |
-| Variance-exploding-Karras (VE-Karras) | $$\sigma$$ | $$z_\sigma = z_0 + \sigma\, \boldsymbol{\epsilon}$$ | $$dz_{\sigma} = \sqrt{2\sigma}\, dW_{\sigma}$$ |
-| Rectified flow | $$s$$ | $$r_s = (1-s)\, r_0 + s\, \boldsymbol{\epsilon}$$ | $$dr_{s} = -\frac{r_s}{1-s}\, ds + \sqrt{\frac{2s}{1-s}}\, dW_{s}$$ |
+| Variance-preserving (VP) | $$d x_t = - \tfrac{1}{2} x_t\, dt + dW_t$$ | $$\alpha_t = e^{-t}$$ | $$x_t = \sqrt{\alpha_t}\, x_0 + \sqrt{1-\alpha_t}\, \boldsymbol{\epsilon}$$ |
+| Variance-exploding-Karras (VE-Karras) | $$dz_{\sigma} = \sqrt{2\sigma}\, dW_{\sigma}$$ | $$\sigma$$ | $$z_\sigma = z_0 + \sigma\, \boldsymbol{\epsilon}$$ |
+| Rectified flow | $$dr_{s} = -\frac{r_s}{1-s}\, ds + \sqrt{\frac{2s}{1-s}}\, dW_{s}$$ | $$s$$ | $$r_s = (1-s)\, r_0 + s\, \boldsymbol{\epsilon}$$ |
 
 </div>
 
@@ -232,9 +232,9 @@ No matter which notation we choose, A forward diffusion step with a step size of
 
 ### The Reverse Diffusion Process for Sampling
 
-The reverse diffusion process is the conjugate of the forward process. While the forward process evolves $p_t(\mathbf{x})$ toward $\mathcal{N}(\mathbf{0},I)$, the reverse process reverses this evolution, restoring $\mathcal{N}(\mathbf{0},I)$ to $p_t$.
+The reverse diffusion process is the conjugate of the forward process. While the forward process evolves $p_t(\mathbf{x})$ toward Gaussian noise, the reverse process reverses this evolution, restoring Gaussian noise to $p_t$.
 
-The concept behind the reverse process is intuitive: since Langevin dynamics acts as an identity operation on a distribution—preserving it unchanged—any forward process composed with its corresponding reverse process should similarly yield an identity transformation. Specifically, at any time $t$, combining the forward and reverse processes must reproduce the Langevin dynamics for the distribution $p_t(\mathbf{x})$, as illustrated in the following diagram.
+The concept behind the reverse process is intuitive: since Langevin dynamics acts as an identity operation on a distribution—preserving it unchanged—any forward process composed with its corresponding reverse process should similarly yield an Langevin dynamics. Specifically, at any time $t$, combining the forward and reverse processes should reproduce the Langevin dynamics for the distribution $p_t(\mathbf{x})$, as illustrated in the following diagram.
 
 <div class="row mt-3">
     <div class="col-md-10 offset-md-1 col-lg-8 offset-lg-2 mt-3 mt-md-0">
