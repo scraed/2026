@@ -281,6 +281,8 @@ $$
 
 The reverse diffusion process itself is also a standalone SDE that advances the reverse diffusion time $t'$. If $$\mathbf{x}_{t'} \sim q_{t'}(\mathbf{x})$$, then one step of the reverse diffusion process with $dt' = \Delta t'$ brings it to $$\mathbf{x}_{t' + \Delta t'} \sim q_{t' + \Delta t'}(\mathbf{x})$$.
 
+#### How can ODE-based and SDE-based diffusion models be unified under a single framework?
+
 The same decomposition approach can be applied to other diffusion schemes. The following table summarizes how each parameterization relates its Langevin dynamics to its corresponding forward and reverse processes:
 
 <div style="overflow-x: auto; max-width: 100%;" markdown="1">
@@ -294,7 +296,6 @@ The same decomposition approach can be applied to other diffusion schemes. The f
 
 </div>
 
-#### How can ODE-based and SDE-based diffusion models be unified under a single framework?
 
 A key observation from this table is that we present two distinct splittings for the VP model: the SDE and ODE versions. Both are essentially decompositions of different Langevin dynamics, differing only in their time scaling functions $g(\tau)$. The ODE version corresponds to a splitting where the reverse process contains no stochastic term $dW$, effectively eliminating the Brownian noise component. 
 
@@ -679,7 +680,7 @@ $$
 where the LHS is the denoising score matching (DSM) loss while RHS is the score matching loss.
 
 <details markdown="1">
-<summary><em>Derivation Step 3 (optional): equivalence between DSM and SM losses</em> (click to expand)</summary>
+<summary><em>Derivation (optional): equivalence between DSM and SM losses</em> (click to expand)</summary>
 
 We now prove that the *denoising score matching* (DSM) loss and the *score matching* (SM) loss at time $t$ have the same minimizer.
 
@@ -722,6 +723,7 @@ $$
 \mathbf{s}(\mathbf{x}_t, t)
 := \nabla_{\mathbf{x}_t} \log p_t(\mathbf{x}_t).
 $$
+
 **Step 3: Expand both objectives.**  
 Using $\|\mathbf{a}-\mathbf{b}\|^2 = \|\mathbf{a}\|^2 + \|\mathbf{b}\|^2 - 2\langle \mathbf{a}, \mathbf{b}\rangle$, we can expand both objectives. For DSM,
 
@@ -886,7 +888,9 @@ L_t= \frac{1}{2} g(t)^2\mathbb{E}_{\mathbf{x}_0 \sim p_0}\,
                   - \mathbf{s}_\theta\big\|^2 
 $$
 
-The following table list the loss for different parameterizations considered in this article:
+#### How can Denoising, Score Matching, and Flow Matching training objectives be unified and derived from first principles?
+
+With the above loss, we can unify training objective for different parameterizations considered in this article:
 
 <div style="overflow-x: auto; max-width: 100%;" markdown="1">
 
@@ -898,7 +902,7 @@ The following table list the loss for different parameterizations considered in 
 
 </div>
 
-#### How can Denoising, Score Matching, and Flow Matching training objectives be unified and derived from first principles?
+
 
 The table above shows the loss functions for different diffusion model types. For the VP model, the loss represents score matching that trains the score function. For the VE-Karras model, the loss is a denoising objective with a noise prediction model $\epsilon_\theta$. For the Rectified flow model, the loss is flow matching. These training objectives are now unified under the same maximum likelihood framework, answering the question:
 
