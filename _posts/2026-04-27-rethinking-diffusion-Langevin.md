@@ -42,22 +42,19 @@ bibliography: 2026-04-27-rethinking-diffusion-Langevin.bib
 #   - please use this format rather than manually creating a markdown table of contents.
 toc:
   - name: Langevin Dynamics as 'Identity' Operation
-  - name: "Spliting the Identity: Forward and Reverse Processes in diffusion models"
+  - name: Spliting the Identity into Forward and Reverse Processes
+  - name: The Forward Diffusion Process for training
+  - name: The Reverse Diffusion Process for Sampling
     subsections:
-      - name: The Forward Diffusion Process for training
-      - name: The Reverse Diffusion Process for Sampling
-        subsections:
-          - name: "How does the reverse process invert the forward process to generate data from pure noise?"
-          - name: "How can ODE-based and SDE-based diffusion models be unified under a single framework?"
+      - name: "How does the reverse process invert the forward process to generate data from pure noise?"
+      - name: "How can ODE-based and SDE-based diffusion models be unified under a single framework?"
   - name: Forward-Reverse Duality
     subsections:
       - name: "Why are diffusion models theoretically superior to ordinary VAEs"
-  - name: Training the Diffusion Model
+  - name: Maximal likelihood Training of Diffusion Models
     subsections:
-      - name: Maximal likelihood Training of Diffusion Models
-        subsections:
-          - name: "How can Denoising, Score Matching, and Flow Matching training objectives be unified and derived from first principles?"
-      - name: Conclusion
+      - name: "How can Denoising, Score Matching, and Flow Matching training objectives be unified and derived from first principles?"
+  - name: Conclusion
 
 # Below is an example of injecting additional post-specific styles.
 # This is used in the 'Layouts' section of this post.
@@ -179,7 +176,7 @@ Langevin dynamics, while widely used for sampling from complex distributions, be
     Langevin dynamics acts as an identity operation on $p(\mathbf{x})$: starting from a sample $\mathbf{x} \sim p(\mathbf{x})$, it produces a new sample $\mathbf{x}'$ from the same distribution.
 </div>
 
-# Spliting the Identity: Forward and Reverse Processes in diffusion models
+# Spliting the Identity into Forward and Reverse Processes
 
 One key reason Langevin dynamics struggles in high-dimensional settings is the challenge of initialization. The score function required by it is learned from real data and is therefore reliable only near true data points, while being poorly estimated elsewhere. Yet in generative modeling we need to start from locations that may be far from the data manifold. Finding an initialization that is both realistic and close enough to the true data manifold is difficult, making effective generation with Langevin dynamics challenging in practice. In short, Langevin dynamics is well-suited for generating new samples from an existing one, but ill-suited for generating samples entirely from scratch.
 
@@ -405,7 +402,7 @@ The above result means that if we run the reverse process from time $$t' = 0$$ t
 
 Now we have demonstrated that **reverse diffusion**—the dual of the forward process—can generate image data from noise. However, this requires access to the score function $\mathbf{s}(\mathbf{x}, t) = \nabla_{\mathbf{x}} \log p_t(\mathbf{x})$ at every timestep $t$. In practice, we approximate this function using a neural network.  In the next section, we will explain how to train such score networks.  
 
-# Training the Diffusion Model
+# Maximal likelihood Training of Diffusion Models
 
 Training the reverse diffusion process involves addressing two fundamental questions: (1) What mathematical quantity should we model, and (2) What objective function should guide the training? 
 
@@ -413,7 +410,6 @@ The core mathematical object to model is the **score function**—the gradient o
 
 Our goal is to derive the training objective directly from first principles, beginning with the maximum likelihood framework. By doing so, we reveal the fundamental connection between diffusion model loss and exact maximum likelihood, without presupposing the existence or explicit usage of the score function.
 
-## Maximal likelihood Training of Diffusion Models
 
 Suppose we have two distributions $p(\mathbf{x}, t)$ and $q(\mathbf{x}, t)$ that both evolve under the same forward diffusion process. Think of $p$ as the **true data distribution** pushed forward by the diffusion dynamics, and $q$ as the **model distribution**. At any fixed time $t$, their Kullback–Leibler (KL) divergence is
 
@@ -485,7 +481,7 @@ The answer is the **Fokker–Planck equation**, which describes the time evoluti
 $$
 \frac{\partial p}{\partial t}
 = -\nabla \cdot \left[f(\mathbf{x}, t)\, p\right]
-  + \frac{1}{2}\, \nabla^2 \left[g(t)^2\, p \right].
+  + \frac{1}{2}g(t)^2\, \nabla^2  p .
 $$
 
 This PDE shows how **drift** $f$ and **diffusion** $g$ jointly shape the distribution. Rigorous derivations can be found in standard references; here we only sketch an intuitive 1D argument for the drift part:
