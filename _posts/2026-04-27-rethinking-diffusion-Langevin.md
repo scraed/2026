@@ -447,7 +447,7 @@ $$
 d\mathbf{x} = f(\mathbf{x}, t) \, dt + g(t) \, d\mathbf{W}.
 $$
 
-the training objective is
+the instantaneous contribution is
 
 $$
 \begin{align*}
@@ -464,7 +464,7 @@ L_t
 $$
 
 
-where the score functions $$\nabla \log p(\mathbf{x}, t)$$ and $$\nabla \log q(\mathbf{x}, t)$$ appears naturally inside the objective. 
+where the score functions $$\nabla \log p(\mathbf{x}, t)$$ and $$\nabla \log q(\mathbf{x}, t)$$ for the true data distribution and the model distribution appear naturally inside the objective.
 
 
 
@@ -510,9 +510,7 @@ $$
   + \frac{\partial}{\partial x}\big(f(x, t)\, p(x, t)\big) = 0.
 $$
 
-Here we write $f(x, t)$ inside the derivative, not outside, because it guarantees global probability conservation:
-integrating over $x$ and assuming $p$ vanishes at $\pm \infty$ gives
-$\frac{d}{dt}\int p(x, t)\,dx = 0$, so $\int p(x, t)\,dx = 1$ for all $t$.
+We keep $f(x, t)$ inside the $\partial_x$ because this term represents the probability flux. This guarantees conservation: integrating the total derivative $\partial_x(f p)$ over all space gives zero (assuming $p$ vanishes at boundaries), preserving the total probability.
 
 **Noise term $g\,dW$.** Consider now the pure diffusion SDE $dx = g\,dW$ with constant $g$ and initial condition $x(0) = 0$. At time $t$, the accumulated Brownian motion from $0$ to $t$ is Gaussian with variance $t$, so $x(t)$ is Gaussian with variance $g^2 t$ and density
 
@@ -531,7 +529,7 @@ Combining drift and diffusion, we obtain that
 $$
 \frac{\partial p}{\partial t}
   = -\frac{\partial}{\partial x} \left[f(x, t)\, p\right]
-    + \frac{1}{2} g^2 \frac{\partial^2 p}{\partial x^2},
+    + \frac{1}{2} g(t)^2 \frac{\partial^2 p}{\partial x^2},
 $$
 
 which is the 1D specialization of the Fokker–Planck equation stated above.
