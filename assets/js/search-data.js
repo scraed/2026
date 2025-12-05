@@ -72,18 +72,7 @@ ninja.data = [{
               handler: () => {
                 window.location.href = "https://iclr-blog-track.github.io/home/";
               },
-            },{id: "post-the-illusion-of-mastery-breaking-the-cycle-of-benchmark-memorization-with-generative-evaluation",
-        
-          title: "The illusion of mastery: Breaking the Cycle of Benchmark Memorization with Generative Evaluation...",
-        
-        description: "Static evaluation traps LLMs in a cycle of overfitting, leading to inflated benchmark scores but fragile real-world performance. This post argues for a paradigm shift to Generative Evaluation, a dynamic engine that creates infinite novel tasks. By targeting unseen reasoning patterns and high-impact corner cases, it moves beyond memorization to genuinely measure and incentivize the generalizable intelligence required for AGI.",
-        section: "Posts",
-        handler: () => {
-          
-            window.location.href = "/2026/blog/2026/illusion-of-mastery/";
-          
-        },
-      },{id: "post-fans-frequency-adaptive-noise-shaping-for-diffusion-models",
+            },{id: "post-fans-frequency-adaptive-noise-shaping-for-diffusion-models",
         
           title: "FANS - Frequency-Adaptive Noise Shaping for Diffusion Models",
         
