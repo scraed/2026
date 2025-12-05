@@ -72,7 +72,18 @@ ninja.data = [{
               handler: () => {
                 window.location.href = "https://iclr-blog-track.github.io/home/";
               },
-            },{id: "post-fans-frequency-adaptive-noise-shaping-for-diffusion-models",
+            },{id: "post-the-illusion-of-mastery-breaking-the-cycle-of-benchmark-memorization-with-generative-evaluation",
+        
+          title: "The illusion of mastery: Breaking the Cycle of Benchmark Memorization with Generative Evaluation...",
+        
+        description: "Static evaluation traps LLMs in a cycle of overfitting, leading to inflated benchmark scores but fragile real-world performance. This post argues for a paradigm shift to Generative Evaluation, a dynamic engine that creates infinite novel tasks. By targeting unseen reasoning patterns and high-impact corner cases, it moves beyond memorization to genuinely measure and incentivize the generalizable intelligence required for AGI.",
+        section: "Posts",
+        handler: () => {
+          
+            window.location.href = "/2026/blog/2026/illusion-of-mastery/";
+          
+        },
+      },{id: "post-fans-frequency-adaptive-noise-shaping-for-diffusion-models",
         
           title: "FANS - Frequency-Adaptive Noise Shaping for Diffusion Models",
         
@@ -224,17 +235,6 @@ ninja.data = [{
         handler: () => {
           
             window.location.href = "/2026/blog/2026/performative-prediction/";
-          
-        },
-      },{id: "post-neural-audio-codecs-how-to-get-audio-into-llms",
-        
-          title: "Neural audio codecs: how to get audio into LLMs",
-        
-        description: "A look at why audio is harder to model than text and how we can make it easier with neural audio codecs. With a codec, we can turn audio into larger discrete tokens, train models to predict continuations for these tokens, and then decode those back into audio.",
-        section: "Posts",
-        handler: () => {
-          
-            window.location.href = "/2026/blog/2026/neural-audio-codecs/";
           
         },
       },{id: "post-misalignments-and-rl-failure-modes-in-the-early-stage-of-superintelligence",
