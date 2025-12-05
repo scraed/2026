@@ -265,11 +265,10 @@ $$
 
 where $$\mathbf{s}(\mathbf{x}, t) = \nabla_{\mathbf{x}} \log p_t(\mathbf{x})$$ is the score function of $$p_t(\mathbf{x})$$. Here, we split the noise term $$\sqrt{2}\, d\mathbf{W}_\tau$$ into two independent Gaussian increments, $$d\mathbf{W}_\tau^{(1)}$$ and $$d\mathbf{W}_\tau^{(2)}$$, such that their sum equals the original noise: $$\sqrt{2}\, d\mathbf{W}_\tau = d\mathbf{W}_\tau^{(1)} + d\mathbf{W}_\tau^{(2)}.$$ This split is possible because Gaussian random variables satisfy the property that their sum is Gaussian, and independent Gaussians add in variance; specifically, if $$d\mathbf{W}_\tau^{(1)}$$ and $$d\mathbf{W}_\tau^{(2)}$$ are independent standard Brownian increments (each with variance $d\tau$), their sum has variance $$2\,d\tau$$, matching the original $$\sqrt{2}\,d\mathbf{W}_\tau$$.
 
-The "Forward" part in this decomposition corresponds to the forward diffusion process, effectively **increasing the forward diffusion time $t$ by $d\tau$**, bringing the distribution to $p_{t + d\tau}(\mathbf{x})$. 
 
 #### How does the reverse process invert the forward process to generate data from pure noise?
 
-Since the forward and reverse components combine to form an "identity" operation, the "Reverse" part must reverse the forward process—**decreasing the forward diffusion time $t$ by $d\tau$** and restoring the distribution back to $p_t(\mathbf{x})$.
+The "Forward" part in this decomposition corresponds to the forward diffusion process, effectively **increasing the forward diffusion time $t$ by $d\tau$**, bringing the distribution to $p_{t + d\tau}(\mathbf{x})$. Since the forward and reverse components combine to form an "identity" operation, the "Reverse" part must reverse the forward process—**decreasing the forward diffusion time $t$ by $d\tau$** and restoring the distribution back to $p_t(\mathbf{x})$.
 
 
 
