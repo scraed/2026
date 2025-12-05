@@ -46,10 +46,17 @@ toc:
     subsections:
       - name: The Forward Diffusion Process for training
       - name: The Reverse Diffusion Process for Sampling
-      - name: Forward-Reverse Duality
+        subsections:
+          - name: "How does the reverse process invert the forward process to generate data from pure noise?"
+          - name: "How can ODE-based and SDE-based diffusion models be unified under a single framework?"
+  - name: Forward-Reverse Duality
+    subsections:
+      - name: "Why are diffusion models theoretically superior to ordinary VAEs"
   - name: Training the Diffusion Model
     subsections:
       - name: Maximal likelihood Training of Diffusion Models
+        subsections:
+          - name: "How can Denoising, Score Matching, and Flow Matching training objectives be unified and derived from first principles?"
       - name: Conclusion
 
 # Below is an example of injecting additional post-specific styles.
@@ -259,9 +266,13 @@ $$
 
 </div>
 
-where $\mathbf{s}(\mathbf{x}, t) = \nabla_{\mathbf{x}} \log p_t(\mathbf{x})$ is the score function of $p_t(\mathbf{x})$. Here, we split the noise term $\sqrt{2}\, d\mathbf{W}_\tau$ into two independent Gaussian increments, $d\mathbf{W}_\tau^{(1)}$ and $d\mathbf{W}_\tau^{(2)}$, such that their sum equals the original noise: $$\sqrt{2}\, d\mathbf{W}_\tau = d\mathbf{W}_\tau^{(1)} + d\mathbf{W}_\tau^{(2)}.$$
+where $\mathbf{s}(\mathbf{x}, t) = \nabla_{\mathbf{x}} \log p_t(\mathbf{x})$ is the score function of $p_t(\mathbf{x})$. Here, we split the noise term $$\sqrt{2}\, d\mathbf{W}_\tau$$ into two independent Gaussian increments, $$d\mathbf{W}_\tau^{(1)}$ and $d\mathbf{W}_\tau^{(2)}$$, such that their sum equals the original noise: $$\sqrt{2}\, d\mathbf{W}_\tau = d\mathbf{W}_\tau^{(1)} + d\mathbf{W}_\tau^{(2)}.$$ This split is possible because Gaussian random variables satisfy the property that their sum is Gaussian, and independent Gaussians add in variance; specifically, if $d\mathbf{W}_\tau^{(1)}$ and $d\mathbf{W}_\tau^{(2)}$ are independent standard Brownian increments (each with variance $d\tau$), their sum has variance $2\,d\tau$, matching the original $\sqrt{2}\,d\mathbf{W}_\tau$.
 
-The "Forward" part in this decomposition corresponds to the forward diffusion process, effectively **increasing the forward diffusion time $t$ by $d\tau$**, bringing the distribution to $p_{t + d\tau}(\mathbf{x})$. Since the forward and reverse components combine to form an "identity" operation, the "Reverse" part must reverse the forward process—**decreasing the forward diffusion time $t$ by $d\tau$** and restoring the distribution back to $p_t(\mathbf{x})$—which answers the question **"How does the reverse process invert the forward process to generate data from pure noise?"**
+The "Forward" part in this decomposition corresponds to the forward diffusion process, effectively **increasing the forward diffusion time $t$ by $d\tau$**, bringing the distribution to $p_{t + d\tau}(\mathbf{x})$. 
+
+#### How does the reverse process invert the forward process to generate data from pure noise?
+
+Since the forward and reverse components combine to form an "identity" operation, the "Reverse" part must reverse the forward process—**decreasing the forward diffusion time $t$ by $d\tau$** and restoring the distribution back to $p_t(\mathbf{x})$.
 
 
 
@@ -279,12 +290,16 @@ The same decomposition approach can be applied to other diffusion schemes. The f
 
 | **Model Type** | **Langevin dynamics** | **Forward Split** | **Reverse Split** |
 | --- | --- | --- | --- |
-| VP-SDE/<br>ODE | $$dx = \mathbf{s}_x\, d\tau + \sqrt{2}\, d W_\tau$$<br>$$dx = \frac{1}{2} \mathbf{s}_x\, d\tau + d W_\tau$$ | $$d x = - \tfrac{1}{2} x\, d\tau + dW_\tau$$ | $$dx = \left[ \frac{1}{2} x + \mathbf{s}_x \right] d\tau + dW_{\tau}$$<br>$$dx = \frac{1}{2} \left( x + \mathbf{s}_x \right) d\tau$$ |
+| VP-SDE | $$dx = \mathbf{s}_x\, d\tau + \sqrt{2}\, d W_\tau$$ | $$d x = - \tfrac{1}{2} x\, d\tau + dW_\tau$$ | $$dx = \left[ \frac{1}{2} x + \mathbf{s}_x \right] d\tau + dW_{\tau}$$ |
+| VP-ODE | $$dx = \frac{1}{2} \mathbf{s}_x\, d\tau + d W_\tau$$ | $$d x = - \tfrac{1}{2} x\, d\tau$$ | $$dx = \frac{1}{2} \left( x + \mathbf{s}_x \right) d\tau$$ |
 | VE-Karras | $$dz = \tau\, \mathbf{s}_z\, d\tau + \sqrt{2 \tau}\, d W_\tau$$ | $$dz = \sqrt{2\tau}\, dW_{\tau}$$ |  $$dz = \tau\, \mathbf{s}_z\, d\tau $$ |
 | Rectified flow | $$dr = \frac{\tau}{1+\tau} \mathbf{s}_r\, d\tau + \sqrt{\frac{2\tau}{1+\tau}}\, d W_\tau$$  | $$dr = -\frac{r}{1-\tau}\, d\tau + \sqrt{\frac{2\tau}{1-\tau}}\, dW_{\tau}$$  |  $$dr = \frac{\tau\, \mathbf{s}_r + r}{1-\tau} d\tau$$ |
 
 </div>
-A key observation from this table is that we present two distinct splittings for the VP model: the SDE and ODE versions. Both are essentially decompositions of different Langevin dynamics, differing only in their time scaling functions $g(\tau)$. The ODE version corresponds to a splitting where the reverse process contains no stochastic term $dW$, effectively eliminating the Brownian noise component. This directly answers the question **"How can ODE-based and SDE-based diffusion models be unified under a single framework?"**
+
+#### How can ODE-based and SDE-based diffusion models be unified under a single framework?
+
+A key observation from this table is that we present two distinct splittings for the VP model: the SDE and ODE versions. Both are essentially decompositions of different Langevin dynamics, differing only in their time scaling functions $g(\tau)$. The ODE version corresponds to a splitting where the reverse process contains no stochastic term $dW$, effectively eliminating the Brownian noise component. 
 
 Besides the decomposition of Langevin dynamics, we still have one problem: note that the $\mathbf{s}(\mathbf{x}_{t'}, t)$ term in the reverse process still depends on the forward time $t$, not the reverse time $t'$; we need the relationship between the forward time $t$ and the reverse time $t'$ to close the equation. 
 
@@ -382,7 +397,11 @@ $$
 q_T(\mathbf{x}) = p_0(\mathbf{x}) \quad \text{(data distribution)}.  
 $$
 
-This result means that if we run the reverse process from time \(t' = 0\) to \(t' = T\), the final samples follow exactly the same distribution as the original training data \(p_0\). In other words, the forward and reverse processes form an exact prior–posterior pair: the forward process maps data to noise, and the reverse process maps noise back to data. In practice, training introduces approximation error, but the theoretical target is exact equality. Ordinary VAEs, by contrast, only require the decoder to approximate the encoder’s posterior, with no guarantee of exactness even at the ELBO optimum. This clarifies **Why are diffusion models theoretically superior to ordinary VAEs**.
+This result means that if we run the reverse process from time \(t' = 0\) to \(t' = T\), the final samples follow exactly the same distribution as the original training data \(p_0\). 
+
+#### Why are diffusion models theoretically superior to ordinary VAEs
+
+In other words, the forward and reverse processes form an exact prior–posterior pair: the forward process maps data to noise, and the reverse process maps noise back to data. In practice, training introduces approximation error, but the theoretical target is exact equality. Ordinary VAEs, by contrast, only require the decoder to approximate the encoder’s posterior, with no guarantee of exactness even at the ELBO optimum.
 
 Now we have demonstrated that **reverse diffusion**—the dual of the forward process—can generate image data from noise. However, this requires access to the score function $\mathbf{s}(\mathbf{x}, t) = \nabla_{\mathbf{x}} \log p_t(\mathbf{x})$ at every timestep $t$. In practice, we approximate this function using a neural network.  In the next section, we will explain how to train such score networks.  
 
@@ -892,7 +911,9 @@ The following table list the loss for different parameterizations considered in 
 
 </div>
 
-The table above shows the loss functions for different diffusion model types. For the VP model, the loss represents score matching that trains the score function. For the VE-Karras model, the loss is a denoising objective with a noise prediction model $\epsilon_\theta$. For the Rectified flow model, the loss is flow matching. These training objectives are now unified under the same maximum likelihood framework, answering the question: **"How can Denoising, Score Matching, and Flow Matching training objectives be unified and derived from first principles?"**
+#### How can Denoising, Score Matching, and Flow Matching training objectives be unified and derived from first principles?
+
+The table above shows the loss functions for different diffusion model types. For the VP model, the loss represents score matching that trains the score function. For the VE-Karras model, the loss is a denoising objective with a noise prediction model $\epsilon_\theta$. For the Rectified flow model, the loss is flow matching. These training objectives are now unified under the same maximum likelihood framework, answering the question:
 
 
 A note on loss weighting: In practice, the coefficient outside the L2 norm (such as $\frac{1}{2}$, $\frac{1}{\sigma}$, or $\frac{1-s}{s}$) is often omitted or replaced with a custom weighting schedule to improve training performance. This is valid because modifying this coefficient only changes the relative importance of the loss across different time steps $t$—it does not affect the optimal solution at any individual time $t$. In other words, reweighting adjusts how much we prioritize learning at different noise levels, but the target (the true score or velocity) remains unchanged.
