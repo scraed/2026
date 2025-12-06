@@ -53,44 +53,47 @@ toc:
 _styles: >
   /* Highlight Box for Key Insights */
   .insight-box {
-    background-color: rgba(0, 0, 0, 0.03);
-    border-left: 4px solid var(--global-theme-color);
+    background: linear-gradient(to right, rgba(var(--global-theme-color-rgb), 0.05), rgba(var(--global-theme-color-rgb), 0.01));
+    border-left: 5px solid var(--global-theme-color);
     padding: 1.5rem;
-    margin: 2rem 0;
+    margin: 2.5rem 0;
     border-radius: 0 8px 8px 0;
-    box-shadow: 0 2px 6px rgba(0,0,0,0.02);
+    box-shadow: 2px 4px 12px rgba(0,0,0,0.03);
   }
   .insight-box strong {
     color: var(--global-theme-color);
+    font-size: 1.1em;
   }
 
-  /* Table Styling */
+  /* Enhanced Table Styling */
   .table-wrapper {
     overflow-x: auto;
     max-width: 100%;
-    margin: 2rem 0;
-    border-radius: 8px;
-    box-shadow: 0 0 10px rgba(0,0,0,0.02);
-    border: 1px solid rgba(0,0,0,0.05);
+    margin: 2.5rem 0;
+    border-radius: 12px;
+    box-shadow: 0 4px 15px rgba(0,0,0,0.03);
+    border: 1px solid rgba(0,0,0,0.04);
+    background: white;
   }
   table {
     width: 100%;
     border-collapse: collapse;
-    margin: 0; /* Controlled by wrapper */
-    font-size: 0.9rem;
-    background: white;
+    margin: 0;
+    font-size: 0.95rem;
+    line-height: 1.5;
   }
   th {
-    background-color: #f8f9fa;
-    color: #333;
+    background-color: #fafbfc;
+    color: #444;
     font-weight: 600;
-    padding: 12px 16px;
+    padding: 14px 20px;
     text-align: left;
-    border-bottom: 2px solid #eee;
+    border-bottom: 2px solid #eef0f2;
+    letter-spacing: 0.02em;
   }
   td {
-    padding: 12px 16px;
-    border-bottom: 1px solid #eee;
+    padding: 14px 20px;
+    border-bottom: 1px solid #f0f2f5;
     vertical-align: top;
     color: #555;
   }
@@ -98,73 +101,91 @@ _styles: >
     border-bottom: none;
   }
   tr:hover td {
-    background-color: #fafafa;
+    background-color: #fcfdfe;
   }
 
-  /* Details / Accordion Styling */
+  /* Enhanced Details / Accordion */
   details {
     background-color: #fff !important;
-    border: 1px solid #e0e0e0;
-    border-radius: 8px;
-    padding: 0; /* Padding moved to children */
-    margin: 1.5rem 0;
-    box-shadow: 0 2px 5px rgba(0,0,0,0.02);
-    transition: all 0.2s ease;
+    border: 1px solid #eaecf0;
+    border-radius: 10px;
+    padding: 0;
+    margin: 2rem 0;
+    box-shadow: 0 2px 6px rgba(0,0,0,0.02);
+    transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
   }
   details[open] {
-    border-color: var(--global-theme-color);
-    box-shadow: 0 4px 12px rgba(0,0,0,0.05);
+    border-color: rgba(var(--global-theme-color-rgb), 0.4);
+    box-shadow: 0 8px 20px rgba(0,0,0,0.04);
   }
   details > summary {
     cursor: pointer;
     font-weight: 600;
-    padding: 1rem;
+    padding: 1.2rem;
     list-style: none;
-    background-color: rgba(0,0,0,0.01);
+    background-color: #fcfcfd;
     border-bottom: 1px solid transparent;
     transition: background 0.2s;
-    border-radius: 8px;
+    border-radius: 10px;
+    color: #333;
+    display: flex;
+    align-items: center;
+  }
+  /* Add an arrow icon to summary */
+  details > summary::before {
+    content: "▶";
+    font-size: 0.8em;
+    margin-right: 0.8em;
+    color: var(--global-theme-color);
+    transition: transform 0.2s;
+  }
+  details[open] > summary::before {
+    transform: rotate(90deg);
   }
   details[open] > summary {
     border-bottom: 1px solid #eee;
-    border-radius: 8px 8px 0 0;
-    background-color: rgba(var(--global-theme-color-rgb), 0.05);
+    border-radius: 10px 10px 0 0;
+    background-color: rgba(var(--global-theme-color-rgb), 0.03);
     color: var(--global-theme-color);
   }
   details > summary:hover {
-    background-color: rgba(0,0,0,0.03);
+    background-color: #f5f6f8;
   }
-  /* Wrapper for details content to provide padding */
   details > div.details-content {
-    padding: 1.5rem;
+    padding: 1.5rem 2rem;
     background: #fff;
-    border-radius: 0 0 8px 8px;
+    border-radius: 0 0 10px 10px;
   }
 
-  /* Math Block Enhancements */
+  /* Blockquote Styling */
+  blockquote {
+    border-left: 4px solid rgba(var(--global-theme-color-rgb), 0.5);
+    background: #f9f9fa;
+    color: #555;
+    padding: 1rem 1.5rem;
+    margin: 1.5rem 0;
+    border-radius: 0 4px 4px 0;
+    font-style: italic;
+  }
+
+  /* Math Block Enhancements - for stand-alone formulas if wrapped */
   .math-block {
     background: #fcfcfc;
     border: 1px solid #f0f0f0;
     border-radius: 8px;
-    padding: 1rem;
-    margin: 1.5rem 0;
+    padding: 1.5rem;
+    margin: 2rem 0;
     overflow-x: auto;
+    box-shadow: inset 0 1px 4px rgba(0,0,0,0.01);
   }
 
-  /* Fake Image (kept from original) */
-  .fake-img {
-    background: #bbb;
-    border: 1px solid rgba(0, 0, 0, 0.1);
-    box-shadow: 0 0px 4px rgba(0, 0, 0, 0.1);
-    margin-bottom: 12px;
-  }
-  .fake-img p {
-    font-family: monospace;
-    color: white;
-    text-align: left;
-    margin: 12px 0;
+  /* Caption Enhancements */
+  .caption {
+    color: #666;
+    font-size: 0.9em;
+    margin-top: 0.5em;
     text-align: center;
-    font-size: 16px;
+    font-style: italic;
   }
 
   /* Mermaid Fixes */
@@ -219,15 +240,13 @@ $$
 d\mathbf{x}_t = g(t)\, \mathbf{s}(\mathbf{x}_t) dt + \sqrt{2 g(t)}\, d\mathbf{W}_t, 
 $$
 
-where $$\mathbf{s}(\mathbf{x}) = \nabla_{\mathbf{x}} \log p(\mathbf{x})$$ is the score function of $$p(\mathbf{x})$$, $g(t)$ is an arbitrary positive function satisfying $s = \int_0^\infty g(t) dt = \infty$. The $d\mathbf{W}$ term is a Brownian noise what can be treated as $\sqrt{dt} \boldsymbol{\epsilon}$, where $\boldsymbol{\epsilon}$ is a standard Gaussian noise. 
+where $$s(\mathbf{x}) = \nabla_{\mathbf{x}} \log p(\mathbf{x})$$ is the score function of $$p(\mathbf{x})$$, $g(t)$ is an arbitrary positive function satisfying $s = \int_0^\infty g(t) dt = \infty$. The $d\mathbf{W}$ term is a Brownian noise what can be treated as $\sqrt{dt} \boldsymbol{\epsilon}$, where $\boldsymbol{\epsilon}$ is a standard Gaussian noise. 
 
 This dynamics is often used as a Monte Carlo sampler to draw samples from $$p(\mathbf{x})$$, since $$p(\mathbf{x})$$ is its **stationary distribution**—the distribution that $$\mathbf{x}_t$$ converges to and and remains at as $$t \to \infty$$, regardless of the initial distribution of $$\mathbf{x}_0$$. 
 
-
-
-
 <details markdown="1">
-<summary><span style="font-weight: 300; font-style: italic">Optional: Derivation that $p(\mathbf{x})$ is the stationary distribution of Langevin dynamics</span> (click to expand)</summary>
+<summary>Optional: Derivation that $p(\mathbf{x})$ is the stationary distribution of Langevin dynamics</summary>
+<div class="details-content" markdown="1">
 
 1. Set $g(t) = 1$ by rescaling time as $t' = \int_0^t g(\tau)\, d\tau$. Under this change of variables, the dynamics become $$d\mathbf{x}_{t'} = \mathbf{s}(\mathbf{x}_{t'})\, dt' + \sqrt{2}\, d\mathbf{W}_{t'}$$, which is equivalent to the case $g(t') = 1$. Thus, $g(t)$ only sets the time unit and does not affect the stationary distribution.
 
@@ -240,8 +259,7 @@ This dynamics is often used as a Monte Carlo sampler to draw samples from $$p(\m
 
 Thus, the dynamics $$d\mathbf{x}_t = -\nabla E(\mathbf{x})\,dt + \sqrt{2}\,d\mathbf{W}_t$$ has stationary distribution $$\propto e^{-E(\mathbf{x})}$$, and $$d\mathbf{x}_t = \nabla_{\mathbf{x}} \log p(\mathbf{x}) \, dt + \sqrt{2} \, d\mathbf{W}_t$$ has stationary distribution $p(\mathbf{x})$. 
 
-
-
+</div>
 </details>
 
 Langevin dynamics, while widely used for sampling from complex distributions, becomes inefficient in high-dimensional or multi-modal settings due to slow mixing and sensitivity to hyperparameters such as step size and noise scale. However, Langevin dynamics play a crucial role as the foundation of diffusion models due to an important property: for $$p(\mathbf{x})$$, Langevin dynamics act as an "identity" operation on the distribution, transforming a sample from $$p(\mathbf{x})$$ into a new, independent sample from the same distribution.
@@ -545,8 +563,8 @@ where the score functions $$\nabla \log p(\mathbf{x}, t)$$ and $$\nabla \log q(\
 
 
 <details markdown="1">
-<summary><span style="font-weight: 300; font-style: italic">Derivation Step 1 (optional): how the forward SDE induces the Fokker–Planck equation for $p_t(\mathbf{x})$</span> (click to expand)</summary>
-
+<summary>Derivation Step 1 (optional): how the forward SDE induces the Fokker–Planck equation for $p_t(\mathbf{x})$</summary>
+<div class="details-content" markdown="1">
 
 Given the SDE
 
@@ -609,13 +627,14 @@ $$
 
 which is the 1D specialization of the Fokker–Planck equation stated above.
 
+</div>
 </details>
 
 
 <details markdown="1">
-<summary><span style="font-weight: 300; font-style: italic">Derivation Step 2 (optional): why this forward diffusion yields the squared-score objective above</span> (click to expand)</summary>
+<summary>Derivation Step 2 (optional): why this forward diffusion yields the squared-score objective above</summary>
+<div class="details-content" markdown="1">
 
-We now analyze **how the KL divergence between two solutions of the Fokker–Planck equation evolves in time**.
 We now analyze **how the KL divergence between two solutions of the same Fokker–Planck equation evolves in time**.
 
 Assume that both $p(\mathbf{x}, t)$ and $q(\mathbf{x}, t)$ satisfy the same Fokker–Planck equation with drift $f(\mathbf{x}, t)$ and diffusion strength $g(t)$:
@@ -737,6 +756,8 @@ $$
 $$
 
 Thus, along the forward diffusion process, the KL divergence between any two solutions of the same Fokker–Planck equation is **non-increasing**: diffusion strictly contracts KL (with equality only if the scores $\nabla\log p$ and $\nabla\log q$ coincide almost everywhere). This monotone decrease of $\mathrm{KL}(p_t \Vert q_t)$ justifies decomposing the global maximum-likelihood objective into local-in-time, squared-score terms associated with each diffusion step.
+
+</div>
 </details>
 
 In practice, we approximate the score function $$\nabla \log q(\mathbf{x}, t)$$ using a neural network. For the standard score-based model, we directly model $\mathbf{s}_\theta(\mathbf{x}, t)$. For other formulations like VE-Karras and Rectified flow models, we instead model related functions: $\boldsymbol{\epsilon}$ (noise prediction) or $\mathbf{v}$ (velocity field), which can be transformed to obtain the score.
@@ -758,7 +779,8 @@ $$
 where the LHS is the denoising score matching (DSM) loss while RHS is the score matching loss.
 
 <details markdown="1">
-<summary><span style="font-weight: 300; font-style: italic">Derivation (optional): equivalence between DSM and SM losses</span> (click to expand)</summary>
+<summary>Derivation (optional): equivalence between DSM and SM losses</summary>
+<div class="details-content" markdown="1">
 
 We now prove that the *denoising score matching* (DSM) loss and the *score matching* (SM) loss at time $t$ have the same minimizer.
 
@@ -953,6 +975,7 @@ $$
 \mathbf{s}_\theta^\star(\mathbf{x}_t, t) = \nabla_{\mathbf{x}_t} \log p_t(\mathbf{x}_t).
 $$
 
+</div>
 </details>
 
 
