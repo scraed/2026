@@ -125,12 +125,13 @@ _styles: >
   }
   details > summary {
     cursor: pointer;
-    font-weight: 600;
+    font-weight: 300;
     padding: 1rem;
     list-style: none;
-    background-color: rgba(0,0,0,0.01);
+    background-color: transparent;
+    color: #777;
     border-bottom: 1px solid transparent;
-    transition: background 0.2s;
+    transition: background 0.2s, color 0.2s;
     border-radius: 8px;
   }
   details[open] > summary {
