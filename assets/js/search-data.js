@@ -105,6 +105,17 @@ ninja.data = [{
             window.location.href = "/2026/blog/2026/visual-long-context/";
           
         },
+      },{id: "post-visualizing-llm-latent-space-geometry-through-dimensionality-reduction",
+        
+          title: "Visualizing LLM Latent Space Geometry Through Dimensionality Reduction",
+        
+        description: "In this blog post, we extract, process, and visualize latent state geometries in Transformer-based language models through dimensionality reduction to build a better intuition of their internal dynamics. We demonstrate experiments with GPT-2 and LLaMa models, uncovering interesting geometric patterns in their latent spaces. Notably, we identify a clear separation between attention and MLP component outputs across intermediate layers, a pattern not documented in prior work to our knowledge.",
+        section: "Posts",
+        handler: () => {
+          
+            window.location.href = "/2026/blog/2026/vis-llm-latent-geometry/";
+          
+        },
       },{id: "post-using-large-language-models-to-simulate-and-predict-human-decision-making",
         
           title: "Using Large Language Models to Simulate and Predict Human Decision-Making",
@@ -149,17 +160,6 @@ ninja.data = [{
             window.location.href = "/2026/blog/2026/unigramlm-manual/";
           
         },
-      },{id: "post-tracing-the-principles-behind-modern-diffusion-models",
-        
-          title: "Tracing the Principles Behind Modern Diffusion Models",
-        
-        description: "Diffusion models can feel like a jungle of acronyms, but the core idea is simple: start from noise and gradually move a cloud of samples until it looks like real data. This post gives an intuition-first tour showing that DDPMs, score-based models, and flow matching are the same recipe with different prediction targets, all rooted in the change-of-variable rule from calculus and powered by one shared “conditional trick” that turns learning into supervised regression. Finally, we zoom out to the speed problem and show how flow map models aim to replace many tiny denoising steps with a few big, accurate jumps toward real-time generation.",
-        section: "Posts",
-        handler: () => {
-          
-            window.location.href = "/2026/blog/2026/tracing-principles-behind-modern-diffusion-models/";
-          
-        },
       },{id: "post-from-dense-monoliths-to-modular-minds-the-rise-of-symbolic-routing-in-llms",
         
           title: "From Dense Monoliths to Modular Minds: The Rise of Symbolic Routing in LLMs...",
@@ -171,22 +171,11 @@ ninja.data = [{
             window.location.href = "/2026/blog/2026/symbolic-connect/";
           
         },
-      },{id: "post-speeding-up-training-of-model-free-reinforcement-learning-a-comparative-evaluation-for-fast-and-accurate-learning",
-        
-          title: "Speeding up Training of Model-Free Reinforcement Learning :A Comparative Evaluation for Fast and...",
-        
-        description: "Reinforcement Learning (RL) represents a powerful framework for solving sequential decision-making problems in dynamic environments across diverse domains, such as control of robots or optimization of profit. However, its practical implementation requires navigating a variety of software packages, encompassing deep learning libraries (e.g., TensorFlow, PyTorch, JAX/Flax), environment frameworks (e.g., Gymnasium, Numpy), and hyperparameter optimization techniques and libraries. This post critically evaluates the common PyTorch, Gymnasium, and NumPy RL stack by comparing it to a faster alternative:JAX/Flax for both of model training and environment simulation. A Gridworld example evaluating both training speed and accuracy is utilized to test each of these packages. Additionally, we complement our example by a comprehensive tracking and monitoring of the training process using MLflow along with a thorough hyperparameters optimization via Optuna. The post concludes with a discussion of the results and final recommendations for optimal use cases of each of these packages.",
-        section: "Posts",
-        handler: () => {
-          
-            window.location.href = "/2026/blog/2026/speeding-up-rl/";
-          
-        },
       },{id: "post-sparsity",
         
           title: "Sparsity",
         
-        description: "Large Language Models (LLMs) have brought about a significant change in the field of artificial intelligence, where they have transitioned in scope from being specialized research tools to common resources that drive the next generation of software. With increasing model parameters and training data, LLMs demonstrate new abilities in reasoning, code generation, and solving complex problems that were once considered unattainable. However, scaling these models effectively for long-context applications uniquely poses a challenge. This is primarily due to the inherent limitations of the self-attention mechanism, which has space and time complexity O(N^2). This quadratic bottleneck hinders applications for long documents, high-resolution images, and large codebases, among others. However, what is interesting to observe is that effectively only a few parameters are used when outputting a token, and most calculations are sparse. Hence, Sparsity emerges as an effective solution to this problem. Rather than relying on the N x N attention matrix, one can utilize an approximate or “sparse” version of attention to achieve almost the same results much faster. The backbone of this approach is the idea that tokens do not require the entire context; they only need local context, and thus, most of the computation carried out is wasteful. In this blog, we analyze the types of attention patterns that emerge and how to use them to our advantage for faster and efficient LLMs.",
+        description: "Large Language Models (LLMs) have brought about a significant change in the field of artificial intelligence, where they have transitioned in scope from being specialized research tools to common resources that drive the next generation of software. With increasing model parameters and training data, LLMs demonstrate new abilities in reasoning, code generation, and solving complex problems that were once considered unattainable. However, scaling these models effectively for long-context applications uniquely poses a challenge. This is primarily due to the inherent limitations of the self-attention mechanism, which has time complexity O(N^2). This quadratic bottleneck hinders applications for long documents, high-resolution images, and large codebases, among others. However, what is interesting to observe is that effectively only a few parameters are used when outputting a token, and most calculations are sparse. Hence, Sparsity emerges as an effective solution to this problem. Rather than relying on the N x N attention matrix, one can utilize an approximate or “sparse” version of attention to achieve almost the same results much faster. The backbone of this approach is the idea that tokens do not require the entire context; they only need local context, and thus, most of the computation carried out is wasteful. In this blog, we analyze the types of attention patterns that emerge and how to use them to our advantage for faster and efficient LLMs.",
         section: "Posts",
         handler: () => {
           
@@ -215,6 +204,17 @@ ninja.data = [{
             window.location.href = "/2026/blog/2026/rethinking-diffusion-Langevin/";
           
         },
+      },{id: "post-dynamic-parameter-reuse-augments-reasoning-via-latent-chain-of-thought",
+        
+          title: "Dynamic Parameter Reuse Augments Reasoning via Latent Chain of Thought",
+        
+        description: "Standard language models often rely on massive parameter counts for their performance, utilizing each parameter only once per inference pass. This prompts consideration of recurrent structures, where models reuse parameters across sequential time, depth, or training progression to achieve improved performance and reduced training cost. We draw connections in the landscape of parameter reuse, from growing models via stacking to recurrent looping, and postulate that these architectural priors act as a form of Latent Chain of Thought (LCoT), allowing models to reason in a continuous state space. By shifting towards deeper and dynamic computation, grown and recurrent architectures offer a path toward improved reasoning in compact networks, ascending beyond scaling laws of standard architectures.",
+        section: "Posts",
+        handler: () => {
+          
+            window.location.href = "/2026/blog/2026/recur-refine-reason/";
+          
+        },
       },{id: "post-performative-prediction-made-practical",
         
           title: "Performative Prediction made practical",
@@ -237,17 +237,6 @@ ninja.data = [{
             window.location.href = "/2026/blog/2026/neural-audio-codecs/";
           
         },
-      },{id: "post-misalignments-and-rl-failure-modes-in-the-early-stage-of-superintelligence",
-        
-          title: "Misalignments and RL Failure Modes in the Early Stage of Superintelligence",
-        
-        description: "With the rapid ability grokking of frontier Large Models (LMs), there is growing attention and research focus on aligning them with human values and intent via large scale reinforcement learning and other techniques. However, as LMs are getting stronger and more agentic, their misalignment and deceptive behaviors are also emerging and becoming increasingly difficult for humans to pre-detect and keep track of. This blog post discusses current misalignment patterns, deceptive behaviors, RL failure modes, and emergent traits in modern large models to further AI safety discussions and advance the development of mitigation strategies for LM misbehaviors.",
-        section: "Posts",
-        handler: () => {
-          
-            window.location.href = "/2026/blog/2026/misalign-failure-mode/";
-          
-        },
       },{id: "post-generative-ai-archaeology",
         
           title: "Generative AI Archaeology",
@@ -259,15 +248,15 @@ ninja.data = [{
             window.location.href = "/2026/blog/2026/genai-archaeology/";
           
         },
-      },{id: "post-from-trajectories-to-operators-a-unified-flow-map-perspective-on-generative-modeling",
+      },{id: "post-quot-how-to-transition-from-ml-to-dl-in-production-lessons-from-the-trenches-at-company-quot",
         
-          title: "From Trajectories to Operators — A Unified Flow Map Perspective on Generative Modeling...",
+          title: "[&quot;How to Transition from ML to DL in Production - Lessons From the...",
         
-        description: "In this post, we reframe continuous-time generative modeling from integrating trajectories to learning two-time operators (flow maps). This operator view unifies diffusion, flow matching, and consistency models, and suggests a practical diagnostic — semigroup-consistent jumps yield both step-robust generation and low compositional drift. We derive Eulerian/Lagrangian distillation objectives and use inpainting experiments to show why semigroup-consistent jumps can be both step-robust and composition-stable.",
+        description: "[&quot;A large and mature gradient-boosted tree model had been powering Company’s fraud detection for years. We gradually migrated to a pure deep learning model over the past year going through a heterogeneous stacking phase that reached parity before outperforming our boosting model in production. We learned along the way that a simple ResNet can beat sophisticated tabular DL architectures at million-scale (1); stacking is a practical bridge from ML to DL (2); and the biggest wins from DL are often beyond metrics (3).&quot;]",
         section: "Posts",
         handler: () => {
           
-            window.location.href = "/2026/blog/2026/flow-map-learning/";
+            window.location.href = "/2026/blog/2026/from-ml-to-dl/";
           
         },
       },{id: "post-understanding-and-fixing-bottlenecks-in-state-space-models-what-recency-and-over-smoothing-tell-us",
@@ -281,26 +270,26 @@ ninja.data = [{
             window.location.href = "/2026/blog/2026/fixing-bottlenecks-in-state-space-models/";
           
         },
-      },{id: "post-the-effect-of-feature-resolution-on-embedding-dimension",
+      },{id: "post-are-llm-agent-populations-really-emergent-a-comprehensive-perspective",
         
-          title: "The effect of feature resolution on embedding dimension",
+          title: "Are LLM Agent Populations Really Emergent? A Comprehensive Perspective",
         
-        description: "High-dimensional data can be compressed into lower-dimensional embeddings while retaining a relatively large amount of relevant information, a phenomenon which, despite its widespread use, we struggle to fully explain. In this post, we use a common property of datasets - a limit on the number of features per data point - to show how a slight uniform dependence between features can be exploited to reduce the required dimensions by at least a third, while sacrificing no information about the features. To do so, we introduce the concepts of dataset resolution and feature composition of a dataset, and analyse how a set of orderings of the dataset affect the types of partitions we can create of the dataset.",
+        description: "Exploring emergent properties in populations of LLM agents through the lens of complex systems theory, examining social coordination, cooperation dynamics, and economic interactions in generative agent-based models.",
         section: "Posts",
         handler: () => {
           
-            window.location.href = "/2026/blog/2026/feature-reduction/";
+            window.location.href = "/2026/blog/2026/emergent-agents/";
           
         },
-      },{id: "post-elastic-weight-consolidation-ewc-nuts-and-bolts",
+      },{id: "post-your-moe-model-does-not-have-to-select-fixed-number-of-experts",
         
-          title: "Elastic Weight Consolidation (EWC): Nuts and Bolts",
+          title: "Your MoE Model Does Not Have to Select Fixed Number of Experts",
         
-        description: "A theoretical deep-dive into the Elastic Weight Consolidation method for continual learning, explaining the mathematical foundations and intuitions behind this influential approach to preventing catastrophic forgetting.",
+        description: "Standard Mixture-of-Experts (MoE) models adopt fixed top-k routing, applying uniform computation across tokens regardless of their complexity. This rigidity often leads to suboptimal efficiency and performance. Dynamic routing addresses this by adaptively selecting the optimal number of experts for each token. This post introduces the principles of dynamic routing and reviews key techniques for flexible expert allocation.",
         section: "Posts",
         handler: () => {
           
-            window.location.href = "/2026/blog/2026/elastic-weight-consolidation-nuts-bolts/";
+            window.location.href = "/2026/blog/2026/dynamic-routing/";
           
         },
       },{id: "post-sample-blog-post",
@@ -329,22 +318,11 @@ ninja.data = [{
         
           title: "Discretisation invariance",
         
-        description: "We are going to talk about discretisation invariance - a recent innovation in scientific machine learning. Discretisation invariance is a requirement that ensures the architecture can process inputs of different resolutions. We will formally define this property, provide examples, generate datasets, train architectures, and discuss whether discretisation invariance is living up to its promise.",
+        description: "Discretisation invariance, a recent innovation in scientific machine learning, is a requirement that ensures an architecture can process inputs of different resolutions. In this post, we formally define this property, provide examples, generate datasets, train architectures, and discuss whether discretisation invariance is living up to its promise.",
         section: "Posts",
         handler: () => {
           
             window.location.href = "/2026/blog/2026/discretisation-invariance/";
-          
-        },
-      },{id: "post-navigating-the-manifold-a-geometric-perspective-on-diffusion-based-inverse-problems",
-        
-          title: "Navigating the Manifold — A Geometric Perspective on Diffusion-Based Inverse Problems",
-        
-        description: "This blogpost develops a geometric and probabilistic lens on diffusion priors for inverse problems. We show that a wide range of methods mostly instantiate two operator-splitting paradigms, i.e., posterior-guided sampling and clean-space local-MAP optimization. Through manifold diagrams, Tweedie-based animations, and step-by-step derivations, we explain how these paradigms decouple a pretrained diffusion prior from measurement physics, clarify when they approximate full posterior sampling versus MAP estimation, and distill practical design rules for building robust diffusion-based inverse solvers.",
-        section: "Posts",
-        handler: () => {
-          
-            window.location.href = "/2026/blog/2026/diffusion-inverse-problems/";
           
         },
       },{id: "post-from-u-nets-to-dits-the-architectural-evolution-of-text-to-image-diffusion-models-2021-2025",
@@ -369,6 +347,17 @@ ninja.data = [{
             window.location.href = "/2026/blog/2026/content-promotion-agent-design/";
           
         },
+      },{id: "post-the-99-success-paradox-when-near-perfect-retrieval-equals-random-selection",
+        
+          title: "The 99% Success Paradox: When Near-Perfect Retrieval Equals Random Selection",
+        
+        description: "For most of the history of information retrieval (IR), search results were designed for human consumers who could scan, filter, and discard irrelevant information on their own. This shaped retrieval systems to optimize for finding and ranking more relevant documents, but not keeping results clean and minimal, as the human was the final filter. However, LLMs have changed that by lacking this filtering ability. To address this, we introduce Bits-over-Random (BoR), a chance-corrected measure of retrieval selectivity that reveals when high success rates mask random-level performance.",
+        section: "Posts",
+        handler: () => {
+          
+            window.location.href = "/2026/blog/2026/bits-over-random/";
+          
+        },
       },{id: "post-beyond-the-rerun-why-reproducibility-is-failing-science",
         
           title: "Beyond the Rerun: Why Reproducibility is Failing Science",
@@ -389,6 +378,17 @@ ninja.data = [{
         handler: () => {
           
             window.location.href = "/2026/blog/2026/auto-calibration/";
+          
+        },
+      },{id: "post-the-adversarial-conditioning-paradox-why-attacked-inputs-are-more-stable-not-less",
+        
+          title: "The Adversarial Conditioning Paradox: Why Attacked Inputs Are More Stable, Not Less",
+        
+        description: "Adversarial inputs exhibit systematically lower Jacobian condition numbers at early transformer layers—the opposite of our initial hypothesis that attacks exploit unstable regions. This paradox reveals that adversarial attacks succeed by finding well-conditioned directions that cross decision boundaries.",
+        section: "Posts",
+        handler: () => {
+          
+            window.location.href = "/2026/blog/2026/adversarial-conditioning-paradox/";
           
         },
       },{id: "post-a-human-centric-framework-for-debating-the-ethics-of-ai-consciousness-under-uncertainty",
