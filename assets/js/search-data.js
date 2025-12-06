@@ -116,28 +116,6 @@ ninja.data = [{
             window.location.href = "/2026/blog/2026/vis-llm-latent-geometry/";
           
         },
-      },{id: "post-using-large-language-models-to-simulate-and-predict-human-decision-making",
-        
-          title: "Using Large Language Models to Simulate and Predict Human Decision-Making",
-        
-        description: "We explore how large language models can be used to predict human decisions in language-based persuasion games, comparing direct prompting, LLM-based data generation, and hybrid methods that mix synthetic and human data.",
-        section: "Posts",
-        handler: () => {
-          
-            window.location.href = "/2026/blog/2026/using-large-language-models-to-simulate-and-predict-human-decision-making/";
-          
-        },
-      },{id: "post-what-and-what-not-are-calibrated-uncertainties-actually-useful-for",
-        
-          title: "What (and What Not) are Calibrated Uncertainties Actually Useful for?",
-        
-        description: "This blogpost clarifies the practical usefulness of having a model with calibrated probabilities, something that is not often clearly stated in the calibration literature. We show that a calibrated model can be relied on to estimate average loss/reward, however, good calibration does not mean that a model is useful for per-sample decision making.",
-        section: "Posts",
-        handler: () => {
-          
-            window.location.href = "/2026/blog/2026/useful-calibrated-uncertainties/";
-          
-        },
       },{id: "post-is-your-algorithm-unlearning-or-untraining",
         
           title: "Is your algorithm Unlearning or Untraining?",
@@ -175,11 +153,22 @@ ninja.data = [{
         
           title: "Sparsity",
         
-        description: "Large Language Models (LLMs) have brought about a significant change in the field of artificial intelligence, where they have transitioned in scope from being specialized research tools to common resources that drive the next generation of software. With increasing model parameters and training data, LLMs demonstrate new abilities in reasoning, code generation, and solving complex problems that were once considered unattainable. However, scaling these models effectively for long-context applications uniquely poses a challenge. This is primarily due to the inherent limitations of the self-attention mechanism, which has time complexity O(N^2). This quadratic bottleneck hinders applications for long documents, high-resolution images, and large codebases, among others. However, what is interesting to observe is that effectively only a few parameters are used when outputting a token, and most calculations are sparse. Hence, Sparsity emerges as an effective solution to this problem. Rather than relying on the N x N attention matrix, one can utilize an approximate or “sparse” version of attention to achieve almost the same results much faster. The backbone of this approach is the idea that tokens do not require the entire context; they only need local context, and thus, most of the computation carried out is wasteful. In this blog, we analyze the types of attention patterns that emerge and how to use them to our advantage for faster and efficient LLMs.",
+        description: "Large Language Models (LLMs) have brought about a significant change in the field of artificial intelligence, where they have transitioned in scope from being specialized research tools to common resources that drive the next generation of software. With increasing model parameters and training data, LLMs demonstrate new abilities in reasoning, code generation, and solving complex problems that were once considered unattainable. However, scaling these models effectively for long-context applications uniquely poses a challenge. This is primarily due to the inherent limitations of the self-attention mechanism, which has time complexity O(N^2). This quadratic bottleneck hinders applications for long documents, high-resolution images, and large codebases, among others. However, what is interesting to observe is that effectively only a few parameters are used in token computation, and most calculations are sparse. Hence, Sparsity emerges as an effective solution to this problem. Rather than relying on the N x N attention matrix, one can utilize an approximate or “sparse” version of attention to achieve almost the same results much faster. The backbone of this approach is the idea that tokens do not require the entire context; they only need local context, and thus, most of the computation carried out is wasteful. In this blog, we analyze the types of attention patterns that emerge and how to use them to our advantage for faster and efficient LLMs.",
         section: "Posts",
         handler: () => {
           
             window.location.href = "/2026/blog/2026/sparsity/";
+          
+        },
+      },{id: "post-scaling-online-rlvr-done-right-with-decoupled-generation-amp-optimization",
+        
+          title: "Scaling Online RLVR Done Right with Decoupled Generation &amp; Optimization",
+        
+        description: "Reinforcement Learning with Verifiable Rewards (RLVR) optimizes large language models on tasks with objective correctness criteria by directly leveraging deterministic reward signals rather than learned preferences. While theoretically principled, online RLVR remains computationally prohibitive due to tight coupling of generation and optimization, which inflates memory and severely limits training throughput. We prove this gap is architectural, not fundamental. Online RLVR can be reformulated exactly as offline supervised fine-tuning with importance-weighted samples. We introduce Decoupled Generation &amp; Optimization (DGO), a two-phase paradigm that separates generation from optimization, reducing peak memory by ~18-31% and training time by ~75-85% while enabling multi-epoch training. Our framework unifies existing offline methods, exposes systematic theory-practice mismatches, and establishes DGO as the first method where theoretical optimal weights align perfectly with implementation. We show scaling online RLVR is achievable when done right, through principled decoupling and theoretically-grounded design.",
+        section: "Posts",
+        handler: () => {
+          
+            window.location.href = "/2026/blog/2026/scaling-rlvr/";
           
         },
       },{id: "post-using-graph-neural-networks-in-reinforcement-learning-a-practical-guide",
@@ -235,6 +224,17 @@ ninja.data = [{
         handler: () => {
           
             window.location.href = "/2026/blog/2026/neural-audio-codecs/";
+          
+        },
+      },{id: "post-the-illusion-of-mastery-breaking-the-cycle-of-benchmark-memorization-with-generative-evaluation",
+        
+          title: "The Illusion of Mastery: Breaking the Cycle of Benchmark Memorization with Generative Evaluation...",
+        
+        description: "Modern AI models that score perfectly on standardized benchmarks often fail in real-world applications. In this post, we first examine why current evaluation paradigms increasingly fail to capture how models perform in real-world scenarios, leading to an illusion of competence. Then, we introduce generative evaluation that automatically creates novel, diverse tasks every time a model is tested, and explain how it offers a more realistic way to measure what AI systems can actually do.",
+        section: "Posts",
+        handler: () => {
+          
+            window.location.href = "/2026/blog/2026/illusion-of-mastery/";
           
         },
       },{id: "post-generative-ai-archaeology",
@@ -358,17 +358,6 @@ ninja.data = [{
             window.location.href = "/2026/blog/2026/bits-over-random/";
           
         },
-      },{id: "post-beyond-the-rerun-why-reproducibility-is-failing-science",
-        
-          title: "Beyond the Rerun: Why Reproducibility is Failing Science",
-        
-        description: "Is reproducibility enough? We discuss the current reproducibility crisis and the limitations that focusing solely on this aspect of scientific project quality imposes on science. We propose a broader approach to the problem of scientific debt and outline practical actions researchers can take in their research. We also draw attention to the need for community action on the issue.",
-        section: "Posts",
-        handler: () => {
-          
-            window.location.href = "/2026/blog/2026/beyond-the-rerun/";
-          
-        },
       },{id: "post-llm-judges-on-autopilot",
         
           title: "(LLM-)Judges on autopilot",
@@ -400,6 +389,17 @@ ninja.data = [{
         handler: () => {
           
             window.location.href = "/2026/blog/2026/a-human-centric-framework-for-debating-the-ethics-of-ai-consciousness-under-uncertainty/";
+          
+        },
+      },{id: "post-",
+        
+          title: "",
+        
+        description: "",
+        section: "Posts",
+        handler: () => {
+          
+            window.location.href = "/2026/blog/2025/2026-04-27-philosophy-of-model-editing/";
           
         },
       },{id: "books-the-godfather",
