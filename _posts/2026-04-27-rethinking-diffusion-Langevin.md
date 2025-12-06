@@ -53,139 +53,126 @@ toc:
 _styles: >
   /* Highlight Box for Key Insights */
   .insight-box {
-    background: linear-gradient(to right, rgba(var(--global-theme-color-rgb), 0.05), rgba(var(--global-theme-color-rgb), 0.01));
-    border-left: 5px solid var(--global-theme-color);
+    background-color: rgba(0, 0, 0, 0.03);
+    border-left: 4px solid var(--global-theme-color);
     padding: 1.5rem;
-    margin: 2.5rem 0;
+    margin: 2rem 0;
     border-radius: 0 8px 8px 0;
-    box-shadow: 2px 4px 12px rgba(0,0,0,0.03);
+    box-shadow: 0 2px 6px rgba(0,0,0,0.02);
   }
   .insight-box strong {
     color: var(--global-theme-color);
-    font-size: 1.1em;
   }
 
-  /* Enhanced Table Styling */
+  /* Table Styling */
   .table-wrapper {
     overflow-x: auto;
     max-width: 100%;
     margin: 2.5rem 0;
     border-radius: 12px;
-    box-shadow: 0 4px 15px rgba(0,0,0,0.03);
-    border: 1px solid rgba(0,0,0,0.04);
-    background: white;
+    box-shadow: 0 4px 20px rgba(0,0,0,0.05);
+    border: 1px solid rgba(0,0,0,0.05);
+    background: #fff;
   }
   table {
     width: 100%;
     border-collapse: collapse;
-    margin: 0;
+    margin: 0; /* Controlled by wrapper */
     font-size: 0.95rem;
-    line-height: 1.5;
+    background: white;
   }
   th {
-    background-color: #fafbfc;
-    color: #444;
-    font-weight: 600;
-    padding: 14px 20px;
+    background-color: rgba(var(--global-theme-color-rgb), 0.1);
+    color: var(--global-theme-color);
+    font-weight: 700;
+    padding: 16px 20px;
     text-align: left;
-    border-bottom: 2px solid #eef0f2;
-    letter-spacing: 0.02em;
+    border-bottom: 2px solid rgba(var(--global-theme-color-rgb), 0.2);
+    text-transform: uppercase;
+    font-size: 0.85rem;
+    letter-spacing: 0.05em;
   }
   td {
     padding: 14px 20px;
-    border-bottom: 1px solid #f0f2f5;
-    vertical-align: top;
-    color: #555;
+    border-bottom: 1px solid #f0f0f0;
+    vertical-align: middle;
+    color: #444;
+  }
+  tr:nth-child(even) {
+    background-color: #fafafa;
   }
   tr:last-child td {
     border-bottom: none;
   }
   tr:hover td {
-    background-color: #fcfdfe;
+    background-color: rgba(var(--global-theme-color-rgb), 0.05);
+    transition: background-color 0.2s ease;
   }
 
-  /* Enhanced Details / Accordion */
+  /* Details / Accordion Styling */
   details {
     background-color: #fff !important;
-    border: 1px solid #eaecf0;
-    border-radius: 10px;
-    padding: 0;
-    margin: 2rem 0;
-    box-shadow: 0 2px 6px rgba(0,0,0,0.02);
-    transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
+    border: 1px solid #e0e0e0;
+    border-radius: 8px;
+    padding: 0; /* Padding moved to children */
+    margin: 1.5rem 0;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.02);
+    transition: all 0.2s ease;
   }
   details[open] {
-    border-color: rgba(var(--global-theme-color-rgb), 0.4);
-    box-shadow: 0 8px 20px rgba(0,0,0,0.04);
+    border-color: var(--global-theme-color);
+    box-shadow: 0 4px 12px rgba(0,0,0,0.05);
   }
   details > summary {
     cursor: pointer;
     font-weight: 600;
-    padding: 1.2rem;
+    padding: 1rem;
     list-style: none;
-    background-color: #fcfcfd;
+    background-color: rgba(0,0,0,0.01);
     border-bottom: 1px solid transparent;
     transition: background 0.2s;
-    border-radius: 10px;
-    color: #333;
-    display: flex;
-    align-items: center;
-  }
-  /* Add an arrow icon to summary */
-  details > summary::before {
-    content: "▶";
-    font-size: 0.8em;
-    margin-right: 0.8em;
-    color: var(--global-theme-color);
-    transition: transform 0.2s;
-  }
-  details[open] > summary::before {
-    transform: rotate(90deg);
+    border-radius: 8px;
   }
   details[open] > summary {
     border-bottom: 1px solid #eee;
-    border-radius: 10px 10px 0 0;
-    background-color: rgba(var(--global-theme-color-rgb), 0.03);
+    border-radius: 8px 8px 0 0;
+    background-color: rgba(var(--global-theme-color-rgb), 0.05);
     color: var(--global-theme-color);
   }
   details > summary:hover {
-    background-color: #f5f6f8;
+    background-color: rgba(0,0,0,0.03);
   }
+  /* Wrapper for details content to provide padding */
   details > div.details-content {
-    padding: 1.5rem 2rem;
+    padding: 1.5rem;
     background: #fff;
-    border-radius: 0 0 10px 10px;
+    border-radius: 0 0 8px 8px;
   }
 
-  /* Blockquote Styling */
-  blockquote {
-    border-left: 4px solid rgba(var(--global-theme-color-rgb), 0.5);
-    background: #f9f9fa;
-    color: #555;
-    padding: 1rem 1.5rem;
-    margin: 1.5rem 0;
-    border-radius: 0 4px 4px 0;
-    font-style: italic;
-  }
-
-  /* Math Block Enhancements - for stand-alone formulas if wrapped */
+  /* Math Block Enhancements */
   .math-block {
     background: #fcfcfc;
     border: 1px solid #f0f0f0;
     border-radius: 8px;
-    padding: 1.5rem;
-    margin: 2rem 0;
+    padding: 1rem;
+    margin: 1.5rem 0;
     overflow-x: auto;
-    box-shadow: inset 0 1px 4px rgba(0,0,0,0.01);
   }
 
-  /* Caption Enhancements */
-  .caption {
-    color: #666;
-    font-size: 0.9em;
-    margin-top: 0.5em;
+  /* Fake Image (kept from original) */
+  .fake-img {
+    background: #bbb;
+    border: 1px solid rgba(0, 0, 0, 0.1);
+    box-shadow: 0 0px 4px rgba(0, 0, 0, 0.1);
+    margin-bottom: 12px;
+  }
+  .fake-img p {
+    font-family: monospace;
+    color: white;
+    text-align: left;
+    margin: 12px 0;
     text-align: center;
-    font-style: italic;
+    font-size: 16px;
   }
 
   /* Mermaid Fixes */
@@ -243,6 +230,9 @@ $$
 where $$s(\mathbf{x}) = \nabla_{\mathbf{x}} \log p(\mathbf{x})$$ is the score function of $$p(\mathbf{x})$$, $g(t)$ is an arbitrary positive function satisfying $s = \int_0^\infty g(t) dt = \infty$. The $d\mathbf{W}$ term is a Brownian noise what can be treated as $\sqrt{dt} \boldsymbol{\epsilon}$, where $\boldsymbol{\epsilon}$ is a standard Gaussian noise. 
 
 This dynamics is often used as a Monte Carlo sampler to draw samples from $$p(\mathbf{x})$$, since $$p(\mathbf{x})$$ is its **stationary distribution**—the distribution that $$\mathbf{x}_t$$ converges to and and remains at as $$t \to \infty$$, regardless of the initial distribution of $$\mathbf{x}_0$$. 
+
+
+
 
 <details markdown="1">
 <summary>Optional: Derivation that $p(\mathbf{x})$ is the stationary distribution of Langevin dynamics</summary>
