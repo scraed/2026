@@ -125,7 +125,7 @@ which illustrates that the forward and reverse diffusion steps are a split of a 
 
 # Langevin Dynamics as 'Identity' Operation
 
-Langevin Dynamics is a special diffusion process that can generate samples from a probability distribution $$p(\mathbf{x})$$. It is defined as:
+Langevin dynamics <d-cite key="Langevin1908"></d-cite> is a stochastic process for sampling from a target probability distribution $$p(\mathbf{x})$$. One common form is the SDE:
 
 $$
 d\mathbf{x}_t = g(t)\, \mathbf{s}(\mathbf{x}_t) dt + \sqrt{2 g(t)}\, d\mathbf{W}_t, 
