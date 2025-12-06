@@ -51,6 +51,107 @@ toc:
 # This is used in the 'Layouts' section of this post.
 # If you use this post as a template, delete this _styles block.
 _styles: >
+  /* Highlight Box for Key Insights */
+  .insight-box {
+    background-color: rgba(0, 0, 0, 0.03);
+    border-left: 4px solid var(--global-theme-color);
+    padding: 1.5rem;
+    margin: 2rem 0;
+    border-radius: 0 8px 8px 0;
+    box-shadow: 0 2px 6px rgba(0,0,0,0.02);
+  }
+  .insight-box strong {
+    color: var(--global-theme-color);
+  }
+
+  /* Table Styling */
+  .table-wrapper {
+    overflow-x: auto;
+    max-width: 100%;
+    margin: 2rem 0;
+    border-radius: 8px;
+    box-shadow: 0 0 10px rgba(0,0,0,0.02);
+    border: 1px solid rgba(0,0,0,0.05);
+  }
+  table {
+    width: 100%;
+    border-collapse: collapse;
+    margin: 0; /* Controlled by wrapper */
+    font-size: 0.9rem;
+    background: white;
+  }
+  th {
+    background-color: #f8f9fa;
+    color: #333;
+    font-weight: 600;
+    padding: 12px 16px;
+    text-align: left;
+    border-bottom: 2px solid #eee;
+  }
+  td {
+    padding: 12px 16px;
+    border-bottom: 1px solid #eee;
+    vertical-align: top;
+    color: #555;
+  }
+  tr:last-child td {
+    border-bottom: none;
+  }
+  tr:hover td {
+    background-color: #fafafa;
+  }
+
+  /* Details / Accordion Styling */
+  details {
+    background-color: #fff !important;
+    border: 1px solid #e0e0e0;
+    border-radius: 8px;
+    padding: 0; /* Padding moved to children */
+    margin: 1.5rem 0;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.02);
+    transition: all 0.2s ease;
+  }
+  details[open] {
+    border-color: var(--global-theme-color);
+    box-shadow: 0 4px 12px rgba(0,0,0,0.05);
+  }
+  details > summary {
+    cursor: pointer;
+    font-weight: 600;
+    padding: 1rem;
+    list-style: none;
+    background-color: rgba(0,0,0,0.01);
+    border-bottom: 1px solid transparent;
+    transition: background 0.2s;
+    border-radius: 8px;
+  }
+  details[open] > summary {
+    border-bottom: 1px solid #eee;
+    border-radius: 8px 8px 0 0;
+    background-color: rgba(var(--global-theme-color-rgb), 0.05);
+    color: var(--global-theme-color);
+  }
+  details > summary:hover {
+    background-color: rgba(0,0,0,0.03);
+  }
+  /* Wrapper for details content to provide padding */
+  details > div.details-content {
+    padding: 1.5rem;
+    background: #fff;
+    border-radius: 0 0 8px 8px;
+  }
+
+  /* Math Block Enhancements */
+  .math-block {
+    background: #fcfcfc;
+    border: 1px solid #f0f0f0;
+    border-radius: 8px;
+    padding: 1rem;
+    margin: 1.5rem 0;
+    overflow-x: auto;
+  }
+
+  /* Fake Image (kept from original) */
   .fake-img {
     background: #bbb;
     border: 1px solid rgba(0, 0, 0, 0.1);
@@ -65,23 +166,8 @@ _styles: >
     text-align: center;
     font-size: 16px;
   }
-  details {
-    background: transparent !important;
-    border: 1px solid rgba(0, 0, 0, 0.08);
-    border-radius: 4px;
-    padding: 0.75rem 1rem;
-    margin: 1rem 0;
-  }
-  details > summary {
-    cursor: pointer;
-    font-weight: 500;
-    list-style: none;
-    background: transparent !important;
-  }
-  details[open] {
-    background: transparent !important;
-  }
-  /* Make Mermaid diagrams match article background (remove pink) and center them */
+
+  /* Mermaid Fixes */
   .mermaid, svg.mermaid {
     background: transparent !important;
     background-color: transparent !important;
@@ -90,13 +176,11 @@ _styles: >
     display: block;
     text-align: center;
   }
-  /* Remove box fill/border for nodes (formulas) */
   .mermaid .node rect,
   .mermaid .node polygon {
     fill: transparent !important;
     stroke: transparent !important;
   }
-  /* Remove background for edge labels such as "Forward" */
   .mermaid .edgeLabel rect {
     fill: transparent !important;
     stroke: transparent !important;
@@ -113,7 +197,9 @@ A third valuable viewpoint is the flow-based perspective <d-cite key="liu2022flo
 
 In this article, we aim to present a perspective that is both mathematically simple and intuitively clear: the Langevin perspective. This approach, relying only on fundamental techniques from stochastic differential equations (SDEs), provides a straightforward derivation of the reverse processes as well as a unified, first-principle derivation of the denoising, score matching, and flow matching objectives.
 
-The central insight of the Langevin perspective is captured by the following triangular relationship:
+<div class="insight-box" markdown="1">
+
+**Central Insight:** The Langevin perspective reveals a fundamental triangular relationship:
 
 <div class="row mt-3">
     <div class="col-md-12 col-lg-10 offset-lg-1 mt-3 mt-md-0">
@@ -121,7 +207,9 @@ The central insight of the Langevin perspective is captured by the following tri
     </div>
 </div>
 
-which illustrates that the forward and reverse diffusion steps are a split of a step of Langevin dynamics.
+This illustrates that the forward and reverse diffusion steps are simply a **split** of a single step of Langevin dynamics.
+
+</div>
 
 # Langevin Dynamics as 'Identity' Operation
 
@@ -189,7 +277,7 @@ In practice, diffusion models are usually instantiated by choosing specific para
 
 The table below summarizes these three forward processes of different model types, as well as their corresponding SDEs expressed in terms of their respective noise-levels. In what follows, we adopt Karras'<d-cite key="Karras2022Elucidating"></d-cite> notation for the VE parameterization .
 
-<div style="overflow-x: auto; max-width: 100%;" markdown="1">
+<div class="table-wrapper" markdown="1">
 
 | **Model Type** | **Forward SDE** | **Noise-level parameter** | **Relation between initial and noisy variable** |
 | --- | --- | --- | --- |
@@ -202,7 +290,7 @@ The table below summarizes these three forward processes of different model type
 Each forward process has a characteristic way of mixing data and noise: The VP model uses the Ornstein–Uhlenbeck (OU) process, blending the data with noise in a geometric (Pythagorean) fashion. The VE-Karras model adds noise directly to the data without a restoring drift, while the Rectified flow model creates a straight-line interpolation between data and noise. Despite their differences, all these SDEs are fundamentally equivalent—they differ only by how time and state are reparameterized. For clarity, the table below shows the transformations between time parameters and state variables for each model:
 
 
-<div style="overflow-x: auto; max-width: 100%;" markdown="1">
+<div class="table-wrapper" markdown="1">
 
 | **Model Type** | **Time variable** | **Time domain** | **State variable notation** |
 | --- | --- | --- | --- |
@@ -243,7 +331,7 @@ The concept behind the reverse process is intuitive: since Langevin dynamics act
 
 To formalize this, consider the VP case with the following Langevin dynamics for $p_t(\mathbf{x})$ with a time variable $\tau$, distinguished from the forward diffusion time $t$. This dynamics can be decomposed into forward and reverse components as follows:  
 
-<div style="overflow-x: auto; max-width: 100%;" markdown="1">
+<div class="table-wrapper" markdown="1">
 
 $$
 \begin{split}  
@@ -275,7 +363,7 @@ The reverse diffusion process itself is also a standalone SDE that advances the 
 
 The same decomposition approach can be applied to other diffusion schemes. The following table summarizes how each parameterization relates its Langevin dynamics to its corresponding forward and reverse processes:
 
-<div style="overflow-x: auto; max-width: 100%;" markdown="1">
+<div class="table-wrapper" markdown="1">
 
 | **Model Type** | **Langevin dynamics** | **Forward Split** | **Reverse Split** |
 | --- | --- | --- | --- |
@@ -324,7 +412,7 @@ in which $t' \in [0,T]$ is the reverse time, $\mathbf{s}(\mathbf{x}, t) = \nabla
 
 The above analysis applies not only to SDE reverse processes but also to ODE reverse processes. The following table summarizes the reverse diffusion processes for different model types:
 
-<div style="overflow-x: auto; max-width: 100%;" markdown="1">
+<div class="table-wrapper" markdown="1">
 
 | **Model Type** | **Reverse Time** | **Reverse time domain** | **Reverse Process** | **Relation to Score** |
 | --- | --- | --- | --- | --- |
@@ -882,7 +970,7 @@ $$
 
 With the above loss, we can unify training objective for different parameterizations considered in this article:
 
-<div style="overflow-x: auto; max-width: 100%;" markdown="1">
+<div class="table-wrapper" markdown="1">
 
 | **Model Type** | **Relation between initial and noisy variable** | **Function modeled by NN** | **$\mathbf{s}_\theta$ in terms of NN** | **$\nabla \log p(x_t \mid x_0)$** | **Loss $L_t$** |
 | --- | --- | --- | --- | --- | --- |
@@ -901,7 +989,7 @@ A note on loss weighting: In practice, the coefficient outside the L2 norm (such
 
 Combining all results from previous discussion, we summarize the forward, reverse, and loss for each diffusion type:
 
-<div style="overflow-x: auto; max-width: 100%;" markdown="1">
+<div class="table-wrapper" markdown="1">
 
 | **Model Type** | **Forward Process** | **Reverse Process** | **Loss (up to a weight factor)** |
 | --- | --- | --- | --- |
