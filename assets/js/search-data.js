@@ -237,17 +237,6 @@ ninja.data = [{
             window.location.href = "/2026/blog/2026/illusion-of-mastery/";
           
         },
-      },{id: "post-generative-ai-archaeology",
-        
-          title: "Generative AI Archaeology",
-        
-        description: "We document the rise of the Generative AI Archaeologist, whose tools include linear algebra and probability theory, jailbreaking, and debuggers, compared to the metal detectors, pickaxes, and radar surveys of traditional archaeology. GenAI Archaeologists have reported findings both through luck by observing unexpected behaviour in publicly accessible models, and by exploiting the mathematical properties of models. In this blog, we survey five types of findings unearthed by GenAI Archaeologists and discuss the status of those findings.",
-        section: "Posts",
-        handler: () => {
-          
-            window.location.href = "/2026/blog/2026/genai-archaeology/";
-          
-        },
       },{id: "post-quot-how-to-transition-from-ml-to-dl-in-production-lessons-from-the-trenches-at-company-quot",
         
           title: "[&quot;How to Transition from ML to DL in Production - Lessons From the...",
@@ -334,6 +323,17 @@ ninja.data = [{
         handler: () => {
           
             window.location.href = "/2026/blog/2026/diffusion-architecture-evolution/";
+          
+        },
+      },{id: "post-destruction-is-a-general-strategy-to-learn-generation-diffusion-39-s-strength-is-to-take-it-seriously-exploration-is-the-future",
+        
+          title: "Destruction is a General Strategy to Learn Generation; Diffusion&#39;s Strength is to Take...",
+        
+        description: "I present diffusion models as part of a family of machine learning techniques that withhold information from a model’s input and train it to guess the withheld information. I argue that diffusion&#39;s destroying approach to withholding is more flexible than typical hand-crafted information withholding techniques, providing a rich training playground that could be advantageous in some settings, notably data-scarce ones. I then address subtle issues that may arise when porting reinforcement learning techniques to the diffusion context, and wonder how such exploration problems could be addressed in more diffusion-native ways. I do not have definitive answers, but I do point my fingers in directions I deem interesting. A tutorial follows this thesis, expanding on the destroy-then-generate perspective. A novel kind of probabilistic graphical models is introduced to facilitate the totorial&#39;s exposition.",
+        section: "Posts",
+        handler: () => {
+          
+            window.location.href = "/2026/blog/2026/destruction/";
           
         },
       },{id: "post-content-promotion-as-a-strategic-game-how-to-design-agentic-publishers-for-the-evolving-search-ecosystem-in-the-genai-era",
