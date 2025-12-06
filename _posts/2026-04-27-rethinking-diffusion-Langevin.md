@@ -139,7 +139,7 @@ This dynamics is often used as a Monte Carlo sampler to draw samples from $$p(\m
 
 
 <details markdown="1">
-<summary><span style="font-weight: 300">Optional: Derivation that $p(\mathbf{x})$ is the stationary distribution of Langevin dynamics</span> (click to expand)</summary>
+<summary><span style="font-weight: 300; font-style: italic">Optional: Derivation that $p(\mathbf{x})$ is the stationary distribution of Langevin dynamics</span> (click to expand)</summary>
 
 1. Set $g(t) = 1$ by rescaling time as $t' = \int_0^t g(\tau)\, d\tau$. Under this change of variables, the dynamics become $$d\mathbf{x}_{t'} = \mathbf{s}(\mathbf{x}_{t'})\, dt' + \sqrt{2}\, d\mathbf{W}_{t'}$$, which is equivalent to the case $g(t') = 1$. Thus, $g(t)$ only sets the time unit and does not affect the stationary distribution.
 
@@ -457,7 +457,7 @@ where the score functions $$\nabla \log p(\mathbf{x}, t)$$ and $$\nabla \log q(\
 
 
 <details markdown="1">
-<summary><em>Derivation Step 1 (optional): how the forward SDE induces the Fokker–Planck equation for $p_t(\mathbf{x})$</em> (click to expand)</summary>
+<summary><span style="font-weight: 300; font-style: italic">Derivation Step 1 (optional): how the forward SDE induces the Fokker–Planck equation for $p_t(\mathbf{x})$</span> (click to expand)</summary>
 
 
 Given the SDE
@@ -525,7 +525,7 @@ which is the 1D specialization of the Fokker–Planck equation stated above.
 
 
 <details markdown="1">
-<summary><em>Derivation Step 2 (optional): why this forward diffusion yields the squared-score objective above</em> (click to expand)</summary>
+<summary><span style="font-weight: 300; font-style: italic">Derivation Step 2 (optional): why this forward diffusion yields the squared-score objective above</span> (click to expand)</summary>
 
 We now analyze **how the KL divergence between two solutions of the Fokker–Planck equation evolves in time**.
 We now analyze **how the KL divergence between two solutions of the same Fokker–Planck equation evolves in time**.
@@ -670,7 +670,7 @@ $$
 where the LHS is the denoising score matching (DSM) loss while RHS is the score matching loss.
 
 <details markdown="1">
-<summary><em>Derivation (optional): equivalence between DSM and SM losses</em> (click to expand)</summary>
+<summary><span style="font-weight: 300; font-style: italic">Derivation (optional): equivalence between DSM and SM losses</span> (click to expand)</summary>
 
 We now prove that the *denoising score matching* (DSM) loss and the *score matching* (SM) loss at time $t$ have the same minimizer.
 
