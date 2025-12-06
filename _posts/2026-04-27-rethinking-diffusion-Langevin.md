@@ -139,7 +139,7 @@ This dynamics is often used as a Monte Carlo sampler to draw samples from $$p(\m
 
 
 <details markdown="1">
-<summary><em>Optional: Derivation that $p(\mathbf{x})$ is the stationary distribution of Langevin dynamics</em> (click to expand)</summary>
+<summary><span style="font-weight: 300">Optional: Derivation that $p(\mathbf{x})$ is the stationary distribution of Langevin dynamics</span> (click to expand)</summary>
 
 1. Set $g(t) = 1$ by rescaling time as $t' = \int_0^t g(\tau)\, d\tau$. Under this change of variables, the dynamics become $$d\mathbf{x}_{t'} = \mathbf{s}(\mathbf{x}_{t'})\, dt' + \sqrt{2}\, d\mathbf{W}_{t'}$$, which is equivalent to the case $g(t') = 1$. Thus, $g(t)$ only sets the time unit and does not affect the stationary distribution.
 
