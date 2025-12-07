@@ -88,7 +88,6 @@ _styles: >
     padding: 16px 20px;
     text-align: left;
     border-bottom: 2px solid rgba(var(--global-theme-color-rgb), 0.2);
-    text-transform: uppercase;
     font-size: 0.85rem;
     letter-spacing: 0.05em;
   }
@@ -984,7 +983,7 @@ $$
 
 With the above loss, we can unify training objective for different parameterizations considered in this article:
 
-<div class="table-wrapper">
+<div class="table-wrapper" markdown="1">
 
 | **Model Type** | **Relation between initial and noisy variable** | **Function modeled by NN** | **$\mathbf{s}_\theta$ in terms of NN** | **$\nabla \log p(x_t \mid x_0)$** | **Loss $L_t$** |
 | --- | --- | --- | --- | --- | --- |
