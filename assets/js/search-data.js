@@ -72,18 +72,7 @@ ninja.data = [{
               handler: () => {
                 window.location.href = "https://iclr-blog-track.github.io/home/";
               },
-            },{id: "post-fans-frequency-adaptive-noise-shaping-for-diffusion-models",
-        
-          title: "FANS - Frequency-Adaptive Noise Shaping for Diffusion Models",
-        
-        description: "Diffusion models have achieved remarkable success in generative modeling, yet they often struggle with spectral bias,the tendency to prioritize low-frequency patterns while inadequately learning high-frequency details. This limitation stems from the uniform noise scheduling employed during training, which allocates equal denoising capacity across all frequencies regardless of the dataset&#39;s spectral characteristics. We introduce Frequency-Adaptive Noise Shaping (FANS), a principled framework that addresses this fundamental limitation by dynamically shaping noise distributions according to dataset-specific frequency importance. FANS operates on a simple insight - different datasets exhibit distinct spectral signatures, and noise scheduling should reflect these differences. The framework integrates seamlessly with existing diffusion architectures through a simple modification to the noise sampling procedure during training and inference.We validate FANS on synthetic datasets with controlled spectral properties as well as real world data (CIFAR10, CelebA, Texture, MultimodalUniverse) where we demonstrate consistent improvements over vanilla DDPM baselines. Our experiments reveal that FANS particularly excels on high-frequency-rich datasets, producing sharper, more detailed samples while maintaining comparable performance for standard natural image datasets like CIFAR10 and CelebA.",
-        section: "Posts",
-        handler: () => {
-          
-            window.location.href = "/2026/blog/2026/fans/";
-          
-        },
-      },{id: "post-visual-reversal-curse-from-general-domain-to-remote-sensing-images",
+            },{id: "post-visual-reversal-curse-from-general-domain-to-remote-sensing-images",
         
           title: "Visual Reversal Curse: From General Domain to Remote Sensing Images",
         
@@ -116,17 +105,6 @@ ninja.data = [{
             window.location.href = "/2026/blog/2026/vis-llm-latent-geometry/";
           
         },
-      },{id: "post-is-your-algorithm-unlearning-or-untraining",
-        
-          title: "Is your algorithm Unlearning or Untraining?",
-        
-        description: "Machine unlearning aims to post-process a trained model in order to remove the influence of specific training examples or higher-level knowledge. We argue that the term unlearning is overloaded, with different use cases belonging to distinct problem formulations. This issue causes confusion in the community: it is often unclear what the goals of different proposed methods are, when they are expected to work, how they should be evaluated, and what baselines they should be compared against. To address this, we establish a fundamental distinction between two notions that we identify as Unlearning and Untraining, aiming to guide the field towards disambiguating technical definitions, to unlock more progress in clarifying goals, designing evaluation metrics for each, and ultimately better algorithms.",
-        section: "Posts",
-        handler: () => {
-          
-            window.location.href = "/2026/blog/2026/unlearning-or-untraining/";
-          
-        },
       },{id: "post-unigramlm-an-attempt-at-writing-the-missing-manual",
         
           title: "UnigramLM - An Attempt at Writing the Missing Manual",
@@ -149,11 +127,33 @@ ninja.data = [{
             window.location.href = "/2026/blog/2026/symbolic-connect/";
           
         },
-      },{id: "post-sparsity",
+      },{id: "post-the-decoupling-hypothesis-attempting-subject-invariant-eeg-representation-learning-via-auxiliary-injection",
         
-          title: "Sparsity",
+          title: "The Decoupling Hypothesis: Attempting Subject-Invariant EEG Representation Learning via Auxiliary Injection",
         
-        description: "Large Language Models (LLMs) have brought about a significant change in the field of artificial intelligence, where they have transitioned in scope from being specialized research tools to common resources that drive the next generation of software. With increasing model parameters and training data, LLMs demonstrate new abilities in reasoning, code generation, and solving complex problems that were once considered unattainable. However, scaling these models effectively for long-context applications uniquely poses a challenge. This is primarily due to the inherent limitations of the self-attention mechanism, which has time complexity O(N^2). This quadratic bottleneck hinders applications for long documents, high-resolution images, and large codebases, among others. However, what is interesting to observe is that effectively only a few parameters are used in token computation, and most calculations are sparse. Hence, Sparsity emerges as an effective solution to this problem. Rather than relying on the N x N attention matrix, one can utilize an approximate or “sparse” version of attention to achieve almost the same results much faster. The backbone of this approach is the idea that tokens do not require the entire context; they only need local context, and thus, most of the computation carried out is wasteful. In this blog, we analyze the types of attention patterns that emerge and how to use them to our advantage for faster and efficient LLMs.",
+        description: "We explore several ideas for learning subject-invariant EEG representations for reaction time and psychopathology prediction using only 2-second windows in the NeurIPS 2025 EEG Challenge. The core of our approach is the Decoupling Hypothesis: an autoencoder framework where we attempt to disentangle subject-specific artifacts and long-term temporal trends (such as fatigue) from the neural signal by explicitly injecting &#39;nuisance&#39; variables (like demographics and sequence position) into the decoder. This method aimed to force a purely convolutional encoder to learn slow, sequential features without relying on computationally expensive Recurrent or Attention mechanisms. This blog discusses the ideas that seemed promising but ultimately did not work as intended—and why.",
+        section: "Posts",
+        handler: () => {
+          
+            window.location.href = "/2026/blog/2026/subject-invariant-eeg/";
+          
+        },
+      },{id: "post-artistic-style-and-the-play-of-neural-style-representations",
+        
+          title: "Artistic Style and the Play of Neural Style Representations",
+        
+        description: "How do neural networks percieve the complex human construct of artistic style? We explore the dynamic interplay between diverse machine representations of style and style definitions. We reveal a profound divergence where models often reject established historical narratives in favour of their own perceptual truths.",
+        section: "Posts",
+        handler: () => {
+          
+            window.location.href = "/2026/blog/2026/style-representations/";
+          
+        },
+      },{id: "post-don-39-t-look-up-every-token-escaping-quadratic-complexity-via-geometric-patterns-and-algorithms",
+        
+          title: "Don&#39;t Look Up (Every Token): Escaping Quadratic Complexity via Geometric Patterns and Algorithms",
+        
+        description: "Large Language Models (LLMs) have brought about a significant change in the field of artificial intelligence, where they have transitioned in scope from being specialized research tools to common resources that drive the next generation of software. With increasing model parameters and training data, LLMs demonstrate new abilities in reasoning, code generation, and solving complex problems that were once considered unattainable. However, scaling these models effectively for long-context applications uniquely poses a challenge. This is primarily due to the inherent limitations of the self-attention mechanism, which has time complexity  $\mathcal{O}\left(n^2\right)$. This quadratic bottleneck hinders applications for long documents, high-resolution images, and large codebases, among others. However, what is interesting to observe is that effectively only a few parameters are used in token computation, and most calculations are sparse. Hence, Sparsity emerges as an effective solution to this problem. Rather than relying on the $N \times N$ attention matrix, one can utilize an approximate or “sparse” version of attention to achieve almost the same results much faster. The backbone of this approach is the idea that tokens do not require the entire context; they only need local context, and thus, most of the computation carried out is wasteful. In this blog, we analyze the types of attention patterns that emerge and how to use them to our advantage for faster and efficient LLMs.",
         section: "Posts",
         handler: () => {
           
@@ -204,6 +204,17 @@ ninja.data = [{
             window.location.href = "/2026/blog/2026/recur-refine-reason/";
           
         },
+      },{id: "post-probabilistic-circuits-for-uncertainty-quantification",
+        
+          title: "Probabilistic Circuits for Uncertainty Quantification",
+        
+        description: "Deep learning models struggle with epistemic uncertainty quantification, often exhibiting blind confidence on out-of-distribution data. This work reviews on Probabilistic Circuits (PCs) as a versatile framework for rigorous, tractable reasoning. PCs model the joint probability distribution and by enforcing structural constraints, specifically smoothness, decomposability, and determinism, they allow for the exact computation of marginals, conditionals, and moments in polynomial time without retraining. We discuss on the suitability of PCs for Uncertainty Quantification, describing their advantages and highlighting their PCs for tractable UQ in high-dimensional problems.",
+        section: "Posts",
+        handler: () => {
+          
+            window.location.href = "/2026/blog/2026/probabilistic-circuits-for-uncertainty-quantification/";
+          
+        },
       },{id: "post-performative-prediction-made-practical",
         
           title: "Performative Prediction made practical",
@@ -246,17 +257,6 @@ ninja.data = [{
         handler: () => {
           
             window.location.href = "/2026/blog/2026/from-ml-to-dl/";
-          
-        },
-      },{id: "post-understanding-and-fixing-bottlenecks-in-state-space-models-what-recency-and-over-smoothing-tell-us",
-        
-          title: "Understanding and Fixing Bottlenecks in State Space Models: What Recency and Over-Smoothing Tell...",
-        
-        description: "This work analyzes how recency bias and hidden-state over-smoothing emerge in modern State Space Models, revealing the bottlenecks that limit their ability to capture long-range dependencies.",
-        section: "Posts",
-        handler: () => {
-          
-            window.location.href = "/2026/blog/2026/fixing-bottlenecks-in-state-space-models/";
           
         },
       },{id: "post-are-llm-agent-populations-really-emergent-a-comprehensive-perspective",
@@ -400,6 +400,17 @@ ninja.data = [{
         handler: () => {
           
             window.location.href = "/2026/blog/2025/2026-04-27-philosophy-of-model-editing/";
+          
+        },
+      },{id: "post-",
+        
+          title: "",
+        
+        description: "",
+        section: "Posts",
+        handler: () => {
+          
+            window.location.href = "/2026/blog/2025/2026-04-27-egraph-symreg/";
           
         },
       },{id: "books-the-godfather",
