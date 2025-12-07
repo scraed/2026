@@ -110,8 +110,8 @@ _styles: >
 
   /* Details / Accordion Styling */
   details {
-    background-color: #fff !important;
-    border: 1px solid #e0e0e0;
+    background-color: var(--global-card-bg-color) !important;
+    border: 1px solid var(--global-divider-color);
     border-radius: 8px;
     padding: 0; /* Padding moved to children */
     margin: 1.5rem 0;
@@ -128,24 +128,24 @@ _styles: >
     padding: 1rem;
     list-style: none;
     background-color: transparent;
-    color: #777;
+    color: var(--global-text-color-light);
     border-bottom: 1px solid transparent;
     transition: background 0.2s, color 0.2s;
     border-radius: 8px;
   }
   details[open] > summary {
-    border-bottom: 1px solid #eee;
+    border-bottom: 1px solid var(--global-divider-color);
     border-radius: 8px 8px 0 0;
     background-color: rgba(var(--global-theme-color-rgb), 0.05);
     color: var(--global-theme-color);
   }
   details > summary:hover {
-    background-color: rgba(0,0,0,0.03);
+    background-color: rgba(var(--global-theme-color-rgb), 0.06);
   }
   /* Wrapper for details content to provide padding */
   details > div.details-content {
     padding: 1.5rem;
-    background: #fff;
+    background: var(--global-card-bg-color);
     border-radius: 0 0 8px 8px;
   }
 
