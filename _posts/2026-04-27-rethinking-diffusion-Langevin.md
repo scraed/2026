@@ -166,6 +166,11 @@ _styles: >
     box-shadow: 0 0px 4px rgba(0, 0, 0, 0.1);
     margin-bottom: 12px;
   }
+
+  /* Dark-mode: invert all images in this article for better contrast */
+  html.dark .post.distill img {
+    filter: invert(1) hue-rotate(180deg);
+  }
   .fake-img p {
     font-family: monospace;
     color: white;
@@ -439,7 +444,7 @@ We have established that a single reverse step undoes a forward step: advancing 
 
 <div class="row mt-3">
     <div class="col-md-10 offset-md-1 col-lg-8 offset-lg-2 mt-3 mt-md-0">
-        {% include figure.liquid path="assets/img/2026-04-27-rethinking-diffusion-Langevin/FastestDiffusionTheory_08.jpg" class="img-fluid rounded" %}
+        {% include figure.liquid path="assets/img/2026-04-27-rethinking-diffusion-Langevin/FastestDiffusionTheory_08.jpg" class="img-fluid rounded diffusion-cycle-figure" %}
     </div>
 </div>
 <div class="caption">
