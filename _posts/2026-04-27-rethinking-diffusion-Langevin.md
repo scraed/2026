@@ -25,7 +25,7 @@ authors:
 
 
 # must be the exact same name as your blogpost
-bibliography: 2026-04-27-rethinking-diffusion-Langevin.bib
+bibliography: 2026-04-27-rethinking-diffusion-langevin.bib
 
 # Add a table of contents to your post.
 #   - make sure that TOC names match the actual section names
