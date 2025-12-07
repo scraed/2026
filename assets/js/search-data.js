@@ -83,17 +83,6 @@ ninja.data = [{
             window.location.href = "/2026/blog/2026/vis-llm-latent-geometry/";
           
         },
-      },{id: "post-from-dense-monoliths-to-modular-minds-the-rise-of-symbolic-routing-in-llms",
-        
-          title: "From Dense Monoliths to Modular Minds: The Rise of Symbolic Routing in LLMs...",
-        
-        description: "The history of Artificial Intelligence (AI) has largely been defined by a dichotomy: the flexible, probabilistic learning of Connectionism versus the rigorous, compositional logic of Symbolism. However, the emergence of Large Language Models (LLMs) is fostering a synthesis of these paradigms through a fundamental architectural shift: the move from Dense Monoliths to Modular, Routed Systems. This shift is fractal. At the Macro level, LLMs function as central planners, using symbolic protocols to orchestrate external tools and specialized neural agents. Simultaneously, at the Micro level, the models themselves are evolving into sparse, modular structures (such as Mixture-of-Experts) governed by internal routing mechanisms. In this post, we explore this transition toward Symbolic Routing. We discuss how this paradigm enables us to build societies of neural agents, discover latent modularity within dense networks, thus enabling composable, verifiable, interpretable and continually learnable AI system. And we also discuss how to leverage these structures to synthesize training data and formally verify AI reasoning.",
-        section: "Posts",
-        handler: () => {
-          
-            window.location.href = "/2026/blog/2026/symbolic-connect/";
-          
-        },
       },{id: "post-the-decoupling-hypothesis-attempting-subject-invariant-eeg-representation-learning-via-auxiliary-injection",
         
           title: "The Decoupling Hypothesis: Attempting Subject-Invariant EEG Representation Learning via Auxiliary Injection",
@@ -191,6 +180,17 @@ ninja.data = [{
         handler: () => {
           
             window.location.href = "/2026/blog/2026/probabilistic-circuits-for-uncertainty-quantification/";
+          
+        },
+      },{id: "post-there-is-no-quot-apple-quot-in-timeseries-quot-rethinking-tsfm-through-the-lens-of-invariance",
+        
+          title: "There is No &quot;apple&quot; in Timeseries&quot; Rethinking TSFM through the Lens of Invariance...",
+        
+        description: "Timeseries foundation models (TSFMs) have multiplied, yet lightweight supervised baselines and even classical models often match them. We argue this gap stems from the naïve importation of NLP/CV pipelines. In language and vision, large web-scale corpora densely capture human concepts, i.e., there are countless images and text of apples. In contrast, timeseries data is built to complement the image and text modalities. There are no timeseries datasets that contain the concept &quot;apple&quot;. As a result, the &quot;scrape everything online&quot; paradigm fails for TS. We posit that progress demands a shift from opportunistic aggregation to principled design: constructing datasets that systematically span the space of invariances that preserve temporal semantics. To this end, we suggest that the ontology of timeseries invariances should be built based on first principles. Only by ensuring representational completeness through invariance coverage can TSFMs achieve the aligned structure necessary for generalisation, reasoning, and truly emergent behaviour.",
+        section: "Posts",
+        handler: () => {
+          
+            window.location.href = "/2026/blog/2026/no-apple/";
           
         },
       },{id: "post-in-context-neurofeedback-can-large-language-models-truly-control-their-internal-representations",
