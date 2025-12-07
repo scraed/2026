@@ -216,7 +216,7 @@ In this article, we aim to present a perspective that is both mathematically sim
 
 <div class="row mt-3">
     <div class="col-md-12 col-lg-10 offset-lg-1 mt-3 mt-md-0">
-        {% include figure.liquid path="assets/img/2026-04-27-rethinking-diffusion-Langevin/forward-reverse-langevin.png" class="img-fluid rounded" %}
+        {% include figure.liquid path="assets/img/2026-04-27-rethinking-diffusion-langevin/forward-reverse-langevin.png" class="img-fluid rounded" %}
     </div>
 </div>
 
@@ -261,7 +261,7 @@ Langevin dynamics, while widely used for sampling from complex distributions, be
 
 <div class="row mt-3">
     <div class="col-md-10 offset-md-1 col-lg-8 offset-lg-2 mt-3 mt-md-0">
-        {% include figure.liquid path="assets/img/2026-04-27-rethinking-diffusion-Langevin/langevin_id.png" class="img-fluid rounded" %}
+        {% include figure.liquid path="assets/img/2026-04-27-rethinking-diffusion-langevin/langevin_id.png" class="img-fluid rounded" %}
     </div>
 </div>
 <div class="caption">
@@ -317,7 +317,7 @@ No matter which notation we choose, A forward diffusion step with a step size of
 
 <div class="row mt-3">
     <div class="col-md-10 offset-md-1 col-lg-8 offset-lg-2 mt-3 mt-md-0">
-        {% include figure.liquid path="assets/img/2026-04-27-rethinking-diffusion-Langevin/forward.png" class="img-fluid rounded" %}
+        {% include figure.liquid path="assets/img/2026-04-27-rethinking-diffusion-langevin/forward.png" class="img-fluid rounded" %}
     </div>
 </div>
 
@@ -334,7 +334,7 @@ The concept behind the reverse process is intuitive: since Langevin dynamics act
 
 <div class="row mt-3">
     <div class="col-md-10 offset-md-1 col-lg-8 offset-lg-2 mt-3 mt-md-0">
-        {% include figure.liquid path="assets/img/2026-04-27-rethinking-diffusion-Langevin/forward-reverse-langevin.png" class="img-fluid rounded" %}
+        {% include figure.liquid path="assets/img/2026-04-27-rethinking-diffusion-langevin/forward-reverse-langevin.png" class="img-fluid rounded" %}
     </div>
 </div>
 <div class="caption">
@@ -444,7 +444,7 @@ We have established that a single reverse step undoes a forward step: advancing 
 
 <div class="row mt-3">
     <div class="col-md-10 offset-md-1 col-lg-8 offset-lg-2 mt-3 mt-md-0">
-        {% include figure.liquid path="assets/img/2026-04-27-rethinking-diffusion-Langevin/FastestDiffusionTheory_08.jpg" class="img-fluid rounded diffusion-cycle-figure" %}
+        {% include figure.liquid path="assets/img/2026-04-27-rethinking-diffusion-langevin/FastestDiffusionTheory_08.jpg" class="img-fluid rounded diffusion-cycle-figure" %}
     </div>
 </div>
 <div class="caption">
@@ -457,7 +457,7 @@ We examine the relationship between $$\mathbf{x}_{t}$$ in the forward diffusion 
 
 <div class="row mt-3">
     <div class="col-md-10 offset-md-1 col-lg-8 offset-lg-2 mt-3 mt-md-0">
-        {% include figure.liquid path="assets/img/2026-04-27-rethinking-diffusion-Langevin/FastestDiffusionTheory_09.jpg" class="img-fluid rounded" %}
+        {% include figure.liquid path="assets/img/2026-04-27-rethinking-diffusion-langevin/FastestDiffusionTheory_09.jpg" class="img-fluid rounded" %}
     </div>
 </div>
 
