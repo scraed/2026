@@ -226,17 +226,6 @@ ninja.data = [{
             window.location.href = "/2026/blog/2026/probabilistic-circuits-for-uncertainty-quantification/";
           
         },
-      },{id: "post-performative-prediction-made-practical",
-        
-          title: "Performative Prediction made practical",
-        
-        description: "Performative Prediction studies settings where deploying a model induces a distribution shift in the data with the aim of building robust and good-peforming models under these post-deployment effects. Most existing work in this area is theoretical and relies on strict assumptions to converge to those models, which makes the resulting techniques difficult to apply in practice and limits their accessibility to the broader Machine Learning (ML) community. In this blog post, we use visualization techniques 1) to provide an intuitive explanation of Performative Prediction and 2) to extract practical insights for studying convergence when theoretical assumptions do not hold.",
-        section: "Posts",
-        handler: () => {
-          
-            window.location.href = "/2026/blog/2026/performative-prediction/";
-          
-        },
       },{id: "post-neural-audio-codecs-how-to-get-audio-into-llms",
         
           title: "Neural audio codecs: how to get audio into LLMs",
@@ -246,6 +235,17 @@ ninja.data = [{
         handler: () => {
           
             window.location.href = "/2026/blog/2026/neural-audio-codecs/";
+          
+        },
+      },{id: "post-how-to-open-the-black-box-amp-58-modern-models-for-mechanistic-interpretability",
+        
+          title: "How To Open the Black Box&amp;#58 Modern Models for Mechanistic Interpretability",
+        
+        description: "Understanding how transformers represent and transform internal features is a core challenge in mechanistic interpretability. Traditional tools like attention maps and probing reveal only partial structure, often blurred by polysemanticity and superposition. New model-based methods offer more principled insight&amp;#58 Sparse Autoencoders extract sparse, interpretable features from dense activations; Semi-Nonnegative Matrix Factorization uncovers how neuron groups themselves encode concepts; Cross-Layer Transcoders track how these representations evolve across depth; and Weight-Sparse Transformers encourage inherently modular computation through architectural sparsity. Together, these approaches provide complementary pathways for opening the black box and understanding the circuits that underpin transformer behavior.",
+        section: "Posts",
+        handler: () => {
+          
+            window.location.href = "/2026/blog/2026/interpret-model/";
           
         },
       },{id: "post-the-illusion-of-mastery-breaking-the-cycle-of-benchmark-memorization-with-generative-evaluation",
@@ -323,17 +323,6 @@ ninja.data = [{
         handler: () => {
           
             window.location.href = "/2026/blog/2026/discretisation-invariance/";
-          
-        },
-      },{id: "post-from-u-nets-to-dits-the-architectural-evolution-of-text-to-image-diffusion-models-2021-2025",
-        
-          title: "From U-Nets to DiTs: The Architectural Evolution of Text-to-Image Diffusion Models (2021–2025)",
-        
-        description: "A comprehensive analysis of how diffusion model architectures evolved from U-Net backbones to Diffusion Transformers, transforming text-to-image generation capabilities.",
-        section: "Posts",
-        handler: () => {
-          
-            window.location.href = "/2026/blog/2026/diffusion-architecture-evolution/";
           
         },
       },{id: "post-destruction-is-a-general-strategy-to-learn-generation-diffusion-39-s-strength-is-to-take-it-seriously-exploration-is-the-future",
