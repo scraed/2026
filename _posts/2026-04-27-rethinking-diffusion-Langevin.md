@@ -984,7 +984,7 @@ $$
 
 With the above loss, we can unify training objective for different parameterizations considered in this article:
 
-<div class="table-wrapper" markdown="1">
+<div class="table-wrapper">
 
 | **Model Type** | **Relation between initial and noisy variable** | **Function modeled by NN** | **$\mathbf{s}_\theta$ in terms of NN** | **$\nabla \log p(x_t \mid x_0)$** | **Loss $L_t$** |
 | --- | --- | --- | --- | --- | --- |
