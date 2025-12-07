@@ -182,17 +182,6 @@ ninja.data = [{
             window.location.href = "/2026/blog/2026/rl-with-gnns/";
           
         },
-      },{id: "post-rethinking-the-diffusion-model-from-a-langevin-perspective",
-        
-          title: "Rethinking the Diffusion Model from a Langevin Perspective",
-        
-        description: "Diffusion models are often introduced from multiple perspectives—such as VAEs, score matching, or flow matching—accompanied by dense and technically demanding mathematics that can be difficult for beginners to grasp. This article offers a fresh Langevin perspective on diffusion models to lower the technical barrier, aiming to present diffusion models in a simpler, clearer, and more intuitive way while addressing the following questions 1. How does the reverse process invert the forward process to generate data from pure noise? 2. How can ODE-based and SDE-based diffusion models be unified under a single framework? 3. Why are diffusion models theoretically superior to ordinary VAEs? 4. How can Denoising, Score Matching, and Flow Matching training objectives be unified and derived from first principles? We demonstrate that the Langevin perspective offers clear and straightforward answers to these questions, providing pedagogical value for both learners and experienced researchers seeking deeper intuition.",
-        section: "Posts",
-        handler: () => {
-          
-            window.location.href = "/2026/blog/2026/rethinking-diffusion-Langevin/";
-          
-        },
       },{id: "post-dynamic-parameter-reuse-augments-reasoning-via-latent-chain-of-thought",
         
           title: "Dynamic Parameter Reuse Augments Reasoning via Latent Chain of Thought",
@@ -235,17 +224,6 @@ ninja.data = [{
         handler: () => {
           
             window.location.href = "/2026/blog/2026/interpret-model/";
-          
-        },
-      },{id: "post-the-illusion-of-mastery-breaking-the-cycle-of-benchmark-memorization-with-generative-evaluation",
-        
-          title: "The Illusion of Mastery: Breaking the Cycle of Benchmark Memorization with Generative Evaluation...",
-        
-        description: "Modern AI models that score perfectly on standardized benchmarks often fail in real-world applications. In this post, we first examine why current evaluation paradigms increasingly fail to capture how models perform in real-world scenarios, leading to an illusion of competence. Then, we introduce generative evaluation that automatically creates novel, diverse tasks every time a model is tested, and explain how it offers a more realistic way to measure what AI systems can actually do.",
-        section: "Posts",
-        handler: () => {
-          
-            window.location.href = "/2026/blog/2026/illusion-of-mastery/";
           
         },
       },{id: "post-quot-how-to-transition-from-ml-to-dl-in-production-lessons-from-the-trenches-at-company-quot",
@@ -303,17 +281,6 @@ ninja.data = [{
             window.location.href = "/2026/blog/2026/dissonant-machine/";
           
         },
-      },{id: "post-discretisation-invariance",
-        
-          title: "Discretisation invariance",
-        
-        description: "Discretisation invariance, a recent innovation in scientific machine learning, is a requirement that ensures an architecture can process inputs of different resolutions. In this post, we formally define this property, provide examples, generate datasets, train architectures, and discuss whether discretisation invariance is living up to its promise.",
-        section: "Posts",
-        handler: () => {
-          
-            window.location.href = "/2026/blog/2026/discretisation-invariance/";
-          
-        },
       },{id: "post-destruction-is-a-general-strategy-to-learn-generation-diffusion-39-s-strength-is-to-take-it-seriously-exploration-is-the-future",
         
           title: "Destruction is a General Strategy to Learn Generation; Diffusion&#39;s Strength is to Take...",
@@ -367,6 +334,17 @@ ninja.data = [{
         handler: () => {
           
             window.location.href = "/2026/blog/2026/a-human-centric-framework-for-debating-the-ethics-of-ai-consciousness-under-uncertainty/";
+          
+        },
+      },{id: "post-",
+        
+          title: "",
+        
+        description: "",
+        section: "Posts",
+        handler: () => {
+          
+            window.location.href = "/2026/blog/2025/2026-04-27-rethinking-diffusion-Langevin/";
           
         },
       },{id: "post-",
