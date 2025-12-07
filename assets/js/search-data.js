@@ -72,18 +72,7 @@ ninja.data = [{
               handler: () => {
                 window.location.href = "https://iclr-blog-track.github.io/home/";
               },
-            },{id: "post-visual-reversal-curse-from-general-domain-to-remote-sensing-images",
-        
-          title: "Visual Reversal Curse: From General Domain to Remote Sensing Images",
-        
-        description: "The &#39;Reversal Curse&#39; highlights a fundamental limitation in AI: models often fail to infer inverse relationships. This post investigates whether this curse extends to Vision Foundation Models and proposes remote sensing image translation as the optimal testbed for evaluating bidirectional visual generalization.",
-        section: "Posts",
-        handler: () => {
-          
-            window.location.href = "/2026/blog/2026/visual-reversal-curse-from-general-domain-to-remote-sensing-images/";
-          
-        },
-      },{id: "post-visualizing-llm-latent-space-geometry-through-dimensionality-reduction",
+            },{id: "post-visualizing-llm-latent-space-geometry-through-dimensionality-reduction",
         
           title: "Visualizing LLM Latent Space Geometry Through Dimensionality Reduction",
         
@@ -92,17 +81,6 @@ ninja.data = [{
         handler: () => {
           
             window.location.href = "/2026/blog/2026/vis-llm-latent-geometry/";
-          
-        },
-      },{id: "post-unigramlm-an-attempt-at-writing-the-missing-manual",
-        
-          title: "UnigramLM - An Attempt at Writing the Missing Manual",
-        
-        description: "This post is my attempt to write down the UnigramLM tokenization algorithm cleanly and explicitly because, well, I still haven&#39;t found such a derivation and I think understanding the theory behind the method could help us make it better. I&#39;ll formalize the generative model around which the algorithm is based, derive the EM updates, explain why pruning is needed (and how it&#39;s done), and point out the spots where the practical implementation defined by the SentencePiece library diverges from the pretty mathematical models.",
-        section: "Posts",
-        handler: () => {
-          
-            window.location.href = "/2026/blog/2026/unigramlm-manual/";
           
         },
       },{id: "post-from-dense-monoliths-to-modular-minds-the-rise-of-symbolic-routing-in-llms",
@@ -190,7 +168,7 @@ ninja.data = [{
         section: "Posts",
         handler: () => {
           
-            window.location.href = "/2026/blog/2026/rethinking-diffusion-Langevin/";
+            window.location.href = "/2026/blog/2026/rethinking-diffusion-langevin/";
           
         },
       },{id: "post-dynamic-parameter-reuse-augments-reasoning-via-latent-chain-of-thought",
