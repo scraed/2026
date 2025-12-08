@@ -72,81 +72,70 @@ ninja.data = [{
               handler: () => {
                 window.location.href = "https://iclr-blog-track.github.io/home/";
               },
-            },{id: "post-visualizing-llm-latent-space-geometry-through-dimensionality-reduction",
+            },{id: "post-fairness-audits-as-theater-when-metrics-mask-structural-harm",
         
-          title: "Visualizing LLM Latent Space Geometry Through Dimensionality Reduction",
+          title: "Fairness Audits as Theater: When Metrics Mask Structural Harm",
         
-        description: "In this blog post, we extract, process, and visualize latent state geometries in Transformer-based language models through dimensionality reduction to build a better intuition of their internal dynamics. We demonstrate experiments with GPT-2 and LLaMa models, uncovering interesting geometric patterns in their latent spaces. Notably, we identify a clear separation between attention and MLP component outputs across intermediate layers, a pattern not documented in prior work to our knowledge.",
+        description: "This blog post examines why contemporary fairness audits fail to prevent algorithmic harm, despite growing adoption. We analyze structural limitations and propose substantive alternatives grounded in participatory accountability.",
         section: "Posts",
         handler: () => {
           
-            window.location.href = "/2026/blog/2026/vis-llm-latent-geometry/";
+            window.location.href = "/2026/blog/2026/fairness-audits/";
           
         },
-      },{id: "post-the-decoupling-hypothesis-attempting-subject-invariant-eeg-representation-learning-via-auxiliary-injection",
+      },{id: "post-why-vlms-waste-their-vision",
         
-          title: "The Decoupling Hypothesis: Attempting Subject-Invariant EEG Representation Learning via Auxiliary Injection",
+          title: "Why vlms waste their vision",
         
-        description: "We explore several ideas for learning subject-invariant EEG representations for reaction time and psychopathology prediction using only 2-second windows in the NeurIPS 2025 EEG Challenge. The core of our approach is the Decoupling Hypothesis: an autoencoder framework where we attempt to disentangle subject-specific artifacts and long-term temporal trends (such as fatigue) from the neural signal by explicitly injecting &#39;nuisance&#39; variables (like demographics and sequence position) into the decoder. This method aimed to force a purely convolutional encoder to learn slow, sequential features without relying on computationally expensive Recurrent or Attention mechanisms. This blog discusses the ideas that seemed promising but ultimately did not work as intended—and why.",
+        description: "Despite the robustness of standalone vision encoders, they often collapse to near-chance performance within Vision Language Models (VLMs) by ignoring visual data in favor of language priors. We investigate this paradox by reconciling conflicting theoretical and empirical literature through the lens of attention budgets and information exchange rates. Ultimately, we propose a new mental model that explains why standard multimodal fusion fails and how to restore effective integration.",
         section: "Posts",
         handler: () => {
           
-            window.location.href = "/2026/blog/2026/subject-invariant-eeg/";
+            window.location.href = "/2026/blog/2026/why-vlms-waste-their-vision/";
           
         },
-      },{id: "post-artistic-style-and-the-play-of-neural-style-representations",
+      },{id: "post-uncertainty-lifecycle-in-deep-learning",
         
-          title: "Artistic Style and the Play of Neural Style Representations",
+          title: "Uncertainty Lifecycle in Deep Learning",
         
-        description: "How do neural networks percieve the complex human construct of artistic style? We explore the dynamic interplay between diverse machine representations of style and style definitions. We reveal a profound divergence where models often reject established historical narratives in favour of their own perceptual truths.",
+        description: "Uncertainty modeling in deep learning has different attributes such as uncertainty propagation, uncertainty estimation, uncertainty decomposition, uncertainty attribution and uncertainty sensitivity, that are extensively discussed in literature. However, there is no proper structure explaining how these different components interact with each other at different stages of Deep Learning pipeline. We propose to structure the flow and transformation of uncertainty from input to prediction through the model, by appropriately positioning them. And we call this structure as “Uncertainty Lifecycle”. The “Uncertainty lifecycle” can be represented as a structured process for handling, quantifying, analyzing, and interpreting uncertainties at different stages of Deep Learning pipeline.",
         section: "Posts",
         handler: () => {
           
-            window.location.href = "/2026/blog/2026/style-representations/";
+            window.location.href = "/2026/blog/2026/uncertainty-lifecycle-in-deep-learning/";
           
         },
-      },{id: "post-where-39-s-the-chicken-unpacking-spatial-awareness-in-vision-language-models",
+      },{id: "post-the-information-shadow-why-there-are-things-llms-can-never-ever-know",
         
-          title: "Where&#39;s the Chicken? Unpacking Spatial Awareness in Vision-Language Models",
+          title: "The Information Shadow - Why There Are Things LLMs Can Never, Ever Know...",
         
-        description: "Modern vision-language models (VLMs) have achieved impressive success in recognizing and describing visual content, yet they continue to struggle with understanding spatial relationships. The limitation persists despite massive data and model scaling, suggesting that the root of the problem lies in the architecture and training objective rather than data alone. This post examines the underlying causes and discusses why recent proposed fixes, while promising, remain insufficient to achieve robust spatial reasoning.",
+        description: "This blogpost introduces the idea of the information shadow - the region of reality that large language models can never fully know, no matter their scale or training data. We argue that some truths are fundamentally inaccessible because they cannot be expressed in language, cannot be inferred from observable data, or cannot be reached by gradient-based training dynamics. Through thought experiments and concrete probes, the post shows how representational limits, identifiability barriers, and optimization constraints create predictable blind spots in model behavior. Understanding this shadow is essential for building safer systems, designing better benchmarks, and avoiding misplaced confidence in model outputs. The goal is not to diminish LLMs, but to map the structural edges of their intelligence.",
         section: "Posts",
         handler: () => {
           
-            window.location.href = "/2026/blog/2026/spatial-awareness/";
+            window.location.href = "/2026/blog/2026/the-information-shadow/";
           
         },
-      },{id: "post-don-39-t-look-up-every-token-escaping-quadratic-complexity-via-geometric-patterns-and-algorithms",
+      },{id: "post-the-evolution-of-flashattention",
         
-          title: "Don&#39;t Look Up (Every Token): Escaping Quadratic Complexity via Geometric Patterns and Algorithms",
+          title: "The Evolution of FlashAttention",
         
-        description: "Large Language Models (LLMs) have brought about a significant change in the field of artificial intelligence, where they have transitioned in scope from being specialized research tools to common resources that drive the next generation of software. With increasing model parameters and training data, LLMs demonstrate new abilities in reasoning, code generation, and solving complex problems that were once considered unattainable. However, scaling these models effectively for long-context applications uniquely poses a challenge. This is primarily due to the inherent limitations of the self-attention mechanism, which has quadratic time complexity. This quadratic bottleneck hinders applications for long documents, high-resolution images, and large codebases, among others. However, what is interesting to observe is that effectively only a few parameters are used in token computation, and most calculations are sparse. Hence, sparsity emerges as an effective solution to this problem. Rather than relying on the attention matrix, one can utilize an approximate or “sparse” version of attention to achieve almost the same results much faster. The backbone of this approach is the idea that tokens do not require the entire context; they only need local context, and thus, most of the computation carried out is wasteful. In this blog, we analyze the types of attention patterns that emerge and how to use them to our advantage for faster and efficient LLMs.",
+        description: "We present a mathematical &amp; technical overview of FlashAttention and its evolution across versions 1 to 4. We explain why IO-aware design became central to scalable transformers and how these kernels shape modern long-context LLMs as memory patterns and hardware limits shift. We then describe the changes across versions with Triton examples and place these kernels in the context of recent work on efficient attention. We close by outlining principles that can guide the next generation of attention algorithms.",
         section: "Posts",
         handler: () => {
           
-            window.location.href = "/2026/blog/2026/sparsity/";
+            window.location.href = "/2026/blog/2026/the-evolution-of-flashattention/";
           
         },
-      },{id: "post-scaling-online-rlvr-done-right-with-decoupled-generation-amp-optimization",
+      },{id: "post-the-bottlenecks-to-scaling-foundation-models-for-robotics",
         
-          title: "Scaling Online RLVR Done Right with Decoupled Generation &amp; Optimization",
+          title: "The Bottlenecks to Scaling Foundation Models for Robotics",
         
-        description: "Reinforcement Learning with Verifiable Rewards (RLVR) optimizes large language models on tasks with objective correctness criteria by directly leveraging deterministic reward signals rather than learned preferences. While theoretically principled, online RLVR remains computationally prohibitive due to tight coupling of generation and optimization, which inflates memory and severely limits training throughput. We prove this gap is architectural, not fundamental. Online RLVR can be reformulated exactly as offline supervised fine-tuning with importance-weighted samples. We introduce Decoupled Generation &amp; Optimization (DGO), a two-phase paradigm that separates generation from optimization, reducing peak memory by ~18-31% and training time by ~75-85% while enabling multi-epoch training. Our framework unifies existing offline methods, exposes systematic theory-practice mismatches, and establishes DGO as the first method where theoretical optimal weights align perfectly with implementation. We show scaling online RLVR is achievable when done right, through principled decoupling and theoretically-grounded design.",
+        description: "Current approaches to building Vision-Language-Action (VLA) models largely rely on combining pre-trained Vision-Language Models (VLMs) with imitation learning. While effective in narrow benchmarks, this paradigm faces fundamental limitations for developing general-purpose robots that operate in complex, dynamic environments. In this article, I first review the standard training recipe and identify key bottlenecks, drawing on both my observations and existing empirical evidence. I then outline a path forward: integrating online reinforcement learning with pre-trained VLMs to enable lightweight, computationally efficient methods that scale with available resources.",
         section: "Posts",
         handler: () => {
           
-            window.location.href = "/2026/blog/2026/scaling-rlvr/";
-          
-        },
-      },{id: "post-using-graph-neural-networks-in-reinforcement-learning-a-practical-guide",
-        
-          title: "Using Graph Neural Networks in Reinforcement Learning: A Practical Guide",
-        
-        description: "Graph Neural Networks (GNNs) have achieved excellent results for modelling relational data in many supervised learning domains. However, much fewer works have explored their potential in Reinforcement Learning (RL) despite the ubiquity of practical problems defined over graphs. In this blog post, we discuss how GNNs can be effectively integrated in Deep RL frameworks, covering crucial design decisions and practical implementation concerns. In doing so, we hope to facilitate unlocking new capabilities for RL agents to reason in graph-structured environments with dynamic action spaces and varying input sizes.",
-        section: "Posts",
-        handler: () => {
-          
-            window.location.href = "/2026/blog/2026/rl-with-gnns/";
+            window.location.href = "/2026/blog/2026/the-bottlenecks-to-scaling-foundation-models-for-robotics/";
           
         },
       },{id: "post-rethinking-the-diffusion-model-from-a-langevin-perspective",
@@ -160,33 +149,33 @@ ninja.data = [{
             window.location.href = "/2026/blog/2026/rethinking-diffusion-langevin/";
           
         },
-      },{id: "post-dynamic-parameter-reuse-augments-reasoning-via-latent-chain-of-thought",
+      },{id: "post-faster-svd-via-accelerated-newton-schulz-iteration",
         
-          title: "Dynamic Parameter Reuse Augments Reasoning via Latent Chain of Thought",
+          title: "Faster SVD via Accelerated Newton-Schulz Iteration",
         
-        description: "Standard language models often rely on massive parameter counts for their performance, utilizing each parameter only once per inference pass. This prompts consideration of recurrent structures, where models reuse parameters across sequential time, depth, or training progression to achieve improved performance and reduced training cost. We draw connections in the landscape of parameter reuse, from growing models via stacking to recurrent looping, and postulate that these architectural priors act as a form of Latent Chain of Thought (LCoT), allowing models to reason in a continuous state space. By shifting towards deeper and dynamic computation, grown and recurrent architectures offer a path toward improved reasoning in compact networks, ascending beyond scaling laws of standard architectures.",
+        description: "Traditional SVD algorithms rely heavily on QR factorizations, which scale poorly on GPUs. We show how the recently proposed Chebyshev-Accelerated Newton-Schulz (CANS) iteration can replace them and produce an SVD routine that is faster across a range of matrix types and precisions.",
         section: "Posts",
         handler: () => {
           
-            window.location.href = "/2026/blog/2026/recur-refine-reason/";
+            window.location.href = "/2026/blog/2026/polar-svd/";
           
         },
-      },{id: "post-probabilistic-circuits-for-uncertainty-quantification",
+      },{id: "post-a-philosophy-of-model-editing-what-does-it-mean-to-change-knowledge-in-a-neural-network",
         
-          title: "Probabilistic Circuits for Uncertainty Quantification",
+          title: "A Philosophy of Model Editing - What Does It Mean to “Change Knowledge”...",
         
-        description: "Deep learning models struggle with epistemic uncertainty quantification, often exhibiting blind confidence on out-of-distribution data. This work reviews on Probabilistic Circuits (PCs) as a versatile framework for rigorous, tractable reasoning. PCs model the joint probability distribution and by enforcing structural constraints, specifically smoothness, decomposability, and determinism, they allow for the exact computation of marginals, conditionals, and moments in polynomial time without retraining. We discuss on the suitability of PCs for Uncertainty Quantification, describing their advantages and highlighting their PCs for tractable UQ in high-dimensional problems.",
+        description: "This blogpost explores what it truly means to change knowledge inside a neural network. Unlike symbolic systems, large language models do not store facts in explicit locations; they implement them through distributed geometric transformations. Editing a model therefore reshapes regions of its activation space, alters relational structures, and sometimes shifts broader behavioral tendencies. We examine how local edits differ from global ones, why forgetting resembles suppression rather than deletion, and how repeated modifications can change a model’s identity. By framing model editing as a philosophical and structural question rather than a purely technical procedure, this piece highlights the need to evaluate edits not only for local correctness but also for their impact on coherence, ontology, and long-term behavior.",
         section: "Posts",
         handler: () => {
           
-            window.location.href = "/2026/blog/2026/probabilistic-circuits-for-uncertainty-quantification/";
+            window.location.href = "/2026/blog/2026/philosophy-of-model-editing/";
           
         },
-      },{id: "post-there-is-no-quot-apple-quot-in-timeseries-quot-rethinking-tsfm-through-the-lens-of-invariance",
+      },{id: "post-there-is-no-in-timeseries-rethinking-tsfm-through-the-lens-of-invariance",
         
-          title: "There is No &quot;apple&quot; in Timeseries&quot; Rethinking TSFM through the Lens of Invariance...",
+          title: "There is No 🍎 in Timeseries: Rethinking TSFM through the Lens of Invariance...",
         
-        description: "Timeseries foundation models (TSFMs) have multiplied, yet lightweight supervised baselines and even classical models often match them. We argue this gap stems from the naïve importation of NLP/CV pipelines. In language and vision, large web-scale corpora densely capture human concepts, i.e., there are countless images and text of apples. In contrast, timeseries data is built to complement the image and text modalities. There are no timeseries datasets that contain the concept &quot;apple&quot;. As a result, the &quot;scrape everything online&quot; paradigm fails for TS. We posit that progress demands a shift from opportunistic aggregation to principled design: constructing datasets that systematically span the space of invariances that preserve temporal semantics. To this end, we suggest that the ontology of timeseries invariances should be built based on first principles. Only by ensuring representational completeness through invariance coverage can TSFMs achieve the aligned structure necessary for generalisation, reasoning, and truly emergent behaviour.",
+        description: "Timeseries foundation models (TSFMs) are trained on scrape-everything-on-the-interet paradigm, yet the internet is only semantically complete for text and images, not for timeseries, leading to poor performance. It contains countless texts and images of 🍎, but there is no timeseries that captures the concept of 🍎. This mismatch calls for a different pretraining strategy for timeseries, and we argue that the correct organising principle is invariance.",
         section: "Posts",
         handler: () => {
           
@@ -204,15 +193,37 @@ ninja.data = [{
             window.location.href = "/2026/blog/2026/neurofeedback/";
           
         },
-      },{id: "post-neural-audio-codecs-how-to-get-audio-into-llms",
+      },{id: "post-evaluating-machine-learned-inter-atomic-potentials-for-a-practical-simulation-workflow",
         
-          title: "Neural audio codecs: how to get audio into LLMs",
+          title: "Evaluating Machine-Learned Inter-Atomic Potentials for a Practical Simulation Workflow",
         
-        description: "A look at why audio is harder to model than text and how we can make it easier with neural audio codecs. With a codec, we can turn audio into larger discrete tokens, train models to predict continuations for these tokens, and then decode those back into audio.",
+        description: "MLIPs are a promising new paradigm in atomistic simulation, potentially offering the accuracy of ab-initio methods at the speed of empirical potentials. In this blog post, we give an overview of recent MLIP architectures, followed by an evaluation on a practical CO2 adsorption simulation. We find that as of today these models, though promising, are far from plug-and-play, requiring significant engineering effort to operate within established simulation frameworks, while also failing to produce physically consistent results.",
         section: "Posts",
         handler: () => {
           
-            window.location.href = "/2026/blog/2026/neural-audio-codecs/";
+            window.location.href = "/2026/blog/2026/mlip-practical/";
+          
+        },
+      },{id: "post-learning-to-maximize-rewards-via-reaching-goals",
+        
+          title: "Learning to Maximize Rewards via Reaching Goals",
+        
+        description: "Goal-conditioned reinforcement learning learns to reach goals instead of optimizing hand-crafted rewards. Despite its popularity, the community often categorizes goal-conditioned reinforcement learning as a special case of reinforcement learning. In this post, we aim to build a direct conversion from any reward-maximization reinforcement learning problem to a goal-conditioned reinforcement learning problem, and to draw connections with the stochastic shortest path framework. Our conversion provides a new perspective on the reinforcement learning problem: maximizing rewards is equivalent to reaching some goals.",
+        section: "Posts",
+        handler: () => {
+          
+            window.location.href = "/2026/blog/2026/mdp-to-gcmdp/";
+          
+        },
+      },{id: "post-the-layered-ontology-of-models-resolving-the-epistemological-crisis-of-ai",
+        
+          title: "The Layered Ontology of Models, Resolving the Epistemological Crisis of AI",
+        
+        description: "We propose a five-layer model framework and discuss the concepts of Meaning and Truth in the era of large models through two thought experiments.",
+        section: "Posts",
+        handler: () => {
+          
+            window.location.href = "/2026/blog/2026/layered-ontology-model/";
           
         },
       },{id: "post-how-to-open-the-black-box-amp-58-modern-models-for-mechanistic-interpretability",
@@ -226,15 +237,26 @@ ninja.data = [{
             window.location.href = "/2026/blog/2026/interpret-model/";
           
         },
-      },{id: "post-the-illusion-of-mastery-breaking-the-cycle-of-benchmark-memorization-with-generative-evaluation",
+      },{id: "post-industrial-agent-benchmarking-what-300-real-evaluations-reveal-about-the-limits-of-agentic-ai",
         
-          title: "The Illusion of Mastery: Breaking the Cycle of Benchmark Memorization with Generative Evaluation...",
+          title: "Industrial Agent Benchmarking What 300+ Real Evaluations Reveal About the Limits of Agentic...",
         
-        description: "Modern AI models that score perfectly on standardized benchmarks often fail in real-world applications. In this post, we first examine why current evaluation paradigms increasingly fail to capture how models perform in real-world scenarios, leading to an illusion of competence. Then, we introduce generative evaluation that automatically creates novel, diverse tasks every time a model is tested, and explain how it offers a more realistic way to measure what AI systems can actually do.",
+        description: "A community-scale evaluation of multi-agent systems using AssetOpsBench and a privacy-preserving Codabench pipeline, exposing real-world failure modes and methodological gaps in industrial AI agent evaluation.",
         section: "Posts",
         handler: () => {
           
-            window.location.href = "/2026/blog/2026/illusion-of-mastery/";
+            window.location.href = "/2026/blog/2026/industrial-agent-benchmarking/";
+          
+        },
+      },{id: "post-heuristic-based-ideation-for-guiding-llms-toward-structured-creativity",
+        
+          title: "Heuristic-Based Ideation for Guiding LLMs Toward Structured Creativity",
+        
+        description: "Large Language Models (LLMs) hold immense promise for accelerating scientific discovery, yet current LLM-based ideation methods often rely on ad-hoc strategies rather than systematic frameworks. This blog introduces Ideation Heuristics, a systematic approach that formalizes 20 cognitive heuristics that structure how researchers generate new ideas. We show that researchers across disciplines find these heuristics highly useful, and we demonstrate how they can be operationalized through Claude skills.",
+        section: "Posts",
+        handler: () => {
+          
+            window.location.href = "/2026/blog/2026/ideation-heuristics/";
           
         },
       },{id: "post-in-context-learning-of-representations-can-be-explained-by-induction-circuits",
@@ -248,37 +270,59 @@ ninja.data = [{
             window.location.href = "/2026/blog/2026/iclr-induction/";
           
         },
-      },{id: "post-quot-how-to-transition-from-ml-to-dl-in-production-lessons-from-the-trenches-at-company-quot",
+      },{id: "post-when-sota-meets-reality-lessons-from-deploying-nlp-at-a-large-healthcare-organization",
         
-          title: "[&quot;How to Transition from ML to DL in Production - Lessons From the...",
+          title: "When SOTA Meets Reality: Lessons from Deploying NLP at a Large Healthcare Organization...",
         
-        description: "[&quot;A mature and entrenched boosting system has been powering Company’s risk systems for years. We outline our year long incremental migration strategy to a pure deep learning system which is highlighted by an intermediate heterogeneous ensembling phase used to reached parity and then outperforming our boosting model in production. We learned along the way that a simple MLPs can beat sophisticated tabular DL architectures at million-scale (1); ensembling is a practical bridge from ML to DL (2); and the biggest wins from DL are often beyond metrics (3).&quot;]",
+        description: "In academia, we optimize for accuracy. In healthcare, we optimize for patient outcomes. This is the story of how a large healthcare organization reduced a multi-year backlog not by using the largest or newest model, but by using the right one.",
         section: "Posts",
         handler: () => {
           
-            window.location.href = "/2026/blog/2026/from-ml-to-dl/";
+            window.location.href = "/2026/blog/2026/healthcare-nlp/";
           
         },
-      },{id: "post-are-llm-agent-populations-really-emergent-a-comprehensive-perspective",
+      },{id: "post-ready-for-general-agents-let-39-s-test-it",
         
-          title: "Are LLM Agent Populations Really Emergent? A Comprehensive Perspective",
+          title: "Ready For General Agents? Let&#39;s Test It.",
         
-        description: "Exploring emergent properties in populations of LLM agents through the lens of complex systems theory, examining social coordination, cooperation dynamics, and economic interactions in generative agent-based models.",
+        description: "General-purpose agents are emerging, but current evaluation tools cannot yet measure how well they adapt to unfamiliar environments or protocols; we outline the gaps and a path to a protocol-agnostic framework.",
         section: "Posts",
         handler: () => {
           
-            window.location.href = "/2026/blog/2026/emergent-agents/";
+            window.location.href = "/2026/blog/2026/general-agent-evaluation/";
           
         },
-      },{id: "post-your-moe-model-does-not-have-to-select-fixed-number-of-experts",
+      },{id: "post-the-coverage-boundary-why-high-fidelity-primitives-don-39-t-compose",
         
-          title: "Your MoE Model Does Not Have to Select Fixed Number of Experts",
+          title: "The Coverage Boundary: Why High-Fidelity Primitives Don&#39;t Compose",
         
-        description: "Standard Mixture-of-Experts (MoE) models adopt fixed top-k routing, applying uniform computation across tokens regardless of their complexity. This rigidity often leads to suboptimal efficiency and performance. Dynamic routing addresses this by adaptively selecting the optimal number of experts for each token. This post introduces the principles of dynamic routing and reviews key techniques for flexible expert allocation.",
+        description: "A controlled experiment showing that adversarially trained primitives hit a glass ceiling on compositional generalization, while low-fidelity pedagogical primitives achieve perfect transfer.",
         section: "Posts",
         handler: () => {
           
-            window.location.href = "/2026/blog/2026/dynamic-routing/";
+            window.location.href = "/2026/blog/2026/fidelity-trap/";
+          
+        },
+      },{id: "post-approximating-faster-transformers",
+        
+          title: "Approximating Faster Transformers",
+        
+        description: "This post offers a comprehensive overview of sketching and sampling algorithms for DistilBERT",
+        section: "Posts",
+        handler: () => {
+          
+            window.location.href = "/2026/blog/2026/fastermatrices/";
+          
+        },
+      },{id: "post-endocrine-to-synaptic-learnable-signaling-primitives-for-robust-multi-agent-ai",
+        
+          title: "Endocrine-to-Synaptic: Learnable Signaling Primitives for Robust Multi-Agent AI",
+        
+        description: "A bio-inspired multi-agent communication framework that uses five cellular signaling modes, signal amplification cascades, and dynamic network adaptation to achieve scalable, robust, and energy-efficient coordination in large distributed AI systems.",
+        section: "Posts",
+        handler: () => {
+          
+            window.location.href = "/2026/blog/2026/endocrine-to-synaptic/";
           
         },
       },{id: "post-sample-blog-post",
@@ -292,59 +336,37 @@ ninja.data = [{
             window.location.href = "/2026/blog/2026/distill-example/";
           
         },
-      },{id: "post-destruction-is-a-general-strategy-to-learn-generation-diffusion-39-s-strength-is-to-take-it-seriously-exploration-is-the-future",
+      },{id: "post-diffusion-guidance-opportunities-for-physical-sciences",
         
-          title: "Destruction is a General Strategy to Learn Generation; Diffusion&#39;s Strength is to Take...",
+          title: "Diffusion Guidance - Opportunities for Physical Sciences",
         
-        description: "I present diffusion models as part of a family of machine learning techniques that withhold information from a model’s input and train it to guess the withheld information. I argue that diffusion&#39;s destroying approach to withholding is more flexible than typical hand-crafted information withholding techniques, providing a rich training playground that could be advantageous in some settings, notably data-scarce ones. I then address subtle issues that may arise when porting reinforcement learning techniques to the diffusion context, and wonder how such exploration problems could be addressed in more diffusion-native ways. I do not have definitive answers, but I do point my fingers in directions I deem interesting. A tutorial follows this thesis, expanding on the destroy-then-generate perspective. A novel kind of probabilistic graphical models is introduced to facilitate the tutorial&#39;s exposition.",
+        description: "Guidance has been a central driver of the success of diffusion models, enabling precise control over the sampling process toward desired target conditions. The most widely used techniques include Classifier Guidance and Classifier-Free Guidance. Recently, however, there has been growing interest in alternative guidance strategies. In this blog post, we review recent progress in training-free diffusion guidance methods and highlight their applications in scientific domains.",
         section: "Posts",
         handler: () => {
           
-            window.location.href = "/2026/blog/2026/destruction/";
+            window.location.href = "/2026/blog/2026/diffusion-guidance/";
           
         },
-      },{id: "post-the-99-success-paradox-when-near-perfect-retrieval-equals-random-selection",
+      },{id: "post-can-coding-agents-be-general-agents",
         
-          title: "The 99% Success Paradox: When Near-Perfect Retrieval Equals Random Selection",
+          title: "Can Coding Agents be General Agents?",
         
-        description: "For most of the history of information retrieval (IR), search results were designed for human consumers who could scan, filter, and discard irrelevant information on their own. This shaped retrieval systems to optimize for finding and ranking more relevant documents, but not keeping results clean and minimal, as the human was the final filter. However, LLMs have changed that by lacking this filtering ability. To address this, we introduce Bits-over-Random (BoR), a chance-corrected measure of retrieval selectivity that reveals when high success rates mask random-level performance.",
+        description: "As coding agents have seen rapid capability and adoption gains, users are applying them to general tasks beyond software engineering. In this post, we investigate whether coding agents can successfully generalize to end-to-end business process automation. We identify gaps in current evaluations, and conduct a case study to evaluate a coding agent on practical business tasks in an open-core Enterprise Resource Planning system. We find that the agent reliably completes simple tasks but exhibits characteristic failures on complex tasks, suggesting that bridging domain logic and code execution is a key bottleneck to generalizability.",
         section: "Posts",
         handler: () => {
           
-            window.location.href = "/2026/blog/2026/bits-over-random/";
+            window.location.href = "/2026/blog/2026/coding-agents/";
           
         },
-      },{id: "post-llm-judges-on-autopilot",
+      },{id: "post-boundlessness-overtaking-benchmarks-the-crisis-of-evaluating-ai-scientists",
         
-          title: "(LLM-)Judges on autopilot",
+          title: "Boundlessness Overtaking Benchmarks: The Crisis of Evaluating AI Scientists",
         
-        description: "How do you evaluate Large Language Model (LLM)-based systems in production at scale? Most teams turn to an LLM-as-a-judge: an approach that grasps the nuances of natural language where classical metrics fall short. But these judge models have their own “will”: sometimes they follow instructions precisely, sometimes they don&#39;t. To address this inconsistency, the judge prompt is calibrated to align with known, trusted cases. The problem? Manual calibration is time-consuming and error-prone. In this blog post, we explore auto-calibration techniques inspired by recent prompt-optimization research. We tackle context collapse by iteratively processing data in batches, similarly to a machine learning training pipeline. Along the way, we share some surprising findings about what works and what doesn&#39;t—including cases where simpler approaches outperform more sophisticated ones.",
+        description: "As AI systems begin drafting full research reports, our long-standing evaluation mindset is hitting its limits. We are used to benchmarking models on massive data sets with well-defined, comparable metrics. But modern AI-generated science is now judged on only a small number of long, open-ended research outputs, making traditional notions of generalization hard to verify. In the absence of standard evaluation frameworks, researchers find themselves creating case-specific evaluation criteria. This blog is a wake-up call, a look at how quickly LLM-based scientific agents are outgrowing our inherited evaluation paradigms, and why we must rethink our long-held assumptions to build rigorous and standardized ways of assessing this new form of AI-driven scientific work.",
         section: "Posts",
         handler: () => {
           
-            window.location.href = "/2026/blog/2026/auto-calibration/";
-          
-        },
-      },{id: "post-the-adversarial-conditioning-paradox-why-attacked-inputs-are-more-stable-not-less",
-        
-          title: "The Adversarial Conditioning Paradox: Why Attacked Inputs Are More Stable, Not Less",
-        
-        description: "Adversarial inputs exhibit systematically lower Jacobian condition numbers at early transformer layers—the opposite of our initial hypothesis that attacks exploit unstable regions. This paradox reveals that adversarial attacks succeed by finding well-conditioned directions that cross decision boundaries.",
-        section: "Posts",
-        handler: () => {
-          
-            window.location.href = "/2026/blog/2026/adversarial-conditioning-paradox/";
-          
-        },
-      },{id: "post-a-human-centric-framework-for-debating-the-ethics-of-ai-consciousness-under-uncertainty",
-        
-          title: "A Human-centric Framework for Debating the Ethics of AI Consciousness Under Uncertainty",
-        
-        description: "As AI systems become increasingly sophisticated, questions about machine consciousness and its ethical implications have moved from fringe speculation to mainstream academic debate. We address these limitations through a structured three-level framework grounded in philosophical uncertainty.",
-        section: "Posts",
-        handler: () => {
-          
-            window.location.href = "/2026/blog/2026/a-human-centric-framework-for-debating-the-ethics-of-ai-consciousness-under-uncertainty/";
+            window.location.href = "/2026/blog/2026/boundlessness-overtaking-benchmarks/";
           
         },
       },{id: "post-",
@@ -355,18 +377,7 @@ ninja.data = [{
         section: "Posts",
         handler: () => {
           
-            window.location.href = "/2026/blog/2025/2026-04-27-philosophy-of-model-editing/";
-          
-        },
-      },{id: "post-",
-        
-          title: "",
-        
-        description: "",
-        section: "Posts",
-        handler: () => {
-          
-            window.location.href = "/2026/blog/2025/2026-04-27-egraph-symreg/";
+            window.location.href = "/2026/blog/2025/2026-04-27-hallucination-cs/";
           
         },
       },{id: "books-the-godfather",
