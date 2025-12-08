@@ -984,12 +984,12 @@ $$
 
 
 
-This tells us that training the diffusion model, we only need to figure out the $$\nabla \log p(\mathbf{x}_t | \mathbf{x}_0)$$, then minimize the loss
+This tells us that training the diffusion model, we only need to figure out the $$\nabla \log p(\mathbf{x}_t \mid \mathbf{x}_0)$$, then minimize the loss
 
 $$
 L_t= \frac{1}{2} g(t)^2\mathbb{E}_{\mathbf{x}_0 \sim p_0}\,
    \mathbb{E}_{\mathbf{x}_t \sim p_t(\cdot \mid \mathbf{x}_0)}
-            \big\|\nabla \log p(\mathbf{x}_t | \mathbf{x}_0)
+            \big\|\nabla \log p(\mathbf{x}_t \mid \mathbf{x}_0)
                   - \mathbf{s}_\theta\big\|^2 
 $$
 
