@@ -292,6 +292,17 @@ ninja.data = [{
             window.location.href = "/2026/blog/2026/general-agent-evaluation/";
           
         },
+      },{id: "post-flow-where-you-want",
+        
+          title: "Flow Where You Want",
+        
+        description: "This tutorial demonstrates how to add inference-time controls to pretrained flow-based generative models. Using an unconditional MNIST flow model, we apply classifier guidance and inpainting by adding velocity corrections during sampling. We also explore PnP-Flow, which satisfies constraints through iterative projection rather than velocity correction.",
+        section: "Posts",
+        handler: () => {
+          
+            window.location.href = "/2026/blog/2026/flow-where-you-want/";
+          
+        },
       },{id: "post-the-coverage-boundary-why-high-fidelity-primitives-don-39-t-compose",
         
           title: "The Coverage Boundary: Why High-Fidelity Primitives Don&#39;t Compose",
