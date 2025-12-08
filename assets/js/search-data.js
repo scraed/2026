@@ -325,6 +325,17 @@ ninja.data = [{
             window.location.href = "/2026/blog/2026/endocrine-to-synaptic/";
           
         },
+      },{id: "post-dynamics-of-forgetting",
+        
+          title: "Dynamics of Forgetting",
+        
+        description: "We analyze catastrophic forgetting through spectral decompositions of weights and updates, revealing when optimization refines existing circuits versus builds interfering new ones. Leveraging this, we design spectral techniques that suppress destructive update components while preserving structure.",
+        section: "Posts",
+        handler: () => {
+          
+            window.location.href = "/2026/blog/2026/dynamics-of-forgetting/";
+          
+        },
       },{id: "post-sample-blog-post",
         
           title: "Sample Blog Post",
