@@ -34,17 +34,11 @@ bibliography: 2026-04-27-rethinking-diffusion-langevin.bib
 toc:
   - name: Langevin Dynamics as 'Identity' Operation
   - name: Spliting the Identity into Forward and Reverse Processes
-  - name: The Forward Diffusion Process for training
-  - name: The Reverse Diffusion Process for Sampling
     subsections:
-      - name: "How does the reverse process invert the forward process to generate data from pure noise?"
-      - name: "How can ODE-based and SDE-based diffusion models be unified under a single framework?"
+      - name: The Forward Diffusion Process for training
+      - name: The Reverse Diffusion Process for Sampling
   - name: Forward-Reverse Duality
-    subsections:
-      - name: "Why are diffusion models theoretically superior to ordinary VAEs"
   - name: Maximal likelihood Training of Diffusion Models
-    subsections:
-      - name: "How can Denoising, Score Matching, and Flow Matching training objectives be unified and derived from first principles?"
   - name: Conclusion
 
 # Below is an example of injecting additional post-specific styles.
