@@ -193,18 +193,16 @@ _styles: >
     stroke: transparent !important;
   }
 
-  /* Guiding question heading styling */
-  .post.distill h4 .guiding-question {
-    display: inline-block;
+  /* Guiding question quotation styling */
+  .post.distill blockquote.guiding-question {
+    margin: 2.5rem auto 2.0rem auto;
+    max-width: 720px;
     font-style: italic;
     font-weight: 500;
     color: var(--global-text-color-light);
-  }
-  .post.distill h4:has(.guiding-question) {
-    text-align: center;
-    border-left: none;
-    margin-top: 2.5rem;
-    margin-bottom: 2.0rem;
+    border-left: 4px solid var(--global-theme-color);
+    padding: 1.0rem 1.5rem;
+    background-color: rgba(0, 0, 0, 0.02);
   }
 ---
 
@@ -367,7 +365,7 @@ where $$\mathbf{s}(\mathbf{x}, t) = \nabla_{\mathbf{x}} \log p_t(\mathbf{x})$$ i
 
 This decomposition now lets us directly answer the first question posed in the introduction:
 
-#### <span class="guiding-question">How does the reverse process invert the forward process to generate data from pure noise?</span>
+> <blockquote class="guiding-question">How does the reverse process invert the forward process to generate data from pure noise?</blockquote>
 
 The "Forward" part in this decomposition corresponds to the forward diffusion process, effectively **increasing the forward diffusion time $t$ by $d\tau$**, bringing the distribution to $p_{t + d\tau}(\mathbf{x})$. Since the forward and reverse components combine to form an "identity" operation, the "Reverse" part must reverse the forward process—**decreasing the forward diffusion time $t$ by $d\tau$** and restoring the distribution back to $p_t(\mathbf{x})$.
 
@@ -382,7 +380,7 @@ $$
 The reverse diffusion process itself is also a standalone SDE that advances the reverse diffusion time $t'$. If $$\mathbf{x}_{t'} \sim q_{t'}(\mathbf{x})$$, then one step of the reverse diffusion process with $dt' = \Delta t'$ brings it to $$\mathbf{x}_{t' + \Delta t'} \sim q_{t' + \Delta t'}(\mathbf{x})$$.
 Having analyzed the VP case in detail, we can now apply the same decomposition approach to other diffusion schemes, which involve different choices of Langevin dynamics. This brings us to the second question raised in the introduction:
 
-#### <span class="guiding-question">How can ODE-based and SDE-based diffusion models be unified under a single framework?</span>
+> <blockquote class="guiding-question">How can ODE-based and SDE-based diffusion models be unified under a single framework?</blockquote>
 
 The following table provides a direct answer: these models are unified by decomposing different Langevin dynamics. We have decomposed the VP model into both SDE and ODE versions, as well as decomposition of other parameterizations, relating their Langevin dynamics to the corresponding forward and reverse processes:
 
@@ -498,7 +496,7 @@ $$
 
 This exact recovery of the data distribution through a forward–reverse cycle brings us to the third question from the introduction:
 
-#### <span class="guiding-question">Why are diffusion models theoretically superior to ordinary VAEs</span>
+> <blockquote class="guiding-question">Why are diffusion models theoretically superior to ordinary VAEs</blockquote>
 
 The above result means that if we run the reverse process from time $$t' = 0$$ to $$t' = T$$, the final samples follow exactly the same distribution as the original training data $$p_0$$. In other words, the forward and reverse processes form an exact prior–posterior pair: the forward process maps data to noise, and the reverse process maps noise back to data. In practice, training introduces approximation error, but the theoretical target is exact equality. Ordinary VAEs, by contrast, only require the decoder to approximate the encoder’s posterior, with no guarantee of exactness even at the ELBO optimum.
 
@@ -996,7 +994,7 @@ $$
 
 Equipped with this instantaneous maximum-likelihood objective, we can now address the fourth and final question from the introduction:
 
-#### <span class="guiding-question">How can Denoising, Score Matching, and Flow Matching training objectives be unified and derived from first principles?</span>
+> <blockquote class="guiding-question">How can Denoising, Score Matching, and Flow Matching training objectives be unified and derived from first principles?</blockquote>
 
 With the above loss, we can unify training objective for different parameterizations considered in this article:
 
