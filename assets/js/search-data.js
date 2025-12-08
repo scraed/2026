@@ -83,15 +83,59 @@ ninja.data = [{
             window.location.href = "/2026/blog/2026/fairness-audits/";
           
         },
-      },{id: "post-why-vlms-waste-their-vision",
+      },{id: "post-beyond-attention-as-a-graph",
         
-          title: "Why vlms waste their vision",
+          title: "Beyond Attention as a Graph",
         
-        description: "Despite the robustness of standalone vision encoders, they often collapse to near-chance performance within Vision Language Models (VLMs) by ignoring visual data in favor of language priors. We investigate this paradox by reconciling conflicting theoretical and empirical literature through the lens of attention budgets and information exchange rates. Ultimately, we propose a new mental model that explains why standard multimodal fusion fails and how to restore effective integration.",
+        description: "We extend a graph-based perspective on attention to higher-order topological structures, exploring 2-simplicial attention and its implications for transformer depth and expressivity.",
         section: "Posts",
         handler: () => {
           
-            window.location.href = "/2026/blog/2026/why-vlms-waste-their-vision/";
+            window.location.href = "/2026/blog/2026/beyond-attention-as-graph/";
+          
+        },
+      },{id: "post-attention-sinks-from-the-graph-perspective",
+        
+          title: "Attention Sinks from the Graph Perspective",
+        
+        description: "We explore attention sinks in decoder-only transformers through the lens of message passing on graphs, revealing an intrinsic structural bias toward early tokens that may explain this phenomenon.",
+        section: "Posts",
+        handler: () => {
+          
+            window.location.href = "/2026/blog/2026/attention-sinks-graph-perspective/";
+          
+        },
+      },{id: "post-what-can-you-do-when-you-have-zero-rewards-during-rl",
+        
+          title: "What Can You Do When You Have Zero Rewards During RL?",
+        
+        description: "If your base model has zero success rates, performing RL with outcome rewards won&#39;t do anything. What can you do then? 🤔TL;DR: simply adding easy samples to your training dataset can unlock RL training!",
+        section: "Posts",
+        handler: () => {
+          
+            window.location.href = "/2026/blog/2026/zero-rewards/";
+          
+        },
+      },{id: "post-why-ai-evaluations-need-error-bars",
+        
+          title: "Why AI Evaluations Need Error Bars",
+        
+        description: "AI evaluations often rely on single-run scores even though models, agents, and judges are inherently stochastic, making many reported differences unstable. This post surveys statistical tools—error bars, reliability measures, Bayesian models—that show and help manage this variance. Overall, it highlights how incorporating established statistical practices can make evaluations more trustworthy and informative.",
+        section: "Posts",
+        handler: () => {
+          
+            window.location.href = "/2026/blog/2026/why-ai-evaluations-need-error-bars/";
+          
+        },
+      },{id: "post-computer-use-survey-a-visual-survey-of-computer-use-agents",
+        
+          title: "Computer Use Survey - A Visual Survey of Computer Use Agents",
+        
+        description: "In recent years, AI systems operating on the web and in computer environments have become a major topic of interest for both academia and industry. The goal of this blog is to provide an interesting and interactive survey of historical and recent works on computer use agents. We define key terms used in the literature, catalogue the expansive list of environments and datasets, discuss the evolution of the methodologies, and assess both today’s landscape and possible paths forward.",
+        section: "Posts",
+        handler: () => {
+          
+            window.location.href = "/2026/blog/2026/web-agent/";
           
         },
       },{id: "post-uncertainty-lifecycle-in-deep-learning",
@@ -105,26 +149,15 @@ ninja.data = [{
             window.location.href = "/2026/blog/2026/uncertainty-lifecycle-in-deep-learning/";
           
         },
-      },{id: "post-the-information-shadow-why-there-are-things-llms-can-never-ever-know",
+      },{id: "post-trade-offs-in-llm-compute-for-reasoning-intensive-information-retrieval",
         
-          title: "The Information Shadow - Why There Are Things LLMs Can Never, Ever Know...",
+          title: "Trade-offs in LLM Compute for Reasoning-Intensive Information Retrieval",
         
-        description: "This blogpost introduces the idea of the information shadow - the region of reality that large language models can never fully know, no matter their scale or training data. We argue that some truths are fundamentally inaccessible because they cannot be expressed in language, cannot be inferred from observable data, or cannot be reached by gradient-based training dynamics. Through thought experiments and concrete probes, the post shows how representational limits, identifiability barriers, and optimization constraints create predictable blind spots in model behavior. Understanding this shadow is essential for building safer systems, designing better benchmarks, and avoiding misplaced confidence in model outputs. The goal is not to diminish LLMs, but to map the structural edges of their intelligence.",
+        description: "This is some random description",
         section: "Posts",
         handler: () => {
           
-            window.location.href = "/2026/blog/2026/the-information-shadow/";
-          
-        },
-      },{id: "post-the-evolution-of-flashattention",
-        
-          title: "The Evolution of FlashAttention",
-        
-        description: "We present a mathematical &amp; technical overview of FlashAttention and its evolution across versions 1 to 4. We explain why IO-aware design became central to scalable transformers and how these kernels shape modern long-context LLMs as memory patterns and hardware limits shift. We then describe the changes across versions with Triton examples and place these kernels in the context of recent work on efficient attention. We close by outlining principles that can guide the next generation of attention algorithms.",
-        section: "Posts",
-        handler: () => {
-          
-            window.location.href = "/2026/blog/2026/the-evolution-of-flashattention/";
+            window.location.href = "/2026/blog/2026/trade-offs-in-llm-compute-for-reasoning-intensive-information-retrieval/";
           
         },
       },{id: "post-the-bottlenecks-to-scaling-foundation-models-for-robotics",
@@ -136,6 +169,39 @@ ninja.data = [{
         handler: () => {
           
             window.location.href = "/2026/blog/2026/the-bottlenecks-to-scaling-foundation-models-for-robotics/";
+          
+        },
+      },{id: "post-task-complexity-analysis",
+        
+          title: "Task Complexity Analysis",
+        
+        description: "We analyzed and compared 3 different sampling strategies to sample 100 questions from MATH 500 and Hendrycks&#39; 4500 (the remaining questions from Hendrycks&#39; math dataset that wasn&#39;t selected for MATH500). We ran the subsets on 13 different small (apparent difficulty (the levels assigned by Hendrycks&#39; creators) than MATH 500 results in a more stable ranking for the low performing models, but the baseline apparent difficulty split is the most stable for the top performing models.",
+        section: "Posts",
+        handler: () => {
+          
+            window.location.href = "/2026/blog/2026/task-complexity-analysis/";
+          
+        },
+      },{id: "post-revisiting-the-nethack-learning-environment",
+        
+          title: "Revisiting The NetHack Learning Environment",
+        
+        description: "The NetHack Learning Environment (NLE) was proposed as a challenging benchmark to test an agents abilities to perform complex reasoning over long time horizons in a stochastic, partially-observed, procedurally generated setting. To date, no approach, including those based on reinforcement learning, using large pretrained models, using handcoded symbolic agents, imitating expert trajectories or any hybrid method has achieved significant progress towards completing the game. We take a deeper look into the mechanics and interface of the NLE and show that much of the complexity of NetHack is inaccessible due to constraints on the observation and action spaces. We propose a series of modifications and show that they meaningfully improve performance on the NLE.",
+        section: "Posts",
+        handler: () => {
+          
+            window.location.href = "/2026/blog/2026/revisiting-the-nle/";
+          
+        },
+      },{id: "post-mimicking-or-reasoning-rethinking-multi-modal-in-context-learning-in-vision-language-models",
+        
+          title: "Mimicking or Reasoning: Rethinking Multi-Modal In-Context Learning in Vision-Language Models",
+        
+        description: "Vision-language models (VLMs) are widely assumed to exhibit in-context learning (ICL), a property similar to that of their language-only counterparts. While recent work suggests VLMs can perform multimodal ICL (MM-ICL), studies show they often rely on shallow heuristics such as copying or majority voting, rather than true task understanding. We revisit this assumption by evaluating VLMs under distribution shifts, where support examples come from a dataset different from the query. Surprisingly, performance often degrades with more demonstrations, and models tend to copy answers rather than learn from them. To investigate further, we propose a new MM-ICL with reasoning pipeline that augments each demonstration with a generated rationale alongside the answer. We conduct extensive and comprehensive experiments on both perception- and reasoning-required datasets with open-source VLMs ranging from 3B to 72B and proprietary models such as Gemini 2.0 and 2.5. We conduct controlled studies varying shot count, retrieval method, rationale quality, and distribution. Our results show limited performance sensitivity across these factors, indicating that current VLMs fail to effectively utilize demonstration-level information and thus do not inherit the strong few-shot abilities of large language models (LLMs). We further conduct a mechanistic analysis showing that VLMs exhibit weak prefix matching and lack induction-head-like behavior, which potentially explains the failure of MM-ICL.",
+        section: "Posts",
+        handler: () => {
+          
+            window.location.href = "/2026/blog/2026/rethinking-mmicl/";
           
         },
       },{id: "post-rethinking-the-diffusion-model-from-a-langevin-perspective",
@@ -160,70 +226,48 @@ ninja.data = [{
             window.location.href = "/2026/blog/2026/polar-svd/";
           
         },
-      },{id: "post-a-philosophy-of-model-editing-what-does-it-mean-to-change-knowledge-in-a-neural-network",
+      },{id: "post-learning-to-maximize-rewards-via-reaching-goals",
         
-          title: "A Philosophy of Model Editing - What Does It Mean to “Change Knowledge”...",
+          title: "Learning to Maximize Rewards via Reaching Goals",
         
-        description: "This blogpost explores what it truly means to change knowledge inside a neural network. Unlike symbolic systems, large language models do not store facts in explicit locations; they implement them through distributed geometric transformations. Editing a model therefore reshapes regions of its activation space, alters relational structures, and sometimes shifts broader behavioral tendencies. We examine how local edits differ from global ones, why forgetting resembles suppression rather than deletion, and how repeated modifications can change a model’s identity. By framing model editing as a philosophical and structural question rather than a purely technical procedure, this piece highlights the need to evaluate edits not only for local correctness but also for their impact on coherence, ontology, and long-term behavior.",
+        description: "Goal-conditioned reinforcement learning learns to reach goals instead of optimizing hand-crafted rewards. Despite its popularity, the community often categorizes goal-conditioned reinforcement learning as a special case of reinforcement learning. In this post, we aim to build a direct conversion from any reward-maximization reinforcement learning problem to a goal-conditioned reinforcement learning problem, and to draw connections with the stochastic shortest path framework. Our conversion provides a new perspective on the reinforcement learning problem: maximizing rewards is equivalent to reaching some goals.",
         section: "Posts",
         handler: () => {
           
-            window.location.href = "/2026/blog/2026/philosophy-of-model-editing/";
+            window.location.href = "/2026/blog/2026/mdp-to-gcmdp/";
           
         },
-      },{id: "post-there-is-no-in-timeseries-rethinking-tsfm-through-the-lens-of-invariance",
+      },{id: "post-loneliness-as-a-case-study-for-social-reward-misalignment",
         
-          title: "There is No 🍎 in Timeseries: Rethinking TSFM through the Lens of Invariance...",
+          title: "Loneliness as a Case Study for Social Reward Misalignment",
         
-        description: "Timeseries foundation models (TSFMs) are trained on scrape-everything-on-the-interet paradigm, yet the internet is only semantically complete for text and images, not for timeseries, leading to poor performance. It contains countless texts and images of 🍎, but there is no timeseries that captures the concept of 🍎. This mismatch calls for a different pretraining strategy for timeseries, and we argue that the correct organising principle is invariance.",
+        description: "The goal of this blogpost is to use loneliness as a clean case study of social proxy-reward misalignment in RL. We introduce a minimal homeostatic environment with loneliness drift and accumulated harm, and show that engagement-optimized agents learn short-term “social snack” policies that reduce the error signal without improving the underlying social state. This simple testbed highlights why reward inference or well-being objectives may be a better foundation than engagement proxies for socially aligned AI.",
         section: "Posts",
         handler: () => {
           
-            window.location.href = "/2026/blog/2026/no-apple/";
+            window.location.href = "/2026/blog/2026/loneliness-social-misalignment/";
           
         },
-      },{id: "post-in-context-neurofeedback-can-large-language-models-truly-control-their-internal-representations",
+      },{id: "post-a-small-observation-on-schulman-39-s-kl-divergence-estimator",
         
-          title: "In-Context Neurofeedback: Can Large Language Models Truly Control Their Internal Representations?",
+          title: "A small observation on Schulman&#39;s KL divergence estimator",
         
-        description: "Whether large language models (LLMs) can control their own internal representations matters for understanding machine metacognition and for AI safety. A recent study accepted at NeurIPS 2025 claimed that LLMs can control these internal representations, but this study cannot rule out the possibility that such control relies on superficial mechanisms because the control targets are not privileged. We propose in-context neurofeedback, a method that uses multi-turn conversation to control internal representations while ensuring privileged access requirements, and provide a methodological framework for future investigations into machine metacognition.",
+        description: "The unbiased estimator of the Kullback–Leibler divergence introduced by John Schulman has a free parameter. Schulman sets it to one to yield non-negativity. Interestingly, we can prove that this parameter choice coincidentally also approximately minimizes variance",
         section: "Posts",
         handler: () => {
           
-            window.location.href = "/2026/blog/2026/neurofeedback/";
+            window.location.href = "/2026/blog/2026/kl-estimator/";
           
         },
-      },{id: "post-evaluating-machine-learned-inter-atomic-potentials-for-a-practical-simulation-workflow",
+      },{id: "post-charting-the-depths-interpretability-tools-to-enhance-llm-safety",
         
-          title: "Evaluating Machine-Learned Inter-Atomic Potentials for a Practical Simulation Workflow",
+          title: "Charting the Depths: Interpretability Tools to Enhance LLM Safety",
         
-        description: "MLIPs are a promising new paradigm in atomistic simulation, potentially offering the accuracy of ab-initio methods at the speed of empirical potentials. In this blog post, we give an overview of recent MLIP architectures, followed by an evaluation on a practical CO2 adsorption simulation. We find that as of today these models, though promising, are far from plug-and-play, requiring significant engineering effort to operate within established simulation frameworks, while also failing to produce physically consistent results.",
+        description: "Motivated by the increasing deployment of LLMs for safety-critical applications, we provide an accessible introduction to a practical suite of interpretability tools useful for understanding LLMs’ behavior during safety-critical decisions. Previous discussions of interpretability are often heavily focused on these methods&#39; technical aspects, rather than giving practical guidance for their immediate use; here, we provide practitioners with an overview of a range of methods for understanding LLM behavior. For each method covered, we highlight what it can and cannot tell us, and how this can help inform deployment decisions.",
         section: "Posts",
         handler: () => {
           
-            window.location.href = "/2026/blog/2026/mlip-practical/";
-          
-        },
-      },{id: "post-the-layered-ontology-of-models-resolving-the-epistemological-crisis-of-ai",
-        
-          title: "The Layered Ontology of Models, Resolving the Epistemological Crisis of AI",
-        
-        description: "We propose a five-layer model framework and discuss the concepts of Meaning and Truth in the era of large models through two thought experiments.",
-        section: "Posts",
-        handler: () => {
-          
-            window.location.href = "/2026/blog/2026/layered-ontology-model/";
-          
-        },
-      },{id: "post-how-to-open-the-black-box-amp-58-modern-models-for-mechanistic-interpretability",
-        
-          title: "How To Open the Black Box&amp;#58 Modern Models for Mechanistic Interpretability",
-        
-        description: "Understanding how transformers represent and transform internal features is a core challenge in mechanistic interpretability. Traditional tools like attention maps and probing reveal only partial structure, often blurred by polysemanticity and superposition. New model-based methods offer more principled insight&amp;#58 Sparse Autoencoders extract sparse, interpretable features from dense activations; Semi-Nonnegative Matrix Factorization uncovers how neuron groups themselves encode concepts; Cross-Layer Transcoders track how these representations evolve across depth; and Weight-Sparse Transformers encourage inherently modular computation through architectural sparsity. Together, these approaches provide complementary pathways for opening the black box and understanding the circuits that underpin transformer behavior.",
-        section: "Posts",
-        handler: () => {
-          
-            window.location.href = "/2026/blog/2026/interpret-model/";
+            window.location.href = "/2026/blog/2026/interp-safety/";
           
         },
       },{id: "post-industrial-agent-benchmarking-what-300-real-evaluations-reveal-about-the-limits-of-agentic-ai",
@@ -237,39 +281,6 @@ ninja.data = [{
             window.location.href = "/2026/blog/2026/industrial-agent-benchmarking/";
           
         },
-      },{id: "post-heuristic-based-ideation-for-guiding-llms-toward-structured-creativity",
-        
-          title: "Heuristic-Based Ideation for Guiding LLMs Toward Structured Creativity",
-        
-        description: "Large Language Models (LLMs) hold immense promise for accelerating scientific discovery, yet current LLM-based ideation methods often rely on ad-hoc strategies rather than systematic frameworks. This blog introduces Ideation Heuristics, a systematic approach that formalizes 20 cognitive heuristics that structure how researchers generate new ideas. We show that researchers across disciplines find these heuristics highly useful, and we demonstrate how they can be operationalized through Claude skills.",
-        section: "Posts",
-        handler: () => {
-          
-            window.location.href = "/2026/blog/2026/ideation-heuristics/";
-          
-        },
-      },{id: "post-in-context-learning-of-representations-can-be-explained-by-induction-circuits",
-        
-          title: "In-context learning of representations can be explained by induction circuits",
-        
-        description: "Park et al., 2025 demonstrate that large language models can learn to trace random walks on graphs presented in context, and observe that token representations reorganize to reflect the underlying graph structure. This has been interpreted as evidence that models &#39;flexibly manipulate their representations&#39; to reflect in-context semantics, and that this reorganization enables task performance. We offer a simpler mechanistic explanation. We first observe that task performance can be fully explained by induction circuits (Olsson et al., 2022), and show that ablating the attention heads that comprise these circuits substantially degrades performance. As for the geometric structure, we propose that it could result from previous token heads effectively mixing the representations of graph neighbors together. We show that a single round of such &#39;neighbor mixing&#39; on random embeddings recreates the observed graph correspondence in PCA visualizations. These results suggest that apparent &#39;representation reorganization&#39; may be a byproduct of the model&#39;s induction circuits, rather than a critical strategy useful for in-context learning.",
-        section: "Posts",
-        handler: () => {
-          
-            window.location.href = "/2026/blog/2026/iclr-induction/";
-          
-        },
-      },{id: "post-when-sota-meets-reality-lessons-from-deploying-nlp-at-a-large-healthcare-organization",
-        
-          title: "When SOTA Meets Reality: Lessons from Deploying NLP at a Large Healthcare Organization...",
-        
-        description: "In academia, we optimize for accuracy. In healthcare, we optimize for patient outcomes. This is the story of how a large healthcare organization reduced a multi-year backlog not by using the largest or newest model, but by using the right one.",
-        section: "Posts",
-        handler: () => {
-          
-            window.location.href = "/2026/blog/2026/healthcare-nlp/";
-          
-        },
       },{id: "post-ready-for-general-agents-let-39-s-test-it",
         
           title: "Ready For General Agents? Let&#39;s Test It.",
@@ -279,6 +290,17 @@ ninja.data = [{
         handler: () => {
           
             window.location.href = "/2026/blog/2026/general-agent-evaluation/";
+          
+        },
+      },{id: "post-learning-function-space-maps-a-red-herring",
+        
+          title: "Learning Function Space Maps: A Red Herring?",
+        
+        description: "Much interest has been generated in the space of learning function space maps, such as in deep operator networks and neural operators. In this post, we explore whether viewing data in their underlying, infinite-dimensional form offers benefits in the manner professed or whether this is a fad.",
+        section: "Posts",
+        handler: () => {
+          
+            window.location.href = "/2026/blog/2026/function-space-maps/";
           
         },
       },{id: "post-flow-where-you-want",
@@ -303,17 +325,6 @@ ninja.data = [{
             window.location.href = "/2026/blog/2026/fidelity-trap/";
           
         },
-      },{id: "post-approximating-faster-transformers",
-        
-          title: "Approximating Faster Transformers",
-        
-        description: "This post offers a comprehensive overview of sketching and sampling algorithms for DistilBERT",
-        section: "Posts",
-        handler: () => {
-          
-            window.location.href = "/2026/blog/2026/fastermatrices/";
-          
-        },
       },{id: "post-endocrine-to-synaptic-learnable-signaling-primitives-for-robust-multi-agent-ai",
         
           title: "Endocrine-to-Synaptic: Learnable Signaling Primitives for Robust Multi-Agent AI",
@@ -334,6 +345,17 @@ ninja.data = [{
         handler: () => {
           
             window.location.href = "/2026/blog/2026/distill-example/";
+          
+        },
+      },{id: "post-dissecting-non-determinism-in-large-language-models",
+        
+          title: "Dissecting Non-Determinism in Large Language Models",
+        
+        description: "The Large Language Models (LLMs) evolve into the backbone of complex decision-making systems, their inherent non-deterministic nature poses a significant threat to the validity of experimental results. This blog explores the impact of stochasticity, prompt brittleness, and LLM-as-a-Judge during both response generation and evaluation. We conclude that understanding these dynamics is essential to prevent misleading conclusions, advocating for consistency oriented practices that treat non-determinism as a critical variable in rigorous experimentation.",
+        section: "Posts",
+        handler: () => {
+          
+            window.location.href = "/2026/blog/2026/dissecting-non-determinism/";
           
         },
       },{id: "post-diffusion-guidance-opportunities-for-physical-sciences",
@@ -358,6 +380,17 @@ ninja.data = [{
             window.location.href = "/2026/blog/2026/coding-agents/";
           
         },
+      },{id: "post-hypes-and-hopes-for-causal-inference-for-brain-dynamics",
+        
+          title: "Hypes and Hopes for Causal Inference for Brain Dynamics",
+        
+        description: "We study whether modern identifiability-based nonlinear ICA methods, in particular Time-Contrastive Learning (TCL), can recover meaningful sources from realistic scalp-level brain recordings such as EEG. Using simulated data, EEG sensor data, and source-reconstructed cortical activity, we evaluate whether TCL provides representations aligned with the underlying sources.",
+        section: "Posts",
+        handler: () => {
+          
+            window.location.href = "/2026/blog/2026/causal-ts/";
+          
+        },
       },{id: "post-boundlessness-overtaking-benchmarks-the-crisis-of-evaluating-ai-scientists",
         
           title: "Boundlessness Overtaking Benchmarks: The Crisis of Evaluating AI Scientists",
@@ -367,6 +400,17 @@ ninja.data = [{
         handler: () => {
           
             window.location.href = "/2026/blog/2026/boundlessness-overtaking-benchmarks/";
+          
+        },
+      },{id: "post-",
+        
+          title: "",
+        
+        description: "",
+        section: "Posts",
+        handler: () => {
+          
+            window.location.href = "/2026/blog/2025/2026-04-27-sampler-eval-trilemma/";
           
         },
       },{id: "post-",
