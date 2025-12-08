@@ -149,6 +149,17 @@ ninja.data = [{
             window.location.href = "/2026/blog/2026/uncertainty-lifecycle-in-deep-learning/";
           
         },
+      },{id: "post-trade-offs-in-llm-compute-for-reasoning-intensive-information-retrieval",
+        
+          title: "Trade-offs in LLM Compute for Reasoning-Intensive Information Retrieval",
+        
+        description: "Large Language Models have become essential for reasoning-intensive information retrieval, but their computational cost raises a critical question: where should compute be allocated for maximum effectiveness? Using the BRIGHT benchmark and the Gemini 2.5 model family, we systematically evaluate trade-offs across model strength, inference-time thinking depth, and reranking depth. Our controlled experiments reveal the marginal gains of investing compute in query expansion versus reranking, providing practical guidance for optimizing cost-performance in LLM-augmented retrieval pipelines.",
+        section: "Posts",
+        handler: () => {
+          
+            window.location.href = "/2026/blog/2026/trade-offs-in-llm-compute-for-reasoning-intensive-information-retrieval/";
+          
+        },
       },{id: "post-the-bottlenecks-to-scaling-foundation-models-for-robotics",
         
           title: "The Bottlenecks to Scaling Foundation Models for Robotics",
@@ -202,17 +213,6 @@ ninja.data = [{
         handler: () => {
           
             window.location.href = "/2026/blog/2026/rethinking-diffusion-langevin/";
-          
-        },
-      },{id: "post-faster-svd-via-accelerated-newton-schulz-iteration",
-        
-          title: "Faster SVD via Accelerated Newton-Schulz Iteration",
-        
-        description: "Traditional SVD algorithms rely heavily on QR factorizations, which scale poorly on GPUs. We show how the recently proposed Chebyshev-Accelerated Newton-Schulz (CANS) iteration can replace them and produce an SVD routine that is faster across a range of matrix types and precisions.",
-        section: "Posts",
-        handler: () => {
-          
-            window.location.href = "/2026/blog/2026/polar-svd/";
           
         },
       },{id: "post-learning-to-maximize-rewards-via-reaching-goals",
