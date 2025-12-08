@@ -72,18 +72,7 @@ ninja.data = [{
               handler: () => {
                 window.location.href = "https://iclr-blog-track.github.io/home/";
               },
-            },{id: "post-fairness-audits-as-theater-when-metrics-mask-structural-harm",
-        
-          title: "Fairness Audits as Theater: When Metrics Mask Structural Harm",
-        
-        description: "This blog post examines why contemporary fairness audits fail to prevent algorithmic harm, despite growing adoption. We analyze structural limitations and propose substantive alternatives grounded in participatory accountability.",
-        section: "Posts",
-        handler: () => {
-          
-            window.location.href = "/2026/blog/2026/fairness-audits/";
-          
-        },
-      },{id: "post-beyond-attention-as-a-graph",
+            },{id: "post-beyond-attention-as-a-graph",
         
           title: "Beyond Attention as a Graph",
         
@@ -147,17 +136,6 @@ ninja.data = [{
         handler: () => {
           
             window.location.href = "/2026/blog/2026/web-agent/";
-          
-        },
-      },{id: "post-trade-offs-in-llm-compute-for-reasoning-intensive-information-retrieval",
-        
-          title: "Trade-offs in LLM Compute for Reasoning-Intensive Information Retrieval",
-        
-        description: "Large Language Models have become essential for reasoning-intensive information retrieval, but their computational cost raises a critical question: where should compute be allocated for maximum effectiveness? Using the BRIGHT benchmark and the Gemini 2.5 model family, we systematically evaluate trade-offs across model strength, inference-time thinking depth, and reranking depth. Our controlled experiments reveal the marginal gains of investing compute in query expansion versus reranking, providing practical guidance for optimizing cost-performance in LLM-augmented retrieval pipelines.",
-        section: "Posts",
-        handler: () => {
-          
-            window.location.href = "/2026/blog/2026/trade-offs-in-llm-compute-for-reasoning-intensive-information-retrieval/";
           
         },
       },{id: "post-the-bottlenecks-to-scaling-foundation-models-for-robotics",
@@ -400,17 +378,6 @@ ninja.data = [{
         handler: () => {
           
             window.location.href = "/2026/blog/2025/2026-04-27-sampler-eval-trilemma/";
-          
-        },
-      },{id: "post-",
-        
-          title: "",
-        
-        description: "",
-        section: "Posts",
-        handler: () => {
-          
-            window.location.href = "/2026/blog/2025/2026-04-27-hallucination-cs/";
           
         },
       },{id: "books-the-godfather",
