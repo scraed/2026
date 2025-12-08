@@ -204,17 +204,6 @@ ninja.data = [{
             window.location.href = "/2026/blog/2026/mlip-practical/";
           
         },
-      },{id: "post-learning-to-maximize-rewards-via-reaching-goals",
-        
-          title: "Learning to Maximize Rewards via Reaching Goals",
-        
-        description: "Goal-conditioned reinforcement learning learns to reach goals instead of optimizing hand-crafted rewards. Despite its popularity, the community often categorizes goal-conditioned reinforcement learning as a special case of reinforcement learning. In this post, we aim to build a direct conversion from any reward-maximization reinforcement learning problem to a goal-conditioned reinforcement learning problem, and to draw connections with the stochastic shortest path framework. Our conversion provides a new perspective on the reinforcement learning problem: maximizing rewards is equivalent to reaching some goals.",
-        section: "Posts",
-        handler: () => {
-          
-            window.location.href = "/2026/blog/2026/mdp-to-gcmdp/";
-          
-        },
       },{id: "post-the-layered-ontology-of-models-resolving-the-epistemological-crisis-of-ai",
         
           title: "The Layered Ontology of Models, Resolving the Epistemological Crisis of AI",
@@ -235,6 +224,17 @@ ninja.data = [{
         handler: () => {
           
             window.location.href = "/2026/blog/2026/interpret-model/";
+          
+        },
+      },{id: "post-industrial-agent-benchmarking-what-300-real-evaluations-reveal-about-the-limits-of-agentic-ai",
+        
+          title: "Industrial Agent Benchmarking - What 300+ Real Evaluations Reveal About the Limits of...",
+        
+        description: "A community-scale evaluation of multi-agent systems using AssetOpsBench and a privacy-preserving Codabench pipeline, exposing real-world failure modes and methodological gaps in industrial AI agent evaluation.",
+        section: "Posts",
+        handler: () => {
+          
+            window.location.href = "/2026/blog/2026/industrial-agent-benchmarking/";
           
         },
       },{id: "post-heuristic-based-ideation-for-guiding-llms-toward-structured-creativity",
