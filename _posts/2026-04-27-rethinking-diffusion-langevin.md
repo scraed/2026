@@ -241,6 +241,8 @@ This illustrates that the forward and reverse diffusion steps are simply a **spl
 
 ## Langevin Dynamics as 'Identity' Operation
 
+This section will show that Langevin dynamics acts as an 'identity' operation on distributions, mapping a sample from a distribution to another sample from the same distribution. 
+
 Langevin dynamics <d-cite key="Langevin1908"></d-cite> is a stochastic process for sampling from a target probability distribution $$p(\mathbf{x})$$. One common form is the SDE:
 
 $$
@@ -284,6 +286,8 @@ Langevin dynamics, while widely used for sampling from complex distributions, be
 </div>
 
 ## Spliting the Identity into Forward and Reverse Processes
+
+This section, we show that the forward and reverse processes in diffusion models are splits of a single Langevin dynamics, decomposing the identity operation into a noising phase and a denoising phase.
 
 One key reason Langevin dynamics struggles in high-dimensional settings is the challenge of initialization <d-cite key="song2019generative"></d-cite>. The score function required by it is learned from real data and is therefore reliable only near true data points, while being poorly estimated elsewhere. Yet in generative modeling we need to start from locations that may be far from the data manifold. Finding an initialization that is both realistic and close enough to the true data manifold is difficult, making effective generation with Langevin dynamics challenging in practice. In short, Langevin dynamics is well-suited for generating new samples from an existing one, but ill-suited for generating samples entirely from scratch.
 
@@ -463,7 +467,9 @@ The above analysis applies not only to SDE reverse processes but also to ODE rev
 
 
 ### Forward-Reverse Duality
-We have established that a single reverse step undoes a forward step: advancing the reverse time $$t'$$ by an amount corresponds to decreasing the forward time $$t$$ by the same amount. Now, let's examine what happens when we combine multiple forward and reverse steps. Consider this sequence: begin with a data sample $$\mathbf{x}_0$$, propagate it through the forward process to obtain $$\mathbf{x}_T$$, then use $$\mathbf{x}_T$$ as the starting point $$\mathbf{x}_{0'}$$ for the reverse process and evolve it to $$\mathbf{x}_{T'}$$. Part of this forward-reverse cycle is illustrated in the figure below.
+We have established that a single reverse step undoes a forward step: advancing the reverse time $$t'$$ by an amount corresponds to decreasing the forward time $$t$$ by the same amount. Now, let's examine what happens when we combine multiple forward and reverse steps to reveal the deeper duality between them. In fact, the forward process transforms a data distribution into noise, while the reverse process, starting from noise, generates samples from the same data distribution.
+
+Consider this sequence: begin with a data sample $$\mathbf{x}_0$$, propagate it through the forward process to obtain $$\mathbf{x}_T$$, then use $$\mathbf{x}_T$$ as the starting point $$\mathbf{x}_{0'}$$ for the reverse process and evolve it to $$\mathbf{x}_{T'}$$. Part of this forward-reverse cycle is illustrated in the figure below.
 
 <div class="row mt-3">
     <div class="col-md-10 offset-md-1 col-lg-8 offset-lg-2 mt-3 mt-md-0">
@@ -519,12 +525,11 @@ Now we have demonstrated that **reverse diffusion**—the dual of the forward pr
 
 ## Unifying Training of Diffusion Models as Maximal likelihood 
 
+In this section, we aim to derive the training objective directly from first principles, beginning with the maximum likelihood framework. By doing so, we reveal the fundamental connection between diffusion model loss and exact maximum likelihood, and unify the score matching, denoising, and flow matching objectives as manifestations of maximal likelihood.
+
 Training the reverse diffusion process involves addressing two fundamental questions: (1) What mathematical quantity should we model, and (2) What objective function should guide the training? 
 
-The core mathematical object to model is the **score function**—the gradient of the log-probability density. However, contemporary implementations often parameterize the model to predict alternative quantities such as noise, clean data, or flow velocity. While these different parameterizations are mathematically equivalent (being rescaled versions of the same underlying score function), it is less transparent how the they should be explicitly incorporated into the same training objective.
-
-Our goal is to derive the training objective directly from first principles, beginning with the maximum likelihood framework. By doing so, we reveal the fundamental connection between diffusion model loss and exact maximum likelihood, without presupposing the existence or explicit usage of the score function.
-
+The core mathematical object to model is the **score function**—the gradient of the log-probability density. However, contemporary implementations often parameterize the model to predict alternative quantities such as noise, clean data, or flow velocity. While these different parameterizations are mathematically equivalent (being rescaled versions of the same underlying score function), it is less transparent how they should be explicitly incorporated into the same training objective. Here, we start by analyzing the Kullback–Leibler (KL) divergence.
 
 Suppose we have two distributions $p(\mathbf{x}, t)$ and $q(\mathbf{x}, t)$ that both evolve under the same forward diffusion process. Think of $p$ as the **true data distribution** pushed forward by the diffusion dynamics, and $q$ as the **model distribution**. At any fixed time $t$, their Kullback–Leibler (KL) divergence is
 
