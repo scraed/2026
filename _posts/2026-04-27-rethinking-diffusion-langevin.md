@@ -367,7 +367,7 @@ This decomposition now lets us directly answer the first question posed in the a
 
 <blockquote class="guiding-question">How does the reverse process invert the forward process to generate data from pure noise?</blockquote>
 
-The "Forward" part in this decomposition corresponds to the forward diffusion process, effectively **increasing the forward diffusion time $t$ by $d\tau$**, bringing the distribution to $p_{t + d\tau}(\mathbf{x})$. Since the forward and reverse components combine to form an "identity" operation, the "Reverse" part must reverse the forward process—**decreasing the forward diffusion time $t$ by $d\tau$** and restoring the distribution back to $p_t(\mathbf{x})$.
+The "Forward" part in this decomposition corresponds to the forward diffusion process, effectively increasing the forward diffusion time $t$ by $d\tau$, bringing the distribution to $p_{t + d\tau}(\mathbf{x})$. Since **the forward and reverse components combine to form an "identity" Langevin dynamics**, the "Reverse" part must reverse the forward process—decreasing the forward diffusion time $t$ by $d\tau$** and restoring the distribution back to $p_t(\mathbf{x})$.
 
 
 
@@ -382,7 +382,7 @@ Having analyzed the VP case in detail, we can now apply the same decomposition a
 
 <blockquote class="guiding-question">How can ODE-based and SDE-based diffusion models be unified under a single framework?</blockquote>
 
-The following table provides a direct answer: these models are unified by decomposing different Langevin dynamics. We have decomposed the VP model into both SDE and ODE versions, as well as decomposition of other parameterizations, relating their Langevin dynamics to the corresponding forward and reverse processes:
+The following table provides a direct answer: **these models are unified by decomposing different Langevin dynamics**. We have decomposed the VP model into both SDE and ODE versions, as well as decomposition of other parameterizations, relating their Langevin dynamics to the corresponding forward and reverse processes:
 
 <div class="table-wrapper" markdown="1">
 
@@ -494,11 +494,11 @@ $$
 q_T(\mathbf{x}) = p_0(\mathbf{x}) \quad \text{(data distribution)}.  
 $$
 
-This exact recovery of the data distribution through a forward–reverse cycle brings us to the third question from the abstract:
+This exact recovery of the data distribution through a forward–reverse duality brings us to the third question from the abstract:
 
 <blockquote class="guiding-question">Why are diffusion models theoretically superior to ordinary VAEs?</blockquote>
 
-The above result means that if we run the reverse process from time $$t' = 0$$ to $$t' = T$$, the final samples follow exactly the same distribution as the original training data $$p_0$$. In other words, the forward and reverse processes form an exact prior–posterior pair: the forward process maps data to noise, and the reverse process maps noise back to data. In practice, training introduces approximation error, but the theoretical target is exact equality. Ordinary VAEs, by contrast, only require the decoder to approximate the encoder’s posterior, with no guarantee of exactness even at the ELBO optimum.
+The above duality means that if we run the reverse process from time $$t' = 0$$ to $$t' = T$$, the final samples follow exactly the same distribution as the original training data $$p_0$$. In other words, the forward and reverse processes form an exact prior–posterior pair: the forward process maps data to noise, and the reverse process maps noise back to data. In practice, training introduces approximation error, but the theoretical target is exact equality. Ordinary VAEs, by contrast, only require the decoder to approximate the encoder’s posterior, with no guarantee of exactness even at the ELBO optimum.
 
 Now we have demonstrated that **reverse diffusion**—the dual of the forward process—can generate image data from noise. However, this requires access to the score function $\mathbf{s}(\mathbf{x}, t) = \nabla_{\mathbf{x}} \log p_t(\mathbf{x})$ at every timestep $t$. In practice, we approximate this function using a neural network.  In the next section, we will explain how to train such score networks.  
 
@@ -996,7 +996,7 @@ Equipped with this instantaneous maximum-likelihood objective, we can now addres
 
 <blockquote class="guiding-question">How can Denoising, Score Matching, and Flow Matching training objectives be unified and derived from first principles?</blockquote>
 
-With the above loss, we can unify training objective for different parameterizations considered in this article:
+With the above maximum-likelihood objective, we can unify training objective for different parameterizations considered in this article:
 
 <div class="table-wrapper" markdown="1">
 
