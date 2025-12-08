@@ -7,7 +7,7 @@ description:
   2. How can ODE-based and SDE-based diffusion models be unified under a single framework? 
   3. Why are diffusion models theoretically superior to ordinary VAEs? 
   4. How can Denoising, Score Matching, and Flow Matching training objectives be unified and derived from first principles? 
-  We demonstrate that the Langevin perspective offers clear and straightforward answers to these questions, providing pedagogical value for both learners and experienced researchers seeking deeper intuition.
+  We systematically organize the diffusion model from the Langevin perspective and demonstrate that it offers clear and straightforward answers to these questions, providing pedagogical value for both learners and experienced researchers seeking deeper intuition.
 date: 2026-04-27
 future: true
 htmlwidgets: true
@@ -214,7 +214,7 @@ The **score-based perspective** <d-cite key="Song2020ScoreBasedGM"></d-cite> pla
 
 A third valuable viewpoint is the **flow-based perspective** <d-cite key="liu2022flow"></d-cite>, which has rapidly gained popularity in modern diffusion models. Although this approach is theoretically equivalent to both the VAE and score-based frameworks <d-cite key="gao2025diffusion"></d-cite>, it distinguishes itself by highlighting a clear and intuitive straight-line interpolation between data and noise. This conceptual clarity makes the flow-based perspective accessible and attractive. However, its simplicity can be misleading: it can give the impression that it is a fundamentally simpler model rather than an equivalent reformulation of other perspectives.
 
-In this article, we aim to present a perspective that is both mathematically simple and intuitively clear: the **Langevin perspective**. This approach, relying only on fundamental techniques from stochastic differential equations (SDEs), provides a straightforward derivation of the reverse processes as well as a unified, first-principle derivation of the denoising, score matching, and flow matching objectives.
+In this article, we systematically organize the theory of diffusion models and present a perspective that is both mathematically simple and intuitively clear: the **Langevin perspective**. This approach, relying only on fundamental techniques from stochastic differential equations (SDEs), provides a straightforward derivation of the reverse process as well as a unified, first-principles derivation of the denoising, score matching, and flow matching objectives.
 
 <div class="insight-box" markdown="1">
 
@@ -276,7 +276,7 @@ Langevin dynamics, while widely used for sampling from complex distributions, be
 
 ## Spliting the Identity into Forward and Reverse Processes
 
-One key reason Langevin dynamics struggles in high-dimensional settings is the challenge of initialization. The score function required by it is learned from real data and is therefore reliable only near true data points, while being poorly estimated elsewhere. Yet in generative modeling we need to start from locations that may be far from the data manifold. Finding an initialization that is both realistic and close enough to the true data manifold is difficult, making effective generation with Langevin dynamics challenging in practice. In short, Langevin dynamics is well-suited for generating new samples from an existing one, but ill-suited for generating samples entirely from scratch.
+One key reason Langevin dynamics struggles in high-dimensional settings is the challenge of initialization <d-cite key="song2019generative"></d-cite>. The score function required by it is learned from real data and is therefore reliable only near true data points, while being poorly estimated elsewhere. Yet in generative modeling we need to start from locations that may be far from the data manifold. Finding an initialization that is both realistic and close enough to the true data manifold is difficult, making effective generation with Langevin dynamics challenging in practice. In short, Langevin dynamics is well-suited for generating new samples from an existing one, but ill-suited for generating samples entirely from scratch.
 
 An enhancement to Langevin dynamics is the Annealed Langevin dynamics <d-cite key="song2019generative"></d-cite>. Instead of using a single Langevin sampler, this method involves training a sequence of Langevin dynamics, each corresponding to a different level of noise added to the data. Starting from pure noise, the method gradually reduces the noise level, switching between these samplers at each step. In this way, samples are progressively transformed from random noise into data-like samples, using Langevin dynamics that are effective for each stage of noise contamination. This approach highlights the importance of using multiple noise levels.
 
