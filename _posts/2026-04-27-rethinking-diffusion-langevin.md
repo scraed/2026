@@ -38,7 +38,7 @@ toc:
       - name: The Forward Diffusion Process for training
       - name: The Reverse Diffusion Process for Sampling
   - name: Forward-Reverse Duality
-  - name: Maximal likelihood Training of Diffusion Models
+  - name: Unifying Training of Diffusion Models as Maximal likelihood
   - name: Conclusion
 
 # Below is an example of injecting additional post-specific styles.
@@ -195,9 +195,16 @@ _styles: >
 
   /* Guiding question heading styling */
   .post.distill h4 .guiding-question {
+    display: inline-block;
     font-style: italic;
     font-weight: 500;
     color: var(--global-text-color-light);
+  }
+  .post.distill h4:has(.guiding-question) {
+    text-align: center;
+    border-left: none;
+    margin-top: 2.5rem;
+    margin-bottom: 2.0rem;
   }
 ---
 
@@ -209,7 +216,7 @@ The **score-based perspective** <d-cite key="Song2020ScoreBasedGM"></d-cite> pla
 
 A third valuable viewpoint is the **flow-based perspective** <d-cite key="liu2022flow"></d-cite>, which has rapidly gained popularity in modern diffusion models. Although this approach is theoretically equivalent to both the VAE and score-based frameworks <d-cite key="gao2025diffusion"></d-cite>, it distinguishes itself by highlighting a clear and intuitive straight-line interpolation between data and noise. This conceptual clarity makes the flow-based perspective accessible and attractive. However, its simplicity can be misleading: it can give the impression that it is a fundamentally simpler model rather than an equivalent reformulation of other perspectives.
 
-In this article, we aim to present a perspective that is both mathematically simple and intuitively clear: the Langevin perspective. This approach, relying only on fundamental techniques from stochastic differential equations (SDEs), provides a straightforward derivation of the reverse processes as well as a unified, first-principle derivation of the denoising, score matching, and flow matching objectives.
+In this article, we aim to present a perspective that is both mathematically simple and intuitively clear: the **Langevin perspective**. This approach, relying only on fundamental techniques from stochastic differential equations (SDEs), provides a straightforward derivation of the reverse processes as well as a unified, first-principle derivation of the denoising, score matching, and flow matching objectives.
 
 <div class="insight-box" markdown="1">
 
@@ -497,7 +504,7 @@ The above result means that if we run the reverse process from time $$t' = 0$$ t
 
 Now we have demonstrated that **reverse diffusion**—the dual of the forward process—can generate image data from noise. However, this requires access to the score function $\mathbf{s}(\mathbf{x}, t) = \nabla_{\mathbf{x}} \log p_t(\mathbf{x})$ at every timestep $t$. In practice, we approximate this function using a neural network.  In the next section, we will explain how to train such score networks.  
 
-## Maximal likelihood Training of Diffusion Models
+## Unifying Training of Diffusion Models as Maximal likelihood 
 
 Training the reverse diffusion process involves addressing two fundamental questions: (1) What mathematical quantity should we model, and (2) What objective function should guide the training? 
 
