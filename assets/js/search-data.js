@@ -138,17 +138,6 @@ ninja.data = [{
             window.location.href = "/2026/blog/2026/web-agent/";
           
         },
-      },{id: "post-uncertainty-lifecycle-in-deep-learning",
-        
-          title: "Uncertainty Lifecycle in Deep Learning",
-        
-        description: "Uncertainty modeling in deep learning has different attributes such as uncertainty propagation, uncertainty estimation, uncertainty decomposition, uncertainty attribution and uncertainty sensitivity, that are extensively discussed in literature. However, there is no proper structure explaining how these different components interact with each other at different stages of Deep Learning pipeline. We propose to structure the flow and transformation of uncertainty from input to prediction through the model, by appropriately positioning them. And we call this structure as “Uncertainty Lifecycle”. The “Uncertainty lifecycle” can be represented as a structured process for handling, quantifying, analyzing, and interpreting uncertainties at different stages of Deep Learning pipeline.",
-        section: "Posts",
-        handler: () => {
-          
-            window.location.href = "/2026/blog/2026/uncertainty-lifecycle-in-deep-learning/";
-          
-        },
       },{id: "post-trade-offs-in-llm-compute-for-reasoning-intensive-information-retrieval",
         
           title: "Trade-offs in LLM Compute for Reasoning-Intensive Information Retrieval",
@@ -213,6 +202,17 @@ ninja.data = [{
         handler: () => {
           
             window.location.href = "/2026/blog/2026/rethinking-diffusion-langevin/";
+          
+        },
+      },{id: "post-extracting-model-precision-from-20-logprobs",
+        
+          title: "Extracting Model Precision from 20 Logprobs",
+        
+        description: "We demonstrate that the internal floating-point precision of language models can be inferred from API-exposed logprobs.",
+        section: "Posts",
+        handler: () => {
+          
+            window.location.href = "/2026/blog/2026/precision-extraction/";
           
         },
       },{id: "post-learning-to-maximize-rewards-via-reaching-goals",
