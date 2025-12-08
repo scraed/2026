@@ -231,7 +231,7 @@ This illustrates that the forward and reverse diffusion steps are simply a **spl
 
 </div>
 
-# Langevin Dynamics as 'Identity' Operation
+## Langevin Dynamics as 'Identity' Operation
 
 Langevin dynamics <d-cite key="Langevin1908"></d-cite> is a stochastic process for sampling from a target probability distribution $$p(\mathbf{x})$$. One common form is the SDE:
 
@@ -275,7 +275,7 @@ Langevin dynamics, while widely used for sampling from complex distributions, be
     Langevin dynamics acts as an identity operation on $p(\mathbf{x})$: starting from a sample $\mathbf{x} \sim p(\mathbf{x})$, it produces a new sample $\mathbf{x}'$ from the same distribution.
 </div>
 
-# Spliting the Identity into Forward and Reverse Processes
+## Spliting the Identity into Forward and Reverse Processes
 
 One key reason Langevin dynamics struggles in high-dimensional settings is the challenge of initialization. The score function required by it is learned from real data and is therefore reliable only near true data points, while being poorly estimated elsewhere. Yet in generative modeling we need to start from locations that may be far from the data manifold. Finding an initialization that is both realistic and close enough to the true data manifold is difficult, making effective generation with Langevin dynamics challenging in practice. In short, Langevin dynamics is well-suited for generating new samples from an existing one, but ill-suited for generating samples entirely from scratch.
 
@@ -503,7 +503,7 @@ The above result means that if we run the reverse process from time $$t' = 0$$ t
 
 Now we have demonstrated that **reverse diffusion**—the dual of the forward process—can generate image data from noise. However, this requires access to the score function $\mathbf{s}(\mathbf{x}, t) = \nabla_{\mathbf{x}} \log p_t(\mathbf{x})$ at every timestep $t$. In practice, we approximate this function using a neural network.  In the next section, we will explain how to train such score networks.  
 
-# Maximal likelihood Training of Diffusion Models
+## Maximal likelihood Training of Diffusion Models
 
 Training the reverse diffusion process involves addressing two fundamental questions: (1) What mathematical quantity should we model, and (2) What objective function should guide the training? 
 
