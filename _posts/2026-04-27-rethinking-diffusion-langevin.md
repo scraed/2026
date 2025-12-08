@@ -198,6 +198,13 @@ _styles: >
     fill: transparent !important;
     stroke: transparent !important;
   }
+
+  /* Guiding question heading styling */
+  .post.distill h4 .guiding-question {
+    font-style: italic;
+    font-weight: 500;
+    color: var(--global-text-color-light);
+  }
 ---
 
 Modern diffusion models are built upon two fundamental processes: the forward process, which gradually corrupts data with noise during training, and the reverse process, which generates data by sampling from noise. The development of diffusion models has diverged into several valuable perspectives, illuminating different aspects of these processes. Most interpretations fall into three main frameworks: the Variational Autoencoder (VAE) perspective, the score-based perspective, and the flow-based perspective. Although there are many tutorials available, learning the core theory of diffusion models remains challenging for beginners due to mathematically dense derivations and fragmented intuitions scattered across these different perspectives. 
@@ -357,8 +364,9 @@ $$
 
 where $$\mathbf{s}(\mathbf{x}, t) = \nabla_{\mathbf{x}} \log p_t(\mathbf{x})$$ is the score function of $$p_t(\mathbf{x})$$. Here, we split the noise term $$\sqrt{2}\, d\mathbf{W}_\tau$$ into two independent Gaussian increments, $$d\mathbf{W}_\tau^{(1)}$$ and $$d\mathbf{W}_\tau^{(2)}$$, such that their sum equals the original noise: $$\sqrt{2}\, d\mathbf{W}_\tau = d\mathbf{W}_\tau^{(1)} + d\mathbf{W}_\tau^{(2)}.$$ This split is possible because Gaussian random variables satisfy the property that their sum is Gaussian, and independent Gaussians add in variance; specifically, if $$d\mathbf{W}_\tau^{(1)}$$ and $$d\mathbf{W}_\tau^{(2)}$$ are independent standard Brownian increments (each with variance $d\tau$), their sum has variance $$2\,d\tau$$, matching the original $$\sqrt{2}\,d\mathbf{W}_\tau$$.
 
+This decomposition now lets us directly return to the first guiding question posed in the introduction.
 
-#### How does the reverse process invert the forward process to generate data from pure noise?
+#### <span class="guiding-question">How does the reverse process invert the forward process to generate data from pure noise?</span>
 
 The "Forward" part in this decomposition corresponds to the forward diffusion process, effectively **increasing the forward diffusion time $t$ by $d\tau$**, bringing the distribution to $p_{t + d\tau}(\mathbf{x})$. Since the forward and reverse components combine to form an "identity" operation, the "Reverse" part must reverse the forward process—**decreasing the forward diffusion time $t$ by $d\tau$** and restoring the distribution back to $p_t(\mathbf{x})$.
 
