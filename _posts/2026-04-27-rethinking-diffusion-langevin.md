@@ -68,6 +68,15 @@ _styles: >
     border: 1px solid var(--global-divider-color);
     background: var(--global-card-bg-color);
   }
+  .table-caption {
+    font-size: 0.85rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    color: var(--global-theme-color);
+    margin: 0 0 0.75rem 0;
+    text-align: center;
+  }
   table {
     width: 100%;
     border-collapse: collapse;
@@ -306,7 +315,7 @@ The table below summarizes these three forward processes of different model type
 
 </div>
 
-Each forward process has a characteristic way of mixing data and noise: The VP model uses the Ornstein–Uhlenbeck (OU) process, blending the data with noise in a geometric (Pythagorean) fashion. The VE-Karras model adds noise directly to the data without a restoring drift, while the Rectified flow model creates a straight-line interpolation between data and noise. Despite their differences, all these SDEs are fundamentally equivalent—they differ only by how time and state are reparameterized. For clarity, the table below shows the transformations between time parameters and state variables for each model:
+Each forward process has a characteristic way of mixing data and noise: The VP model uses the Ornstein–Uhlenbeck (OU) process, blending the data with noise in a geometric (Pythagorean) fashion. The VE-Karras model adds noise directly to the data without a restoring drift, while the Rectified flow model creates a straight-line interpolation between data and noise. **Despite their differences, all these SDEs are fundamentally equivalent**—they differ only by how time and state are reparameterized. For clarity, the table below shows the transformations between time parameters and state variables for each model:
 
 
 <div class="table-wrapper" markdown="1">
@@ -384,6 +393,10 @@ Having analyzed the VP case in detail, we can now apply the same decomposition a
 
 The following table provides a direct answer: **these models are unified by decomposing different Langevin dynamics**. We have decomposed the VP model into both SDE and ODE versions, as well as decomposition of other parameterizations, relating their Langevin dynamics to the corresponding forward and reverse processes:
 
+<div class="insight-box" markdown="1">
+
+<p class="table-caption"><strong>Langevin Split of different model type</strong></p>
+
 <div class="table-wrapper" markdown="1">
 
 | **Model Type** | **Langevin dynamics** | **Forward Split** | **Reverse Split** |
@@ -392,6 +405,8 @@ The following table provides a direct answer: **these models are unified by deco
 | VP-ODE | $$dx = \frac{1}{2} \mathbf{s}_x\, d\tau + d W_\tau$$ | $$d x = - \tfrac{1}{2} x\, d\tau$$ | $$dx = \frac{1}{2} \left( x + \mathbf{s}_x \right) d\tau$$ |
 | VE-Karras | $$dz = \tau\, \mathbf{s}_z\, d\tau + \sqrt{2 \tau}\, d W_\tau$$ | $$dz = \sqrt{2\tau}\, dW_{\tau}$$ |  $$dz = \tau\, \mathbf{s}_z\, d\tau $$ |
 | Rectified flow | $$dr = \frac{\tau}{1+\tau} \mathbf{s}_r\, d\tau + \sqrt{\frac{2\tau}{1+\tau}}\, d W_\tau$$  | $$dr = -\frac{r}{1-\tau}\, d\tau + \sqrt{\frac{2\tau}{1-\tau}}\, dW_{\tau}$$  |  $$dr = \frac{\tau\, \mathbf{s}_r + r}{1-\tau} d\tau$$ |
+
+</div>
 
 </div>
 
@@ -473,7 +488,7 @@ We examine the relationship between $$\mathbf{x}_{t}$$ in the forward diffusion 
     Each horizontal row shows a Langevin dynamics step that maps a forward sample $\mathbf{x}_t$ to a new reverse sample $\mathbf{x}_{(T-t)'}$ from the same probability density.
 </div>
 
-**Each horizontal row in this picture corresponds to consecutive steps of Langevin dynamics, which alters the samples while maintaining the same probability density**. This illustrates the duality between the forward and reverse diffusion processes: while $$\mathbf{x}_t$$ (forward) and $$\mathbf{x}_{(T-t)'}$$ (reverse) are distinct samples, they obey the same probability distribution.
+**Each horizontal row in this picture corresponds to consecutive steps of Langevin dynamics, which alters the samples while maintaining the same probability density**. This illustrates the **duality** between the forward and reverse diffusion processes: while $$\mathbf{x}_t$$ (forward) and $$\mathbf{x}_{(T-t)'}$$ (reverse) are distinct samples, they obey the same probability distribution.
 
 
 To formalize the duality, we define the densities of $$\mathbf{x}_t$$ (forward) as $$p_t(\mathbf{x})$$, the densities of $$\mathbf{x}_{t'}$$ (reverse) as $$q_{t'}(\mathbf{x})$$. If we initialize
@@ -498,7 +513,7 @@ This exact recovery of the data distribution through a forward–reverse duality
 
 <blockquote class="guiding-question">Why are diffusion models theoretically superior to ordinary VAEs?</blockquote>
 
-The above duality means that if we run the reverse process from time $$t' = 0$$ to $$t' = T$$, the final samples follow exactly the same distribution as the original training data $$p_0$$. In other words, the forward and reverse processes form an exact prior–posterior pair: the forward process maps data to noise, and the reverse process maps noise back to data. In practice, training introduces approximation error, but the theoretical target is exact equality. Ordinary VAEs, by contrast, only require the decoder to approximate the encoder’s posterior, with no guarantee of exactness even at the ELBO optimum.
+The above **duality** means that if we run the reverse process from time $$t' = 0$$ to $$t' = T$$, the final samples follow exactly the same distribution as the original training data $$p_0$$. In other words, the forward and reverse processes form an exact prior–posterior pair: the forward process maps data to noise, and the reverse process maps noise back to data. In practice, training introduces approximation error, but the theoretical target is exact equality. Ordinary VAEs, by contrast, only require the decoder to approximate the encoder’s posterior, with no guarantee of exactness even at the ELBO optimum.
 
 Now we have demonstrated that **reverse diffusion**—the dual of the forward process—can generate image data from noise. However, this requires access to the score function $\mathbf{s}(\mathbf{x}, t) = \nabla_{\mathbf{x}} \log p_t(\mathbf{x})$ at every timestep $t$. In practice, we approximate this function using a neural network.  In the next section, we will explain how to train such score networks.  
 
