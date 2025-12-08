@@ -237,17 +237,6 @@ ninja.data = [{
             window.location.href = "/2026/blog/2026/interpret-model/";
           
         },
-      },{id: "post-industrial-agent-benchmarking-what-300-real-evaluations-reveal-about-the-limits-of-agentic-ai",
-        
-          title: "Industrial Agent Benchmarking What 300+ Real Evaluations Reveal About the Limits of Agentic...",
-        
-        description: "A community-scale evaluation of multi-agent systems using AssetOpsBench and a privacy-preserving Codabench pipeline, exposing real-world failure modes and methodological gaps in industrial AI agent evaluation.",
-        section: "Posts",
-        handler: () => {
-          
-            window.location.href = "/2026/blog/2026/industrial-agent-benchmarking/";
-          
-        },
       },{id: "post-heuristic-based-ideation-for-guiding-llms-toward-structured-creativity",
         
           title: "Heuristic-Based Ideation for Guiding LLMs Toward Structured Creativity",
