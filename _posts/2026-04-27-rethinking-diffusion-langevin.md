@@ -254,7 +254,7 @@ $$
 d\mathbf{x}_t = g(t)\, \mathbf{s}(\mathbf{x}_t) dt + \sqrt{2 g(t)}\, d\mathbf{W}_t, 
 $$
 
-where $$s(\mathbf{x}) = \nabla_{\mathbf{x}} \log p(\mathbf{x})$$ is the score function of $$p(\mathbf{x})$$, $g(t)$ is an arbitrary positive function satisfying $s = \int_0^\infty g(t) dt = \infty$. The $d\mathbf{W}$ term is a Brownian noise what can be treated as $\sqrt{dt} \boldsymbol{\epsilon}$, where $\boldsymbol{\epsilon}$ is a standard Gaussian noise. 
+At first sight, the extra term $$d\mathbf{W}_t$$ may make this stochastic differential equation (SDE) look much more complicated than an ordinary differential equation (ODE). In fact, it is best to think of it as an ODE with an additional infinitesimal random perturbation at each step. Here $$\mathbf{W}_t$$ is a Brownian motion, meaning a continuous random walk, so its increment $$d\mathbf{W}_t$$ can be informally viewed as $$\sqrt{dt}\,\boldsymbol{\epsilon}$$, where $$\boldsymbol{\epsilon}$$ is a standard Gaussian random vector. The remaining terms are familiar: $$\mathbf{s}(\mathbf{x}) = \nabla_{\mathbf{x}} \log p(\mathbf{x})$$ is the score function of $$p(\mathbf{x})$$, and $$g(t)$$ is an arbitrary positive function satisfying $$\int_0^\infty g(t)\,dt = \infty$$. 
 
 This dynamics is often used as a Monte Carlo sampler to draw samples from $$p(\mathbf{x})$$, since $$p(\mathbf{x})$$ is its **stationary distribution**—the distribution that $$\mathbf{x}_t$$ converges to and and remains at as $$t \to \infty$$, regardless of the initial distribution of $$\mathbf{x}_0$$. 
 
