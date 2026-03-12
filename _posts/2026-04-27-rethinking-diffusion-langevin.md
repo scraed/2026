@@ -402,7 +402,9 @@ Having analyzed the VP case in detail, we can now apply the same decomposition a
 
 <blockquote class="guiding-question">How can ODE-based and SDE-based diffusion models be unified under a single framework?</blockquote>
 
-The following table provides a direct answer: **these models are unified by decomposing different Langevin dynamics**. We have decomposed the VP model into both SDE and ODE versions, as well as decomposition of other parameterizations, relating their Langevin dynamics to the corresponding forward and reverse processes:
+Before looking at the table, it is important to note that the Langevin split is **not unique**. Even for the same diffusion model, choosing different Langevin dynamics, in particular different time-scaling functions $$g(\tau)$$, leads to different valid reverse processes. This is exactly why the same VP model can give rise to both an SDE reverse process and an ODE reverse process.
+
+The following table provides a direct answer: **these models are unified by decomposing different Langevin dynamics**. We have decomposed the VP model into both SDE and ODE versions, as well as other parameterizations, relating their Langevin dynamics to the corresponding forward and reverse processes:
 
 <div class="insight-box" markdown="1">
 
@@ -410,12 +412,12 @@ The following table provides a direct answer: **these models are unified by deco
 
 <div class="table-wrapper" markdown="1">
 
-| **Model Type** | **Langevin dynamics** | **Forward Split** | **Reverse Split** |
+| **Model Type** | **Reverse Split** | **Forward Split** | **Langevin dynamics** |
 | --- | --- | --- | --- |
-| VP-SDE | $$dx = \mathbf{s}_x\, d\tau + \sqrt{2}\, d W_\tau$$ | $$d x = - \tfrac{1}{2} x\, d\tau + dW_\tau$$ | $$dx = \left[ \frac{1}{2} x + \mathbf{s}_x \right] d\tau + dW_{\tau}$$ |
-| VP-ODE | $$dx = \frac{1}{2} \mathbf{s}_x\, d\tau + d W_\tau$$ | $$d x = - \tfrac{1}{2} x\, d\tau$$ | $$dx = \frac{1}{2} \left( x + \mathbf{s}_x \right) d\tau$$ |
-| VE-Karras | $$dz = \tau\, \mathbf{s}_z\, d\tau + \sqrt{2 \tau}\, d W_\tau$$ | $$dz = \sqrt{2\tau}\, dW_{\tau}$$ |  $$dz = \tau\, \mathbf{s}_z\, d\tau $$ |
-| Rectified flow | $$dr = \frac{\tau}{1+\tau} \mathbf{s}_r\, d\tau + \sqrt{\frac{2\tau}{1+\tau}}\, d W_\tau$$  | $$dr = -\frac{r}{1-\tau}\, d\tau + \sqrt{\frac{2\tau}{1-\tau}}\, dW_{\tau}$$  |  $$dr = \frac{\tau\, \mathbf{s}_r + r}{1-\tau} d\tau$$ |
+| VP-SDE | $$dx = \left[ \frac{1}{2} x + \mathbf{s}_x \right] d\tau + dW_{\tau}$$ | $$d x = - \tfrac{1}{2} x\, d\tau + dW_\tau$$ | $$dx = \mathbf{s}_x\, d\tau + \sqrt{2}\, d W_\tau$$ |
+| VP-ODE | $$dx = \frac{1}{2} \left( x + \mathbf{s}_x \right) d\tau$$ | $$d x = - \tfrac{1}{2} x\, d\tau + dW_\tau$$ | $$dx = \frac{1}{2} \mathbf{s}_x\, d\tau + d W_\tau$$ |
+| VE-Karras | $$dz = \tau\, \mathbf{s}_z\, d\tau $$ | $$dz = \sqrt{2\tau}\, dW_{\tau}$$ | $$dz = \tau\, \mathbf{s}_z\, d\tau + \sqrt{2 \tau}\, d W_\tau$$ |
+| Rectified flow | $$dr = \frac{\tau\, \mathbf{s}_r + r}{1-\tau} d\tau$$ | $$dr = -\frac{r}{1-\tau}\, d\tau + \sqrt{\frac{2\tau}{1-\tau}}\, dW_{\tau}$$ | $$dr = \frac{\tau}{1+\tau} \mathbf{s}_r\, d\tau + \sqrt{\frac{2\tau}{1+\tau}}\, d W_\tau$$ |
 
 </div>
 
