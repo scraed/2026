@@ -316,11 +316,11 @@ The table below summarizes these three forward processes of different model type
 
 <div class="table-wrapper" markdown="1">
 
-| **Model Type** | **Forward SDE** | **Noise-level parameter** | **Relation between initial and noisy variable** |
+| **Model Type** | **Relation between initial and noisy variable** | **Forward SDE** | **Noise-level parameter** |
 | --- | --- | --- | --- |
-| Variance-preserving (VP) | $$d x_t = - \tfrac{1}{2} x_t\, dt + dW_t$$ | $$\alpha_t = e^{-t}$$ | $$x_t = \sqrt{\alpha_t}\, x_0 + \sqrt{1-\alpha_t}\, \boldsymbol{\epsilon}$$ |
-| Variance-exploding-Karras (VE-Karras) | $$dz_{\sigma} = \sqrt{2\sigma}\, dW_{\sigma}$$ | $$\sigma$$ | $$z_\sigma = z_0 + \sigma\, \boldsymbol{\epsilon}$$ |
-| Rectified flow | $$dr_{s} = -\frac{r_s}{1-s}\, ds + \sqrt{\frac{2s}{1-s}}\, dW_{s}$$ | $$s$$ | $$r_s = (1-s)\, r_0 + s\, \boldsymbol{\epsilon}$$ |
+| Variance-preserving (VP) | $$x_t = \sqrt{\alpha_t}\, x_0 + \sqrt{1-\alpha_t}\, \boldsymbol{\epsilon}$$ | $$d x_t = - \tfrac{1}{2} x_t\, dt + dW_t$$ | $$\alpha_t = e^{-t}$$ |
+| Variance-exploding-Karras (VE-Karras) | $$z_\sigma = z_0 + \sigma\, \boldsymbol{\epsilon}$$ | $$dz_{\sigma} = \sqrt{2\sigma}\, dW_{\sigma}$$ | $$\sigma$$ |
+| Rectified flow | $$r_s = (1-s)\, r_0 + s\, \boldsymbol{\epsilon}$$ | $$dr_{s} = -\frac{r_s}{1-s}\, ds + \sqrt{\frac{2s}{1-s}}\, dW_{s}$$ | $$s$$ |
 
 </div>
 
@@ -329,13 +329,15 @@ Each forward process has a characteristic way of mixing data and noise: The VP m
 
 <div class="table-wrapper" markdown="1">
 
-| **Model Type** | **Time variable** | **Time domain** | **State variable notation** |
+| **Model Type** | **State variable notation** | **Time variable** | **Time domain** |
 | --- | --- | --- | --- |
-| Variance-preserving (VP) | $$t$$ | $$[0, T]$$ | $$x_t$$ |
-| Variance-exploding-Karras (VE-Karras) | $$\sigma = \sqrt{e^{t} - 1}$$ | $$[0, \Sigma]$$ | $$z_{\sigma(t)} = x_t e^{\frac{t}{2}}$$ |
-| Rectified flow | $$s= \dfrac{\sqrt{e^{t} - 1}}{1 + \sqrt{e^{t} - 1}}$$ | $$[0, 1]$$ | $$r_{s(t)} = x_t \dfrac{e^{\frac{t}{2}}}{1 + \sqrt{e^{t} - 1}} $$ |
+| Variance-preserving (VP) | $$x_t$$ | $$t$$ | $$[0, T]$$ |
+| Variance-exploding-Karras (VE-Karras) | $$z_{\sigma(t)} = x_t e^{\frac{t}{2}}$$ | $$\sigma = \sqrt{e^{t} - 1}$$ | $$[0, \Sigma]$$ |
+| Rectified flow | $$r_{s(t)} = x_t \dfrac{e^{\frac{t}{2}}}{1 + \sqrt{e^{t} - 1}} $$ | $$s= \dfrac{\sqrt{e^{t} - 1}}{1 + \sqrt{e^{t} - 1}}$$ | $$[0, 1]$$ |
 
 </div>
+
+Using this table, one can easily translate from one notation to another whenever needed.
 
 No matter which notation we choose, A forward diffusion step with a step size of $$\Delta t$$ acts as adding more noise to data, which is displayed in the following picture:
 
