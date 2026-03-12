@@ -72,7 +72,18 @@ ninja.data = [{
               handler: () => {
                 window.location.href = "https://iclr-blog-track.github.io/home/";
               },
-            },{id: "post-beyond-attention-as-a-graph",
+            },{id: "post-effect-of-parallel-environments-and-rollout-steps-in-ppo",
+        
+          title: "Effect of Parallel Environments and Rollout Steps in PPO",
+        
+        description: "This blog post explores batch size in PPO-what happens when we increase the number of parallel environments versus the number of rollout steps, while keeping the total samples per update fixed. We discuss how this affects bias and variance in gradient estimation.",
+        section: "Posts",
+        handler: () => {
+          
+            window.location.href = "/2026/blog/2026/ppo-batch-size/";
+          
+        },
+      },{id: "post-beyond-attention-as-a-graph",
         
           title: "Beyond Attention as a Graph",
         
@@ -94,15 +105,15 @@ ninja.data = [{
             window.location.href = "/2026/blog/2026/attention-sinks-graph-perspective/";
           
         },
-      },{id: "post-what-can-you-do-when-you-have-zero-rewards-during-rl",
+      },{id: "post-a-hitchhiker-39-s-guide-to-agent-evaluation",
         
-          title: "What Can You Do When You Have Zero Rewards During RL?",
+          title: "A Hitchhiker&#39;s Guide to Agent Evaluation",
         
-        description: "If your base model has zero success rates, performing RL with outcome rewards won&#39;t do anything. What can you do then? 🤔TL;DR: simply adding easy samples to your training dataset can unlock RL training!",
+        description: "An introductory guide to LLM-based agents&#39; evaluation. We explore what makes agent evaluation different from traditional LLM benchmarks, how to measure success, safety, and trajectory quality, and highlight open challenges in the field.",
         section: "Posts",
         handler: () => {
           
-            window.location.href = "/2026/blog/2026/zero-rewards/";
+            window.location.href = "/2026/blog/2026/agent-evaluation/";
           
         },
       },{id: "post-the-witness-problem-in-multi-agent-cooperation",
@@ -116,9 +127,20 @@ ninja.data = [{
             window.location.href = "/2026/blog/2026/witness-problem/";
           
         },
-      },{id: "post-why-ai-evaluations-need-error-bars",
+      },{id: "post-why-did-the-ai-model-say-that-a-methodological-practical-guide-for-explaining-multimodal-medical-decisions",
         
-          title: "Why AI Evaluations Need Error Bars",
+          title: "Why Did the AI Model Say That? A Methodological Practical Guide for Explaining...",
+        
+        description: "A methodological guide that summarizes key explainability techniques for understanding multimodal medical AI systems, addressing the critical challenge of understanding what these systems have learned and how they&#39;ll behave in real-world clinical settings.",
+        section: "Posts",
+        handler: () => {
+          
+            window.location.href = "/2026/blog/2026/why-did-the-model-say-that/";
+          
+        },
+      },{id: "post-why-ai-evaluations-need-statistical-rigor",
+        
+          title: "Why AI Evaluations Need Statistical Rigor",
         
         description: "AI evaluations often rely on single-run scores even though models, agents, and judges are inherently stochastic, making many reported differences unstable. This post surveys statistical tools—error bars, reliability measures, Bayesian models—that show and help manage this variance. Overall, it highlights how incorporating established statistical practices can make evaluations more trustworthy and informative.",
         section: "Posts",
@@ -127,26 +149,37 @@ ninja.data = [{
             window.location.href = "/2026/blog/2026/why-ai-evaluations-need-error-bars/";
           
         },
-      },{id: "post-computer-use-survey-a-visual-survey-of-computer-use-agents",
+      },{id: "post-when-we-are-nosy",
         
-          title: "Computer Use Survey - A Visual Survey of Computer Use Agents",
+          title: "When We are Nosy",
         
-        description: "In recent years, AI systems operating on the web and in computer environments have become a major topic of interest for both academia and industry. The goal of this blog is to provide an interesting and interactive survey of historical and recent works on computer use agents. We define key terms used in the literature, catalogue the expansive list of environments and datasets, discuss the evolution of the methodologies, and assess both today’s landscape and possible paths forward.",
+        description: "Machine learning systems are defined for many people, and for the design of in particular language models, calls for “social choice–based’’ methods are increasing. This seems to run counter to the practice in machine learning to “personalize’’ models. This blogpost clarifies when personalization and when social choice has its place, using the Impossibility of a Paretian Liberal by Amartya Sen.",
         section: "Posts",
         handler: () => {
           
-            window.location.href = "/2026/blog/2026/web-agent/";
+            window.location.href = "/2026/blog/2026/when-we-are-nosy/";
           
         },
-      },{id: "post-the-bottlenecks-to-scaling-foundation-models-for-robotics",
+      },{id: "post-uncertainty-lifecycle-in-deep-learning",
         
-          title: "The Bottlenecks to Scaling Foundation Models for Robotics",
+          title: "Uncertainty Lifecycle in Deep Learning",
         
-        description: "Current approaches to building Vision-Language-Action (VLA) models largely rely on combining pre-trained Vision-Language Models (VLMs) with imitation learning. While effective in narrow benchmarks, this paradigm faces fundamental limitations for developing general-purpose robots that operate in complex, dynamic environments. In this article, I first review the standard training recipe and identify key bottlenecks, drawing on both my observations and existing empirical evidence. I then outline a path forward: integrating online reinforcement learning with pre-trained VLMs to enable lightweight, computationally efficient methods that scale with available resources.",
+        description: "Literature discussing uncertainty handling in deep learning considers different tasks such as uncertainty propagation, uncertainty estimation, uncertainty decomposition, uncertainty attribution and uncertainty sensitivity analysis. However, there is no proper structure explaining how these different components interact with each other at different stages of a deep learning pipeline. We propose to structure the these task by considering the flow and transformation of uncertainty through the model and position them accordingly. We call this structure as “uncertainty lifecycle”. The uncertainty lifecycle can be represented as a structured process for handling, quantifying, analyzing, and interpreting uncertainties at different stages of a deep learning pipeline.",
         section: "Posts",
         handler: () => {
           
-            window.location.href = "/2026/blog/2026/the-bottlenecks-to-scaling-foundation-models-for-robotics/";
+            window.location.href = "/2026/blog/2026/uncertainty-lifecycle-in-deep-learning/";
+          
+        },
+      },{id: "post-trade-offs-in-llm-compute-for-reasoning-intensive-information-retrieval",
+        
+          title: "Trade-offs in LLM Compute for Reasoning-Intensive Information Retrieval",
+        
+        description: "The BRIGHT benchmark (ICLR 2025 Spotlight) revealed that reasoning-intensive information retrieval requires LLM-augmented pipelines, but this raises a critical resource allocation question: where should computational budget be invested for maximum effectiveness? We conduct a systematic study on BRIGHT using the Gemini 2.5 model family, evaluating trade-offs across model strength, inference-time thinking depth, and reranking depth. Our controlled experiments quantify the marginal gains of allocating compute to query expansion versus reranking, providing practical guidance for optimizing LLM-based retrieval systems on reasoning-intensive tasks.",
+        section: "Posts",
+        handler: () => {
+          
+            window.location.href = "/2026/blog/2026/trade-offs-in-llm-compute-for-reasoning-intensive-information-retrieval/";
           
         },
       },{id: "post-task-complexity-analysis",
@@ -158,6 +191,28 @@ ninja.data = [{
         handler: () => {
           
             window.location.href = "/2026/blog/2026/task-complexity-analysis/";
+          
+        },
+      },{id: "post-don-39-t-look-up-every-token-escaping-quadratic-complexity-via-geometric-patterns-and-algorithms",
+        
+          title: "Don&#39;t Look Up (Every Token): Escaping Quadratic Complexity via Geometric Patterns and Algorithms",
+        
+        description: "Large Language Models (LLMs) have brought about a significant change in the field of artificial intelligence, where they have transitioned in scope from being specialized research tools to common resources that drive the next generation of software. With increasing model parameters and training data, LLMs demonstrate new abilities in reasoning, code generation, and solving complex problems that were once considered unattainable. However, scaling these models effectively for long-context applications uniquely poses a challenge. This is primarily due to the inherent limitations of the self-attention mechanism, which has quadratic time complexity. This quadratic bottleneck hinders applications for long documents, high-resolution images, and large codebases, among others. However, what is interesting to observe is that effectively only a few parameters are used in token computation, and most calculations are sparse. Hence, sparsity emerges as an effective solution to this problem. Rather than relying on the entire attention matrix, one can utilize an approximate or sparse version of attention to achieve almost the same results much faster. The backbone of this approach is the idea that tokens do not require the entire context; they only need local context, and thus, most of the computation carried out is wasteful. In this blog, we analyze the types of attention patterns that emerge and how to use them to our advantage for faster and efficient LLMs.",
+        section: "Posts",
+        handler: () => {
+          
+            window.location.href = "/2026/blog/2026/sparsity/";
+          
+        },
+      },{id: "post-an-impossibility-trilemma-for-data-free-sampler-evaluation",
+        
+          title: "An Impossibility Trilemma for Data-Free Sampler Evaluation",
+        
+        description: "Neural samplers aim to learn to sample a target unnormalized energy potential. Sampler quality can be evaluated in a data-free manner, using only the model and the target potential, or in a data-driven manner, with additional data about the target distribution such as known modes, summary statistics, and reference MCMC samples. While data-driven eval is valuable, data-free eval has compelling conceptual advantages, raising the question of how well data-free eval could work. Here, we prove an impossibility trilemma for data-free sampler evaluation; we can only have two among i) mode-covering metric, ii) stable with finite variance, iii) universal ranking (dominance transitivity guarantee / model score does not depend on other models). This note surveys underexplored design space of data-free sampler eval metrics, and asks the community which eval properties we are willing to sacrifice in the face of the impossibility of satisfying all of them.",
+        section: "Posts",
+        handler: () => {
+          
+            window.location.href = "/2026/blog/2026/sampler-eval-trilemma/";
           
         },
       },{id: "post-revisiting-the-nethack-learning-environment",
@@ -186,11 +241,22 @@ ninja.data = [{
         
           title: "Rethinking the Diffusion Model from a Langevin Perspective",
         
-        description: "Diffusion models are often introduced from multiple perspectives—such as VAEs, score matching, or flow matching—accompanied by dense and technically demanding mathematics that can be difficult for beginners to grasp. This article systematically organizes the diffusion model from a fresh Langevin perspective, aiming to present diffusion models in a simpler, clearer, and more intuitive way while addressing the following questions 1. How does the reverse process invert the forward process to generate data from pure noise? 2. How can ODE-based and SDE-based diffusion models be unified under a single framework? 3. Why are diffusion models theoretically superior to ordinary VAEs? 4. How can Denoising, Score Matching, and Flow Matching training objectives be unified and derived from first principles? We demonstrate that the diffusion model offers clear and straightforward answers to these questions, providing pedagogical value for both learners and experienced researchers seeking deeper intuition.",
+        description: "Diffusion models are often introduced from multiple perspectives—such as VAEs, score matching, or flow matching—accompanied by dense and technically demanding mathematics that can be difficult for beginners to grasp. This article systematically organizes the diffusion model from a fresh Langevin perspective, aiming to present diffusion models in a simpler, clearer, and more intuitive way while addressing the following questions 1. How does the reverse process invert the forward process to generate data from pure noise? 2. How can ODE-based and SDE-based diffusion models be unified under a single framework? 3. Why are diffusion models theoretically superior to ordinary VAEs? 4. Why is Flow Matching not fundamentally simpler, but equivalent to Denoising and Score Matching from first principles? We demonstrate that the diffusion model offers clear and straightforward answers to these questions, providing pedagogical value for both learners and experienced researchers seeking deeper intuition.",
         section: "Posts",
         handler: () => {
           
             window.location.href = "/2026/blog/2026/rethinking-diffusion-langevin/";
+          
+        },
+      },{id: "post-looking-for-tractable-definitions-to-satisfy-on-the-path-to-open-endedness",
+        
+          title: "Looking for Tractable Definitions to Satisfy on the Path to Open-Endedness",
+        
+        description: "Understanding and designing systems with open-endedness has been called the “last grand challenge of AI research” and ties to problems like accelerating scientific discovery, continual learning, and exploration. Over the past few years there has been fast progress engineering bigger interactive worlds with capacity for open-endedness and designing systems that can improve autonomously on narrow task distributions, but finding a way to quantify the gap between these and true open-ended systems remains an active challenge. In this blog post, we look at some existing open-endedness definitions and discuss what it would mean to satisfy them and construct attempts at open-endedness that do. By adjusting definitions, we get insights into different forms of partial progress towards constructing open-ended systems.",
+        section: "Posts",
+        handler: () => {
+          
+            window.location.href = "/2026/blog/2026/qoe/";
           
         },
       },{id: "post-extracting-model-precision-from-20-logprobs",
@@ -204,15 +270,26 @@ ninja.data = [{
             window.location.href = "/2026/blog/2026/precision-extraction/";
           
         },
-      },{id: "post-learning-to-maximize-rewards-via-reaching-goals",
+      },{id: "post-beyond-black-box-predictions-neural-operators-as-a-bridge-to-interpretable-governing-equations-in-biology",
         
-          title: "Learning to Maximize Rewards via Reaching Goals",
+          title: "Beyond Black-Box Predictions: Neural Operators as a Bridge to Interpretable Governing Equations in...",
         
-        description: "Goal-conditioned reinforcement learning learns to reach goals instead of optimizing hand-crafted rewards. Despite its popularity, the community often categorizes goal-conditioned reinforcement learning as a special case of reinforcement learning. In this post, we aim to build a direct conversion from any reward-maximization reinforcement learning problem to a goal-conditioned reinforcement learning problem, and to draw connections with the stochastic shortest path framework. Our conversion provides a new perspective on the reinforcement learning problem: maximizing rewards is equivalent to reaching some goals.",
+        description: "This study introduces a hybrid computational framework that integrates Neural Operators with Sparse Identification of Nonlinear Dynamics (SINDy) to recover interpretable governing equations from sparse, partially observed biological data. Using an NF-κB signaling model, we demonstrate that Fourier Neural Operators effectively reconstruct hidden state trajectories from limited measurements, serving as a resolution-independent surrogate that enables the discovery of parsimonious dynamical laws. This operator-plus-symbolic paradigm offers a scalable workflow for extracting mechanistic insights from experimental readouts where classical inference methods typically fail.",
         section: "Posts",
         handler: () => {
           
-            window.location.href = "/2026/blog/2026/mdp-to-gcmdp/";
+            window.location.href = "/2026/blog/2026/neural-ops-in-biology/";
+          
+        },
+      },{id: "post-misalignment-patterns-and-rl-failure-modes-in-frontier-llms",
+        
+          title: "Misalignment Patterns and RL Failure Modes in Frontier LLMs",
+        
+        description: "With the rapid ability grokking of frontier Large Models (LMs), there is growing attention and research focus on aligning them with human values and intent via large scale reinforcement learning and other techniques. However, as LMs are getting stronger and more agentic, their misalignment and deceptive behaviors are also emerging and becoming increasingly difficult for humans to pre-detect and keep track of. This blog post discusses current misalignment patterns, deceptive behaviors, RL failure modes, and emergent traits in modern large models to further AI safety discussions and advance the development of mitigation strategies for LM misbehaviors.",
+        section: "Posts",
+        handler: () => {
+          
+            window.location.href = "/2026/blog/2026/misalign-failure-mode/";
           
         },
       },{id: "post-loneliness-as-a-case-study-for-social-reward-misalignment",
@@ -226,15 +303,15 @@ ninja.data = [{
             window.location.href = "/2026/blog/2026/loneliness-social-misalignment/";
           
         },
-      },{id: "post-a-small-observation-on-schulman-39-s-kl-divergence-estimator",
+      },{id: "post-the-human-knowledge-loophole-in-the-39-bitter-lesson-39-for-llms",
         
-          title: "A small observation on Schulman&#39;s KL divergence estimator",
+          title: "The human knowledge loophole in the &#39;bitter lesson&#39; for LLMs",
         
-        description: "The unbiased estimator of the Kullback–Leibler divergence introduced by John Schulman has a free parameter. Schulman sets it to one to yield non-negativity. Interestingly, we can prove that this parameter choice coincidentally also approximately minimizes variance",
+        description: "Are LLMs a proof that the &#39;bitter lesson&#39; holds for NLP? Perhaps the opposite is true: they work due to the scale of human data, and not just computation.",
         section: "Posts",
         handler: () => {
           
-            window.location.href = "/2026/blog/2026/kl-estimator/";
+            window.location.href = "/2026/blog/2026/llm-bitter-lesson/";
           
         },
       },{id: "post-charting-the-depths-interpretability-tools-to-enhance-llm-safety",
@@ -248,59 +325,37 @@ ninja.data = [{
             window.location.href = "/2026/blog/2026/interp-safety/";
           
         },
-      },{id: "post-industrial-agent-benchmarking-what-300-real-evaluations-reveal-about-the-limits-of-agentic-ai",
+      },{id: "post-diffusion-as-infinite-hierarchical-vaes-do-diffusion-models-generalize-better-than-deep-vaes",
         
-          title: "Industrial Agent Benchmarking - What 300+ Real Evaluations Reveal About the Limits of...",
+          title: "Diffusion as Infinite Hierarchical VAEs - Do Diffusion Models Generalize Better than Deep...",
         
-        description: "A community-scale evaluation of multi-agent systems using AssetOpsBench and a privacy-preserving Codabench pipeline, exposing real-world failure modes and methodological gaps in industrial AI agent evaluation.",
+        description: "This blogpost unifies Diffusion Models and Variational Autoencoders. We demonstrate that DPMs are mathematically equivalent to Hierarchical VAEs (HVAEs) in the limit of infinite depth. By analyzing this architectural link, we explain why diffusion models avoid the posterior collapse that plagues deep VAEs and identify the sweet spot for generalization where these models perform best.",
         section: "Posts",
         handler: () => {
           
-            window.location.href = "/2026/blog/2026/industrial-agent-benchmarking/";
+            window.location.href = "/2026/blog/2026/generalization-in-diffusion-as-infinite-hvae/";
           
         },
       },{id: "post-ready-for-general-agents-let-39-s-test-it",
         
           title: "Ready For General Agents? Let&#39;s Test It.",
         
-        description: "General-purpose agents are emerging, but current evaluation tools cannot yet measure how well they adapt to unfamiliar environments or protocols; we outline the gaps and a path to a protocol-agnostic framework.",
+        description: "General-purpose agents are emerging, promising seamless deployment across domains. However, we currently do not measure their adaptability to diverse, unseen settings—a core requirement for true generality. We outline the key challenges and chart a path toward a unified evaluation framework designed to guide the development of general agents.",
         section: "Posts",
         handler: () => {
           
             window.location.href = "/2026/blog/2026/general-agent-evaluation/";
           
         },
-      },{id: "post-learning-function-space-maps-a-red-herring",
+      },{id: "post-divide-conquer-and-standardize-a-recursive-architecture-for-multi-agent-systems-mas",
         
-          title: "Learning Function Space Maps: A Red Herring?",
+          title: "Divide, Conquer, and Standardize — A Recursive Architecture for Multi-Agent Systems (MAS)",
         
-        description: "Much interest has been generated in the space of learning function space maps, such as in deep operator networks and neural operators. In this post, we explore whether viewing data in their underlying, infinite-dimensional form offers benefits in the manner professed or whether this is a fad.",
+        description: "The scalability and robustness of current Multi-Agent Systems (MAS) are severely constrained by the heterogeneity of communication interfaces and a reliance on fragile ad-hoc integrations. We introduce FRACTAL-MAS, a recursive architecture that standardizes orchestration through the convergence of MCP and A2A protocols, integrating a unified control loop with procedural memory grounded in Case-Based Reasoning (CBR). This design allows for continuous adaptation without fine-tuning and enables a seamless transition from rigid hierarchical structures to decentralized networks, providing a reference architecture for the robust and scalable construction of MAS.",
         section: "Posts",
         handler: () => {
           
-            window.location.href = "/2026/blog/2026/function-space-maps/";
-          
-        },
-      },{id: "post-flow-where-you-want",
-        
-          title: "Flow Where You Want",
-        
-        description: "This tutorial demonstrates how to add inference-time controls to pretrained flow-based generative models. Using an unconditional MNIST flow model, we apply classifier guidance and inpainting by adding velocity corrections during sampling. We also explore PnP-Flow, which satisfies constraints through iterative projection rather than velocity correction.",
-        section: "Posts",
-        handler: () => {
-          
-            window.location.href = "/2026/blog/2026/flow-where-you-want/";
-          
-        },
-      },{id: "post-endocrine-to-synaptic-learnable-signaling-primitives-for-robust-multi-agent-ai",
-        
-          title: "Endocrine-to-Synaptic: Learnable Signaling Primitives for Robust Multi-Agent AI",
-        
-        description: "A bio-inspired multi-agent communication framework that uses five cellular signaling modes, signal amplification cascades, and dynamic network adaptation to achieve scalable, robust, and energy-efficient coordination in large distributed AI systems.",
-        section: "Posts",
-        handler: () => {
-          
-            window.location.href = "/2026/blog/2026/endocrine-to-synaptic/";
+            window.location.href = "/2026/blog/2026/fractal-mas/";
           
         },
       },{id: "post-dynamics-of-forgetting",
@@ -314,6 +369,17 @@ ninja.data = [{
             window.location.href = "/2026/blog/2026/dynamics-of-forgetting/";
           
         },
+      },{id: "post-dllm-rethinking-generation-beyond-autoregressive-models",
+        
+          title: "dLLM - Rethinking Generation Beyond Autoregressive Models",
+        
+        description: "Diffusion large language models (dLLMs) provide an alternative to autoregressive Transformers, supporting parallel token generation and flexible infilling. They excel in structured, long-horizon, or data-constrained settings, though challenges remain with output length, denoising, and blockwise generation. Hybrid approaches combining diffusion for reasoning and AR for generation show promise.",
+        section: "Posts",
+        handler: () => {
+          
+            window.location.href = "/2026/blog/2026/dllm/";
+          
+        },
       },{id: "post-sample-blog-post",
         
           title: "Sample Blog Post",
@@ -323,39 +389,6 @@ ninja.data = [{
         handler: () => {
           
             window.location.href = "/2026/blog/2026/distill-example/";
-          
-        },
-      },{id: "post-dissecting-non-determinism-in-large-language-models",
-        
-          title: "Dissecting Non-Determinism in Large Language Models",
-        
-        description: "The Large Language Models (LLMs) evolve into the backbone of complex decision-making systems, their inherent non-deterministic nature poses a significant threat to the validity of experimental results. This blog explores the impact of stochasticity, prompt brittleness, and LLM-as-a-Judge during both response generation and evaluation. We conclude that understanding these dynamics is essential to prevent misleading conclusions, advocating for consistency oriented practices that treat non-determinism as a critical variable in rigorous experimentation.",
-        section: "Posts",
-        handler: () => {
-          
-            window.location.href = "/2026/blog/2026/dissecting-non-determinism/";
-          
-        },
-      },{id: "post-diffusion-guidance-opportunities-for-physical-sciences",
-        
-          title: "Diffusion Guidance - Opportunities for Physical Sciences",
-        
-        description: "Guidance has been a central driver of the success of diffusion models, enabling precise control over the sampling process toward desired target conditions. The most widely used techniques include Classifier Guidance and Classifier-Free Guidance. Recently, however, there has been growing interest in alternative guidance strategies. In this blog post, we review recent progress in training-free diffusion guidance methods and highlight their applications in scientific domains.",
-        section: "Posts",
-        handler: () => {
-          
-            window.location.href = "/2026/blog/2026/diffusion-guidance/";
-          
-        },
-      },{id: "post-can-coding-agents-be-general-agents",
-        
-          title: "Can Coding Agents be General Agents?",
-        
-        description: "As coding agents have seen rapid capability and adoption gains, users are applying them to general tasks beyond software engineering. In this post, we investigate whether coding agents can successfully generalize to end-to-end business process automation. We identify gaps in current evaluations, and conduct a case study to evaluate a coding agent on practical business tasks in an open-core Enterprise Resource Planning system. We find that the agent reliably completes simple tasks but exhibits characteristic failures on complex tasks, suggesting that bridging domain logic and code execution is a key bottleneck to generalizability.",
-        section: "Posts",
-        handler: () => {
-          
-            window.location.href = "/2026/blog/2026/coding-agents/";
           
         },
       },{id: "post-hypes-and-hopes-for-causal-inference-for-brain-dynamics",
@@ -369,15 +402,15 @@ ninja.data = [{
             window.location.href = "/2026/blog/2026/causal-ts/";
           
         },
-      },{id: "post-",
+      },{id: "post-square-peg-round-hole-plugging-non-sequential-data-into-sequential-language-models",
         
-          title: "",
+          title: "Square Peg, Round Hole: Plugging Non-Sequential Data into Sequential Language Models",
         
-        description: "",
+        description: "Autoregressive (AR) models are central to modern generative AI systems, yet their need for an ordered sequence of tokens clashes with modalities that lack an obvious ordering, such as images, graphs, and point clouds. Despite this mismatch, AR models are widely applied beyond language owing to their scalability and controllability. In this post, we articulate exactly what the problem is, and how it can be solved. In short, there are two broad classes of techniques for applying AR models to non-sequential data: selecting a generation order given some fixed tokenization scheme, and redesigning the tokenization itself to simplify next-token prediction. Yet these methods face tradeoffs, particularly between compression (how many bits are used to represent the input) and autoregressive &amp;quot;modelability&amp;quot; (how easy it is to model each next-token conditional distribution in the chosen order). We predict that as data-hungry AI pipelines require new data modalities to train integrated, multi-modal models, these considerations will only grow more crucial. By drawing these connections, we aim to motivate future work on tokenizations tailored to the needs of autoregressive models for arbitrary datatypes.",
         section: "Posts",
         handler: () => {
           
-            window.location.href = "/2026/blog/2025/2026-04-27-sampler-eval-trilemma/";
+            window.location.href = "/2026/blog/2026/autoregressive-tokenization/";
           
         },
       },{id: "books-the-godfather",
