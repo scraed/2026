@@ -1089,3 +1089,8 @@ Combining all results from previous discussion, we summarize the forward, revers
 ### Conclusion
 
 From the Langevin perspective, diffusion models become conceptually simple: the forward and reverse processes are just a carefully chosen split of Langevin dynamics, which itself is an "identity map". This viewpoint simultaneously explains how sampling inverts noising, unifies SDE and ODE formulations as different splittings of the same dynamics, and clarifies why diffusion models implement exact maximum likelihood in a way ordinary VAEs do not. It also shows, from first principles, why flow matching is not fundamentally simpler than denoising or score matching, but instead an equivalent way of estimating the same underlying score field that governs Langevin dynamics. We hope this perspective helps demystify diffusion models to learners, so that new variants can be understood not as disconnected tricks, but as different parameterizations and discretizations of a single, coherent Langevin story.
+
+
+## Acknowledgements
+
+This work was supported in part by the General Research Fund 16302823, an Area of Excellence project (AoE/E-601/24-N), and a Theme-based Research Project (T32-615/24-R) from the Research Grants Council of the Hong Kong Special Administrative Region, China. We also acknowledge the funding from the Hong Kong Innovation and Technology Commission (ITCPD/17-9).
