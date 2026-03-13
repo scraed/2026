@@ -324,6 +324,15 @@ The table below summarizes these three forward processes of different model type
 
 </div>
 
+<div class="row mt-3">
+    <div class="col-md-10 offset-md-1 col-lg-8 offset-lg-2 mt-3 mt-md-0">
+        {% include figure.liquid path="assets/img/2026-04-27-rethinking-diffusion-langevin/forward_process_trajectories.gif" class="img-fluid rounded" %}
+    </div>
+</div>
+<div class="caption">
+    The same starting point under the three forward processes: VP and Rectified flow drift toward the origin while their uncertainty grows, whereas VE-Karras keeps the mean fixed and lets the sample cloud expand outward.
+</div>
+
 Each forward process has a characteristic way of mixing data and noise: The VP model uses the Ornstein–Uhlenbeck (OU) process, blending the data with noise in a geometric (Pythagorean) fashion. The VE-Karras model adds noise directly to the data without a restoring drift, while the Rectified flow model creates a straight-line interpolation between data and noise. **Despite their differences, all these SDEs are fundamentally equivalent**—they differ only by how time and state are reparameterized. For clarity, the table below shows the transformations between time parameters and state variables for each model:
 
 
@@ -470,6 +479,15 @@ The above analysis applies not only to SDE reverse processes but also to ODE rev
 | VE-Karras | $$d\mathbf{z}_{\sigma'} = -\boldsymbol{\epsilon}(\mathbf{z}_{\sigma'}, \Sigma-\sigma')\, d\sigma'$$ | $$\boldsymbol{\epsilon}(\mathbf{z}, \sigma) = -\sigma \mathbf{s}_z(\mathbf{z}, \sigma)$$ | $$\sigma' = \Sigma - \sigma$$ | $$\sigma' \in [0, \Sigma]$$ |
 | Rectified flow | $$d\mathbf{r}_{s'} = -\mathbf{v}(\mathbf{r}_{s'}, 1-s')\, ds'$$ | $$\mathbf{v}(\mathbf{r}, s) = - \frac{s\, \mathbf{s}_r(\mathbf{r}, s) + \mathbf{r}}{1-s}$$ | $$s' = 1 - s$$ | $$s' \in [0, 1]$$ |
 
+</div>
+
+<div class="row mt-3">
+    <div class="col-md-10 offset-md-1 col-lg-8 offset-lg-2 mt-3 mt-md-0">
+        {% include figure.liquid path="assets/img/2026-04-27-rethinking-diffusion-langevin/reverse_process_trajectories.gif" class="img-fluid rounded" %}
+    </div>
+</div>
+<div class="caption">
+    The complementary reverse generation process starts from noisy samples and moves back toward the target point: VP-SDE denoises stochastically, VP-ODE denoises deterministically, and both VE-Karras and Rectified flow contract their sample clouds toward the shared data point.
 </div>
 
 
