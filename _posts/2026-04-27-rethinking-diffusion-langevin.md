@@ -25,7 +25,7 @@ authors:
       name: Department of Mathematics, The Hong Kong University of Science and Technology
   - name: Yuan Lan
     affiliations:
-      name: Theory Lab, Huawei Hong Kong Research Center
+      name: Independent Researcher
 
 
 
