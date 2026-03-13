@@ -463,12 +463,12 @@ The above analysis applies not only to SDE reverse processes but also to ODE rev
 
 <div class="table-wrapper" markdown="1">
 
-| **Model Type** | **Reverse Time** | **Reverse time domain** | **Reverse Process** | **Relation to Score** |
+| **Model Type** | **Reverse Process** | **Relation to Score** | **Reverse Time** | **Reverse time domain** |
 | --- | --- | --- | --- | --- |
-| VP-SDE | $$t' = T - t$$ | $$t' \in [0, T]$$ | $$dx_{t'} = \left[ \frac{1}{2} x_{t'}+ \mathbf{s}(x_{t'}, T-t') \right] dt' + dW_{t'}$$ | $$\mathbf{s}(x, t) = \mathbf{s}_x(x, t)$$  |
-| VP-ODE | $$t' = T - t$$ | $$t' \in [0, T]$$ | $$dx_{t'} = \frac{1}{2} \left[ x_{t'} + \mathbf{s} (x_{t'}, T-t') \right] dt' $$ | $$ \mathbf{s}(x, t) = \mathbf{s}_x(x, t)$$  |
-| VE-Karras | $$\sigma' = \Sigma - \sigma$$ | $$\sigma' \in [0, \Sigma]$$ | $$dz_{\sigma'} = -\boldsymbol{\epsilon}(z_{\sigma'}, \Sigma-\sigma')d \sigma'$$ | $$\boldsymbol{\epsilon}(z, \sigma) =  -\sigma \mathbf{s}_z(z, \sigma) $$|
-| Rectified flow | $$s' = 1 - s$$ | $$s' \in [0, 1]$$ | $$dr_{s'} = -\mathbf{v} (r_{s'}, 1-s') ds'$$ | $$\mathbf{v}(r, s) =  - \frac{s\, \mathbf{s}_r(r,s) + r_{s'}}{1-s} $$ |
+| VP-SDE | $$d\mathbf{x}_{t'} = \left[ \frac{1}{2} \mathbf{x}_{t'} + \mathbf{s}(\mathbf{x}_{t'}, T-t') \right] dt' + d\mathbf{W}_{t'}$$ | $$\mathbf{s}(\mathbf{x}, t) = \mathbf{s}_x(\mathbf{x}, t)$$ | $$t' = T - t$$ | $$t' \in [0, T]$$ |
+| VP-ODE | $$d\mathbf{x}_{t'} = \frac{1}{2} \left[ \mathbf{x}_{t'} + \mathbf{s}(\mathbf{x}_{t'}, T-t') \right] dt'$$ | $$\mathbf{s}(\mathbf{x}, t) = \mathbf{s}_x(\mathbf{x}, t)$$ | $$t' = T - t$$ | $$t' \in [0, T]$$ |
+| VE-Karras | $$d\mathbf{z}_{\sigma'} = -\boldsymbol{\epsilon}(\mathbf{z}_{\sigma'}, \Sigma-\sigma')\, d\sigma'$$ | $$\boldsymbol{\epsilon}(\mathbf{z}, \sigma) = -\sigma \mathbf{s}_z(\mathbf{z}, \sigma)$$ | $$\sigma' = \Sigma - \sigma$$ | $$\sigma' \in [0, \Sigma]$$ |
+| Rectified flow | $$d\mathbf{r}_{s'} = -\mathbf{v}(\mathbf{r}_{s'}, 1-s')\, ds'$$ | $$\mathbf{v}(\mathbf{r}, s) = - \frac{s\, \mathbf{s}_r(\mathbf{r}, s) + \mathbf{r}}{1-s}$$ | $$s' = 1 - s$$ | $$s' \in [0, 1]$$ |
 
 </div>
 
