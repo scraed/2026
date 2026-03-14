@@ -256,7 +256,7 @@ $$
 d\mathbf{x}_t = g(t)\, \mathbf{s}(\mathbf{x}_t) dt + \sqrt{2 g(t)}\, d\mathbf{W}_t, 
 $$
 
-At first sight, the extra term $$d\mathbf{W}_t$$ may make this stochastic differential equation (SDE) look much more complicated than an ordinary differential equation (ODE). In fact, it is best to think of it as an ODE with an additional infinitesimal random perturbation at each step. Here $$\mathbf{W}_t$$ is a Brownian motion, meaning a continuous random walk, so its increment $$d\mathbf{W}_t$$ can be informally viewed as $$\sqrt{dt}\,\boldsymbol{\epsilon}$$, where $$\boldsymbol{\epsilon}$$ is a standard Gaussian random vector. The remaining terms are familiar: $$\mathbf{s}(\mathbf{x}) = \nabla_{\mathbf{x}} \log p(\mathbf{x})$$ is the score function of $$p(\mathbf{x})$$, and $$g(t)$$ is an arbitrary positive function satisfying $$\int_0^\infty g(t)\,dt = \infty$$. 
+At first sight, the extra term $$d\mathbf{W}_t$$ may make this stochastic differential equation (SDE) look much more complicated than an ordinary differential equation (ODE). In fact, it is best to think of it as an ODE with an additional infinitesimal random perturbation at each step. Here the increment $$d\mathbf{W}_t$$ can be informally viewed as $$\sqrt{dt}\,\boldsymbol{\epsilon}$$, where $$\boldsymbol{\epsilon}$$ is a standard Gaussian random noise. The remaining terms are familiar: $$\mathbf{s}(\mathbf{x}) = \nabla_{\mathbf{x}} \log p(\mathbf{x})$$ is the score function of $$p(\mathbf{x})$$, and $$g(t)$$ is an arbitrary positive function satisfying $$\int_0^\infty g(t)\,dt = \infty$$. 
 
 This dynamics is often used as a Monte Carlo sampler to draw samples from $$p(\mathbf{x})$$, since $$p(\mathbf{x})$$ is its **stationary distribution**—the distribution that $$\mathbf{x}_t$$ converges to and remains at as $$t \to \infty$$, regardless of the initial distribution of $$\mathbf{x}_0$$.
 
@@ -517,11 +517,11 @@ Despite their different geometric behaviors, these model types are inherently **
 
 <div class="table-wrapper" markdown="1">
 
-| **Given native output** | **Equivalent VP output $\mathbf{s}_x$** | **Equivalent VE output $\boldsymbol{\epsilon}$** | **Equivalent Rectified-flow output $\mathbf{v}$** |
+| **Given native prediction** | **Equivalent VP score $\mathbf{s}_x$** | **Equivalent VE noise $\boldsymbol{\epsilon}$** | **Equivalent Rectified-flow velocity $\mathbf{v}$** |
 | --- | --- | --- | --- |
-| VP score $\mathbf{s}_x(x_t,\alpha_t)$ | Already given | $$\boldsymbol{\epsilon}(z_\sigma,\sigma) = -\sqrt{1-\alpha_t}\,\mathbf{s}_x(x_t,\alpha_t)$$ | $$\mathbf{v}(r_s,s) = \frac{-\sqrt{1-\alpha_t}\,\mathbf{s}_x(x_t,\alpha_t)-r_s}{1-s}$$ |
-| VE noise $\boldsymbol{\epsilon}(z_\sigma,\sigma)$ | $$\mathbf{s}_x(x_t,\alpha_t) = -\frac{\boldsymbol{\epsilon}(z_\sigma,\sigma)}{\sqrt{1-\alpha_t}}$$ | Already given | $$\mathbf{v}(r_s,s) = \frac{\boldsymbol{\epsilon}(z_\sigma,\sigma)-r_s}{1-s}$$ |
-| Rectified-flow velocity $\mathbf{v}(r_s,s)$ | $$\mathbf{s}_x(x_t,\alpha_t) = -\frac{r_s+(1-s)\mathbf{v}(r_s,s)}{\sqrt{1-\alpha_t}}$$ | $$\boldsymbol{\epsilon}(z_\sigma,\sigma) = r_s+(1-s)\mathbf{v}(r_s,s)$$ | Already given |
+| VP score $\mathbf{s}_x(x_t,\alpha_t)$ | Already given | $$\boldsymbol{\epsilon}(z_\sigma,\sigma) = -\sqrt{1-\alpha_t}\,\mathbf{s}_x(x_t,\alpha_t)$$ | $$\mathbf{v}(r_s,s) = -\frac{x_t}{\sqrt{\alpha_t}} - \frac{1-\alpha_t+\sqrt{\alpha_t(1-\alpha_t)}}{\sqrt{\alpha_t}}\,\mathbf{s}_x(x_t,\alpha_t)$$ |
+| VE noise $\boldsymbol{\epsilon}(z_\sigma,\sigma)$ | $$\mathbf{s}_x(x_t,\alpha_t) = -\frac{\sqrt{1+\sigma^2}}{\sigma}\,\boldsymbol{\epsilon}(z_\sigma,\sigma)$$ | Already given | $$\mathbf{v}(r_s,s) = (1+\sigma)\boldsymbol{\epsilon}(z_\sigma,\sigma)-z_\sigma$$ |
+| Rectified-flow velocity $\mathbf{v}(r_s,s)$ | $$\mathbf{s}_x(x_t,\alpha_t) = -\frac{\sqrt{(1-s)^2+s^2}}{s}\Big(r_s+(1-s)\mathbf{v}(r_s,s)\Big)$$ | $$\boldsymbol{\epsilon}(z_\sigma,\sigma) = r_s+(1-s)\mathbf{v}(r_s,s)$$ | Already given |
 
 </div>
 
@@ -585,15 +585,13 @@ This exact recovery of the data distribution through a forward–reverse duality
 
 The above **duality** means that if we run the reverse process from time $$t' = 0$$ to $$t' = T$$, the final samples follow exactly the same distribution as the original training data $$p_0$$. In other words, the forward and reverse processes form an exact prior–posterior pair: the forward process maps data to noise, and the reverse process maps noise back to data. In practice, training introduces approximation error, but the theoretical target is exact equality. Ordinary VAEs, by contrast, only require the decoder to approximate the encoder’s posterior, with no guarantee of exactness even at the ELBO optimum.
 
-Now we have demonstrated that **reverse diffusion**—the dual of the forward process—can generate image data from noise. However, this requires access to the score function $\mathbf{s}(\mathbf{x}, t) = \nabla_{\mathbf{x}} \log p_t(\mathbf{x})$ at every timestep $t$. In practice, we approximate this function using a neural network.  In the next section, we will explain how to train such score networks.  
+Now we have demonstrated that **reverse diffusion**—the dual of the forward process—can generate image data from noise. However, this requires access to the score function at every timestep $t$. In practice, we approximate this function using a neural network.  In the next section, we will explain how to train such score networks.  
 
 ## Unifying Training of Diffusion Models as Maximal likelihood 
 
 In this section, we derive the training objective directly from the maximum-likelihood framework. By doing so, we reveal the fundamental connection between diffusion model loss and exact maximum likelihood, and show that score matching, denoising, and flow matching are equivalent manifestations of this same objective rather than fundamentally different levels of simplicity.
 
-Training the reverse diffusion process involves addressing two fundamental questions: (1) What mathematical quantity should we model, and (2) What objective function should guide the training? 
-
-The core mathematical object to model is the **score function**—the gradient of the log-probability density. However, contemporary implementations often parameterize the model to predict alternative quantities such as noise, clean data, or flow velocity. While these different parameterizations are mathematically equivalent (being rescaled versions of the same underlying score function), it is less transparent how they should be explicitly incorporated into the same training objective. Here, we start by analyzing the Kullback–Leibler (KL) divergence.
+Training the reverse diffusion process involves addressing two fundamental questions: (1) What mathematical quantity should we model, and (2) What objective function should guide the training? Here, we start by analyzing the Kullback–Leibler (KL) divergence.
 
 Suppose we have two distributions $p(\mathbf{x}, t)$ and $q(\mathbf{x}, t)$ that both evolve under the same forward diffusion process. Think of $p$ as the **true data distribution** pushed forward by the diffusion dynamics, and $q$ as the **model distribution**. At any fixed time $t$, their Kullback–Leibler (KL) divergence is
 
@@ -644,7 +642,7 @@ L_t
 $$
 
 
-where the score functions $$\nabla \log p(\mathbf{x}, t)$$ and $$\nabla \log q(\mathbf{x}, t)$$ for the true data distribution and the model distribution appear naturally inside the objective.
+where the **score functions** $$\nabla \log p(\mathbf{x}, t)$$ and $$\nabla \log q(\mathbf{x}, t)$$ for the true data distribution and the model distribution **appear naturally** inside the objective. Hence, the score function naturally arises as the quantity we should model.
 
 
 
