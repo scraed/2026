@@ -1,4 +1,4 @@
----
+﻿---
 layout: distill
 title: Rethinking the Diffusion Model from a Langevin Perspective
 description:
@@ -6,7 +6,7 @@ description:
   1. How does the reverse process invert the forward process to generate data from pure noise? 
   2. How can ODE-based and SDE-based diffusion models be unified under a single framework? 
   3. Why are diffusion models theoretically superior to ordinary VAEs? 
-  4. Why is Flow Matching not fundamentally simpler, but equivalent to Denoising and Score Matching from first principles? 
+  4. Why Flow Matching Is Not Fundamentally Simpler Than Denoising or Score Matching, but Equivalent Under Maximum-Likelihood
   We demonstrate that the diffusion model offers clear and straightforward answers to these questions, providing pedagogical value for both learners and experienced researchers seeking deeper intuition.
 date: 2026-04-27
 future: true
@@ -224,11 +224,13 @@ Modern diffusion models are built upon two fundamental processes: the forward pr
 
 The **VAE perspective** treats the forward diffusion process as an encoder that adds noise to the data and the reverse process as a decoder that removes noise, with the Evidence Lower Bound (ELBO) serving as the training objective <d-cite key="Luo2022UnderstandingDM"></d-cite><d-cite key="Ho2020DenoisingDP"></d-cite>. This framework is straightforward for those familiar with VAEs. However, it is not obvious why the iterative denoising in diffusion models outperforms the one-step decoding typical of ordinary VAEs.
 
-The **score-based perspective** <d-cite key="Song2020ScoreBasedGM"></d-cite> places a clearer emphasis on the paired relationship between the forward and reverse processes, which contributes to the superiority of diffusion models. It typically introduces the forward process first, then directly presents the reverse process by referencing Anderson (1982) <d-cite key="Anderson1982ReversetimeDE"></d-cite> without derivation. Understanding the derivation of the reverse process usually requires familiarity with advanced mathematical concepts such as the Kolmogorov backward equations, which makes it less accessible. Additionally, the score matching objective is specifically tailored for score models, making it less straightforward to generalize to other approaches such as flow matching models.
+The **score-based perspective** <d-cite key="Song2020ScoreBasedGM"></d-cite> places a clearer emphasis on the paired relationship between the forward and reverse processes, which contributes to the superiority of diffusion models. It typically introduces the forward process first, then directly presents the reverse process by reverse-time diffusion <d-cite key="Anderson1982ReversetimeDE"></d-cite> without derivation. Understanding the derivation of the reverse process usually requires familiarity with advanced mathematical concepts such as the Kolmogorov backward equations, which makes it less accessible. Additionally, the score matching objective is specifically tailored for score models, making it less straightforward to generalize to other approaches such as flow matching models.
 
 A third valuable viewpoint is the **flow-based perspective** <d-cite key="liu2022flow"></d-cite>, which has rapidly gained popularity in modern diffusion models. Although this approach is theoretically equivalent to both the VAE and score-based frameworks <d-cite key="gao2025diffusion"></d-cite>, it distinguishes itself by highlighting a clear and intuitive straight-line interpolation between data and noise. This conceptual clarity makes the flow-based perspective accessible and attractive. However, this apparent simplicity can be misleading: it can create the impression that flow matching is fundamentally simpler than denoising or score matching, rather than a mathematically equivalent reformulation.
 
-In this article, we systematically organize the theory of diffusion models and present a perspective that is both mathematically simple and intuitively clear: the **Langevin perspective**. This approach, relying only on fundamental techniques from stochastic differential equations (SDEs), provides a straightforward derivation of the reverse process and a first-principles explanation of why flow matching is not fundamentally simpler, but mathematically equivalent to denoising and score matching.
+
+
+In this article, we systematically organize the theory of diffusion models and present a perspective that is both mathematically simple and intuitively clear: the **Langevin perspective**. This approach, relying only on fundamental techniques from stochastic differential equations (SDEs), provides a straightforward derivation of the reverse process and explains why flow matching is not fundamentally simpler than denoising or score matching, but is equivalent to them under maximum likelihood.
 
 <div class="insight-box" markdown="1">
 
@@ -256,7 +258,7 @@ $$
 
 At first sight, the extra term $$d\mathbf{W}_t$$ may make this stochastic differential equation (SDE) look much more complicated than an ordinary differential equation (ODE). In fact, it is best to think of it as an ODE with an additional infinitesimal random perturbation at each step. Here $$\mathbf{W}_t$$ is a Brownian motion, meaning a continuous random walk, so its increment $$d\mathbf{W}_t$$ can be informally viewed as $$\sqrt{dt}\,\boldsymbol{\epsilon}$$, where $$\boldsymbol{\epsilon}$$ is a standard Gaussian random vector. The remaining terms are familiar: $$\mathbf{s}(\mathbf{x}) = \nabla_{\mathbf{x}} \log p(\mathbf{x})$$ is the score function of $$p(\mathbf{x})$$, and $$g(t)$$ is an arbitrary positive function satisfying $$\int_0^\infty g(t)\,dt = \infty$$. 
 
-This dynamics is often used as a Monte Carlo sampler to draw samples from $$p(\mathbf{x})$$, since $$p(\mathbf{x})$$ is its **stationary distribution**—the distribution that $$\mathbf{x}_t$$ converges to and and remains at as $$t \to \infty$$, regardless of the initial distribution of $$\mathbf{x}_0$$. 
+This dynamics is often used as a Monte Carlo sampler to draw samples from $$p(\mathbf{x})$$, since $$p(\mathbf{x})$$ is its **stationary distribution**—the distribution that $$\mathbf{x}_t$$ converges to and remains at as $$t \to \infty$$, regardless of the initial distribution of $$\mathbf{x}_0$$.
 
 
 
@@ -290,9 +292,18 @@ Langevin dynamics, while widely used for sampling from complex distributions, be
     Langevin dynamics acts as an identity operation on $p(\mathbf{x})$: starting from a sample $\mathbf{x} \sim p(\mathbf{x})$, it produces a new sample $\mathbf{x}'$ from the same distribution.
 </div>
 
+<div class="row mt-3">
+    <div class="col-md-10 offset-md-1 col-lg-8 offset-lg-2 mt-3 mt-md-0">
+        {% include figure.liquid path="assets/img/2026-04-27-rethinking-diffusion-langevin/langevin_gaussian_stationary.gif" class="img-fluid rounded" %}
+    </div>
+</div>
+<div class="caption">
+    Under Langevin dynamics, the distribution remains stationary: the density cloud stay fixed, while individual particles move stochastically within it.
+</div>
+
 ## Spliting the Identity into Forward and Reverse Processes
 
-This section, we show that the forward and reverse processes in diffusion models are splits of a single Langevin dynamics, decomposing the identity operation into a noising phase and a denoising phase.
+In this section, we show that the forward and reverse processes in diffusion models are splits of a single Langevin dynamics, decomposing the identity operation into a noising phase and a denoising phase.
 
 One key reason Langevin dynamics struggles in high-dimensional settings is the challenge of initialization <d-cite key="song2019generative"></d-cite>. The score function required by it is learned from real data and is therefore reliable only near true data points, while being poorly estimated elsewhere. Yet in generative modeling we need to start from locations that may be far from the data manifold. Finding an initialization that is both realistic and close enough to the true data manifold is difficult, making effective generation with Langevin dynamics challenging in practice. In short, Langevin dynamics is well-suited for generating new samples from an existing one, but ill-suited for generating samples entirely from scratch.
 
@@ -333,7 +344,7 @@ The table below summarizes these three forward processes of different model type
     Forward trajectories of the same starting point under the three model parameterizations.
 </div>
 
-Each forward process has a characteristic way of mixing data and noise: the VP model uses the Ornstein-Uhlenbeck (OU) process, so samples drift toward the origin while their uncertainty grows; the VE-Karras model adds noise directly to the data without a restoring drift, so the mean stays fixed while the sample cloud expands outward; and the Rectified flow model has a stochastic forward process as well, not a deterministic straight-line interpolation, even though its mean follows the line segment from the data point toward noise. **Despite their differences, all these SDEs are fundamentally equivalent**; they differ only by how time and state are reparameterized. For clarity, the table below gives a direct conversion between any two parameterizations:
+Each forward process has a characteristic way of mixing data and noise: the VP model uses the Ornstein-Uhlenbeck (OU) process, so samples drift toward the origin while their uncertainty grows; the VE-Karras model adds noise directly to the data without a restoring drift, so the mean stays fixed while the sample cloud expands outward; and the Rectified flow model is a stochastic forward process as well, not a deterministic straight-line interpolation. **Despite their differences, all these SDEs are fundamentally equivalent**; they differ only by how time and state are reparameterized. For clarity, the table below gives a direct conversion between any two parameterizations <d-cite key="zheng2025lanpaint"></d-cite>:
 
 
 <div class="table-wrapper" markdown="1">
@@ -396,7 +407,7 @@ This decomposition now lets us directly answer the first question posed in the a
 
 <blockquote class="guiding-question">How does the reverse process invert the forward process to generate data from pure noise?</blockquote>
 
-The "Forward" part in this decomposition corresponds to the forward diffusion process, effectively increasing the forward diffusion time $t$ by $d\tau$, bringing the distribution to $p_{t + d\tau}(\mathbf{x})$. Since **the forward and reverse components combine to form an "identity" Langevin dynamics**, the "Reverse" part must reverse the forward process—decreasing the forward diffusion time $t$ by $d\tau$** and restoring the distribution back to $p_t(\mathbf{x})$.
+The "Forward" part in this decomposition corresponds to the forward diffusion process, effectively increasing the forward diffusion time $t$ by $d\tau$, bringing the distribution to $p_{t + d\tau}(\mathbf{x})$. Since **the forward and reverse components combine to form an "identity" Langevin dynamics**, the "Reverse" part must reverse the forward process, decreasing the forward diffusion time $t$ by $d\tau$ and restoring the distribution back to $p_t(\mathbf{x})$.
 
 
 
@@ -502,7 +513,7 @@ These reverse equations become more intuitive when we visualize how samples move
 
 In this single-data-point example, the reverse trajectories reveal a clear geometric difference between the parameterizations. The VP-SDE and VP-ODE flows bend along a curved path as they return to the target point, whereas the VE-Karras and Rectified flow trajectories move approximately along a straight line toward that point. It is important to emphasize that this straight-line behavior is a special feature of the one-point setting shown in the GIF, not the general case. For a general data distribution, the learned reverse vector fields vary across space, so all of these reverse trajectories are typically curved. Nevertheless, one could still expect the VE-Karras and Rectified flow trajectories to have smaller curvature than the VP trajectories.
 
-Despite their different geometric behaviors, these model types are inherently **equivalent** parameterizations. Although VP uses the score $\mathbf{s}_x$, VE-Karras uses the noise prediction $\boldsymbol{\epsilon}$, and Rectified flow uses the velocity field $\mathbf{v}$ as their native outputs, these model types are mathematically equivalent parameterizations of the same underlying diffusion process. Combined with the previous conversion table for the forward-process variables, we can therefore convert these fields into one another exactly.
+Despite their different geometric behaviors, these model types are inherently **equivalent** parameterizations. Although VP uses the score $\mathbf{s}_x$, VE-Karras uses the noise prediction $\boldsymbol{\epsilon}$, and Rectified flow uses the velocity field $\mathbf{v}$ as their native outputs, these model types are mathematically equivalent parameterizations. Combined with the previous conversion table for the forward-process variables, we can therefore convert these fields into one another exactly <d-cite key="zheng2025lanpaint"></d-cite>.
 
 <div class="table-wrapper" markdown="1">
 
@@ -516,6 +527,8 @@ Despite their different geometric behaviors, these model types are inherently **
 
 
 
+
+From this table, we can see directly that the **velocity learned in flow matching is equivalent to the noise prediction and the score under a change of parameterization**. Its main advantage is therefore not that it produces truly straight-line trajectories, but that it is often expected to produce trajectories with smaller curvature.
 
 ### Forward-Reverse Duality
 We have established that a single reverse step undoes a forward step: advancing the reverse time $$t'$$ by an amount corresponds to decreasing the forward time $$t$$ by the same amount. Now, let's examine what happens when we combine multiple forward and reverse steps to reveal the deeper duality between them. In fact, the forward process transforms a data distribution into noise, while the reverse process, starting from noise, generates samples from the same data distribution.
@@ -576,7 +589,7 @@ Now we have demonstrated that **reverse diffusion**—the dual of the forward pr
 
 ## Unifying Training of Diffusion Models as Maximal likelihood 
 
-In this section, we aim to derive the training objective directly from first principles, beginning with the maximum likelihood framework. By doing so, we reveal the fundamental connection between diffusion model loss and exact maximum likelihood, and show that score matching, denoising, and flow matching are equivalent manifestations of maximal likelihood rather than fundamentally different levels of simplicity.
+In this section, we derive the training objective directly from the maximum-likelihood framework. By doing so, we reveal the fundamental connection between diffusion model loss and exact maximum likelihood, and show that score matching, denoising, and flow matching are equivalent manifestations of this same objective rather than fundamentally different levels of simplicity.
 
 Training the reverse diffusion process involves addressing two fundamental questions: (1) What mathematical quantity should we model, and (2) What objective function should guide the training? 
 
@@ -1065,9 +1078,9 @@ $$
 
 Equipped with this instantaneous maximum-likelihood objective, we can now address the fourth and final question from the abstract:
 
-<blockquote class="guiding-question">Why is Flow Matching not fundamentally simpler, but equivalent to Denoising and Score Matching from first principles?</blockquote>
+<blockquote class="guiding-question">Why Flow Matching Is Not Fundamentally Simpler Than Denoising or Score Matching, but Equivalent Under Maximum-Likelihood</blockquote>
 
-With the maximum-likelihood objective derived above, we can compare the different parameterizations in a common framework and see explicitly why flow matching is not a simpler alternative, but an equivalent reformulation of denoising and score matching:
+With the maximum-likelihood objective derived above, we can compare the different parameterizations in a common framework and see explicitly why flow matching is not a fundamentally simpler alternative, but an equivalent reformulation of denoising and score matching:
 
 <div class="table-wrapper" markdown="1">
 
@@ -1089,7 +1102,7 @@ $$
 \big\| r_1 - r_0 - \mathbf{v}_{\theta}(r_s, s) \big\|^2 .
 $$
 
-If we interpret $r_0$ and $r_1$ as the particle positions at times $s=0$ and $s=1$, then $r_1 - r_0$ is the average velocity over $[0,1]$, which motivates viewing $$\mathbf{v}_\theta$$ as a velocity field and writing the reverse process as $dr = -\mathbf{v}(r,s)\, ds$. This has led to the intuition that rectified flows are trained on simple "straight lines" and are therefore conceptually simpler than general diffusion models. However, $$\mathbf{v}_\theta(r,s)$$ still depends on time $s$, so the velocity changes over time and trajectories are not truly straight in state-time space. More importantly, the table shows that this velocity field is algebraically tied to the same underlying score function that appears in denoising and score matching. From first principles, flow matching is therefore best understood not as a fundamentally simpler class, but as an equivalent parameterization of the same diffusion objective.
+If we interpret $r_0$ and $r_1$ as the particle positions at times $s=0$ and $s=1$, then $r_1 - r_0$ is the average velocity over $[0,1]$, which motivates viewing $$\mathbf{v}_\theta$$ as a velocity field and writing the reverse process as $dr = -\mathbf{v}(r,s)\, ds$. This has led to the intuition that rectified flows are trained on simple "straight lines" and are therefore conceptually simpler than general diffusion models. However, $$\mathbf{v}_\theta(r,s)$$ still depends on time $s$, so the velocity changes over time and trajectories are not truly straight in state-time space. More importantly, the table shows that this velocity field is algebraically tied to the same underlying score function that appears in denoising and score matching. Under the maximum-likelihood objective, flow matching is therefore best understood not as a fundamentally simpler class, but as an equivalent parameterization of the same diffusion objective.
 
 
 A note on loss weighting: In practice, the coefficient outside the L2 norm (such as $\frac{1}{2}$, $\frac{1}{\sigma}$, or $\frac{1-s}{s}$) is often omitted or replaced with a custom weighting schedule to improve training performance. This is valid because modifying this coefficient only changes the relative importance of the loss across different time steps $t$—it does not affect the optimal solution at any individual time $t$. In other words, reweighting adjusts how much we prioritize learning at different noise levels, but the target (the true score or velocity) remains unchanged.
@@ -1112,7 +1125,7 @@ Combining all results from previous discussion, we summarize the forward, revers
 
 ### Conclusion
 
-From the Langevin perspective, diffusion models become conceptually simple: the forward and reverse processes are just a carefully chosen split of Langevin dynamics, which itself is an "identity map". This viewpoint simultaneously explains how sampling inverts noising, unifies SDE and ODE formulations as different splittings of the same dynamics, and clarifies why diffusion models implement exact maximum likelihood in a way ordinary VAEs do not. It also shows, from first principles, why flow matching is not fundamentally simpler than denoising or score matching, but instead an equivalent way of estimating the same underlying score field that governs Langevin dynamics. We hope this perspective helps demystify diffusion models to learners, so that new variants can be understood not as disconnected tricks, but as different parameterizations and discretizations of a single, coherent Langevin story.
+From the Langevin perspective, diffusion models become conceptually simple: the forward and reverse processes are just a carefully chosen split of Langevin dynamics, which itself is an "identity map". This viewpoint simultaneously explains how sampling inverts noising, unifies SDE and ODE formulations as different splittings of the same dynamics, and clarifies why diffusion models implement exact maximum likelihood in a way ordinary VAEs do not. It also shows why flow matching is not fundamentally simpler than denoising or score matching, but instead an equivalent way of estimating the same underlying score field under the maximum-likelihood objective that governs Langevin dynamics. We hope this perspective helps demystify diffusion models to learners, so that new variants can be understood not as disconnected tricks, but as different parameterizations and discretizations of a single, coherent Langevin story.
 
 
 ## Acknowledgements
