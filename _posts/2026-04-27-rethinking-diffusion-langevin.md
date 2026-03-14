@@ -1,4 +1,4 @@
-﻿---
+---
 layout: distill
 title: Rethinking the Diffusion Model from a Langevin Perspective
 description:
@@ -165,6 +165,18 @@ _styles: >
     padding: 1rem;
     margin: 1.5rem 0;
     overflow-x: auto;
+  }
+
+  /* Make long display equations horizontally scrollable on mobile */
+  mjx-container[jax="CHTML"][display="true"] {
+    display: block;
+    max-width: 100%;
+    overflow-x: auto;
+    overflow-y: hidden;
+    -webkit-overflow-scrolling: touch;
+  }
+  mjx-container[jax="CHTML"][display="true"] > mjx-math {
+    min-width: max-content;
   }
 
   /* Fake Image (kept from original) */
