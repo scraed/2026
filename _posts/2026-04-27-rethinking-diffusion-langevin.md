@@ -1,13 +1,13 @@
----
+﻿---
 layout: distill
 title: Rethinking the Diffusion Model from a Langevin Perspective
 description:
-  Diffusion models are often introduced from multiple perspectives—such as VAEs, score matching, or flow matching—accompanied by dense and technically demanding mathematics that can be difficult for beginners to grasp. This article systematically organizes the diffusion model from a fresh Langevin perspective, aiming to present diffusion models in a simpler, clearer, and more intuitive way while addressing the following questions
-  1. How does the reverse process invert the forward process to generate data from pure noise? 
-  2. How can ODE-based and SDE-based diffusion models be unified under a single framework? 
-  3. Why are diffusion models theoretically superior to ordinary VAEs? 
-  4. Why Flow Matching Is Not Fundamentally Simpler Than Denoising or Score Matching, but Equivalent Under Maximum-Likelihood
-  We demonstrate that the diffusion model offers clear and straightforward answers to these questions, providing pedagogical value for both learners and experienced researchers seeking deeper intuition.
+  Diffusion models are often introduced from multiple perspectives—such as VAEs, score matching, or flow matching—accompanied by dense and technically demanding mathematics that can be difficult for beginners to grasp. One classic question is "How does the reverse process invert the forward process to generate data from pure noise?" 
+  This article systematically organizes the diffusion model from a fresh Langevin perspective, offering a simpler, clearer, and more intuitive answer. We also address the following questions
+  1. "How can ODE-based and SDE-based diffusion models be unified under a single framework?" 
+  2. "Why are diffusion models theoretically superior to ordinary VAEs?"
+  3. "Why is flow matching not fundamentally simpler than denoising or score matching, but equivalent under maximum-likelihood?"
+  We demonstrate that the Langevin Perspective offers clear and straightforward answers to these questions, providing pedagogical value for both learners and experienced researchers seeking deeper intuition.
 date: 2026-04-27
 future: true
 htmlwidgets: true
