@@ -330,23 +330,23 @@ The table below summarizes these three forward processes of different model type
     </div>
 </div>
 <div class="caption">
-    The same starting point under the three forward processes: VP and Rectified flow drift toward the origin while their uncertainty grows, whereas VE-Karras keeps the mean fixed and lets the sample cloud expand outward.
+    Forward trajectories of the same starting point under the three model parameterizations.
 </div>
 
-Each forward process has a characteristic way of mixing data and noise: The VP model uses the Ornstein–Uhlenbeck (OU) process, blending the data with noise in a geometric (Pythagorean) fashion. The VE-Karras model adds noise directly to the data without a restoring drift, while the Rectified flow model creates a straight-line interpolation between data and noise. **Despite their differences, all these SDEs are fundamentally equivalent**—they differ only by how time and state are reparameterized. For clarity, the table below shows the transformations between time parameters and state variables for each model:
+Each forward process has a characteristic way of mixing data and noise: the VP model uses the Ornstein-Uhlenbeck (OU) process, so samples drift toward the origin while their uncertainty grows; the VE-Karras model adds noise directly to the data without a restoring drift, so the mean stays fixed while the sample cloud expands outward; and the Rectified flow model has a stochastic forward process as well, not a deterministic straight-line interpolation, even though its mean follows the line segment from the data point toward noise. **Despite their differences, all these SDEs are fundamentally equivalent**; they differ only by how time and state are reparameterized. For clarity, the table below gives a direct conversion between any two parameterizations:
 
 
 <div class="table-wrapper" markdown="1">
 
-| **Model Type** | **State variable notation** | **Time variable** | **Time domain** |
+| **Given parameterization** | **Equivalent VP coordinates** | **Equivalent VE-Karras coordinates** | **Equivalent Rectified-flow coordinates** |
 | --- | --- | --- | --- |
-| Variance-preserving (VP) | $$x_t$$ | $$t$$ | $$[0, T]$$ |
-| Variance-exploding-Karras (VE-Karras) | $$z_{\sigma(t)} = x_t e^{\frac{t}{2}}$$ | $$\sigma = \sqrt{e^{t} - 1}$$ | $$[0, \Sigma]$$ |
-| Rectified flow | $$r_{s(t)} = x_t \dfrac{e^{\frac{t}{2}}}{1 + \sqrt{e^{t} - 1}} $$ | $$s= \dfrac{\sqrt{e^{t} - 1}}{1 + \sqrt{e^{t} - 1}}$$ | $$[0, 1]$$ |
+| VP $$(x_t,\alpha_t)$$ | Already given | $$z_\sigma = \frac{x_t}{\sqrt{\alpha_t}}, \qquad \sigma = \sqrt{\frac{1-\alpha_t}{\alpha_t}}$$ | $$r_s = \frac{x_t}{\sqrt{\alpha_t}+\sqrt{1-\alpha_t}}, \qquad s = \frac{\sqrt{1-\alpha_t}}{\sqrt{\alpha_t}+\sqrt{1-\alpha_t}}$$ |
+| VE-Karras $$(z_\sigma,\sigma)$$ | $$x_t = \frac{z_\sigma}{\sqrt{1+\sigma^2}}, \qquad \alpha_t = \frac{1}{1+\sigma^2}$$ | Already given | $$r_s = \frac{z_\sigma}{1+\sigma}, \qquad s = \frac{\sigma}{1+\sigma}$$ |
+| Rectified flow $$(r_s,s)$$ | $$x_t = \frac{r_s}{\sqrt{(1-s)^2+s^2}}, \qquad \alpha_t = \frac{(1-s)^2}{(1-s)^2+s^2}$$ | $$z_\sigma = \frac{r_s}{1-s}, \qquad \sigma = \frac{s}{1-s}$$ | Already given |
 
 </div>
 
-Using this table, one can easily translate from one notation to another whenever needed.
+Using this table, one can directly translate between any two parameterizations whenever needed.
 
 No matter which notation we choose, A forward diffusion step with a step size of $$\Delta t$$ acts as adding more noise to data, which is displayed in the following picture:
 
@@ -481,13 +481,37 @@ The above analysis applies not only to SDE reverse processes but also to ODE rev
 
 </div>
 
+Here $\mathbf{s}_x(\mathbf{x}, t)$ and $\mathbf{s}_r(\mathbf{r}, s)$ denote **score functions**, meaning gradients of the log-density with respect to their own state variables:
+$$
+\mathbf{s}_x(\mathbf{x}, t) = \nabla_{\mathbf{x}} \log p_t(\mathbf{x}), \qquad
+\mathbf{s}_z(\mathbf{z}, \sigma) = \nabla_{\mathbf{z}} \log p_\sigma(\mathbf{z}), \qquad
+\mathbf{s}_r(\mathbf{r}, s) = \nabla_{\mathbf{r}} \log p_s(\mathbf{r}).
+$$
+
+
+These reverse equations become more intuitive when we visualize how samples move under each parameterization:
+
 <div class="row mt-3">
     <div class="col-md-10 offset-md-1 col-lg-8 offset-lg-2 mt-3 mt-md-0">
         {% include figure.liquid path="assets/img/2026-04-27-rethinking-diffusion-langevin/reverse_process_trajectories.gif" class="img-fluid rounded" %}
     </div>
 </div>
 <div class="caption">
-    The complementary reverse generation process starts from noisy samples and moves back toward the target point: VP-SDE denoises stochastically, VP-ODE denoises deterministically, and both VE-Karras and Rectified flow contract their sample clouds toward the shared data point.
+    Reverse trajectories starting from noisy samples under the four reverse-process parameterizations.
+</div>
+
+In this single-data-point example, the reverse trajectories reveal a clear geometric difference between the parameterizations. The VP-SDE and VP-ODE flows bend along a curved path as they return to the target point, whereas the VE-Karras and Rectified flow trajectories move approximately along a straight line toward that point. It is important to emphasize that this straight-line behavior is a special feature of the one-point setting shown in the GIF, not the general case. For a general data distribution, the learned reverse vector fields vary across space, so all of these reverse trajectories are typically curved. Nevertheless, one could still expect the VE-Karras and Rectified flow trajectories to have smaller curvature than the VP trajectories.
+
+Despite their different geometric behaviors, these model types are inherently **equivalent** parameterizations. Although VP uses the score $\mathbf{s}_x$, VE-Karras uses the noise prediction $\boldsymbol{\epsilon}$, and Rectified flow uses the velocity field $\mathbf{v}$ as their native outputs, these model types are mathematically equivalent parameterizations of the same underlying diffusion process. Combined with the previous conversion table for the forward-process variables, we can therefore convert these fields into one another exactly.
+
+<div class="table-wrapper" markdown="1">
+
+| **Given native output** | **Equivalent VP output $\mathbf{s}_x$** | **Equivalent VE output $\boldsymbol{\epsilon}$** | **Equivalent Rectified-flow output $\mathbf{v}$** |
+| --- | --- | --- | --- |
+| VP score $\mathbf{s}_x(x_t,\alpha_t)$ | Already given | $$\boldsymbol{\epsilon}(z_\sigma,\sigma) = -\sqrt{1-\alpha_t}\,\mathbf{s}_x(x_t,\alpha_t)$$ | $$\mathbf{v}(r_s,s) = \frac{-\sqrt{1-\alpha_t}\,\mathbf{s}_x(x_t,\alpha_t)-r_s}{1-s}$$ |
+| VE noise $\boldsymbol{\epsilon}(z_\sigma,\sigma)$ | $$\mathbf{s}_x(x_t,\alpha_t) = -\frac{\boldsymbol{\epsilon}(z_\sigma,\sigma)}{\sqrt{1-\alpha_t}}$$ | Already given | $$\mathbf{v}(r_s,s) = \frac{\boldsymbol{\epsilon}(z_\sigma,\sigma)-r_s}{1-s}$$ |
+| Rectified-flow velocity $\mathbf{v}(r_s,s)$ | $$\mathbf{s}_x(x_t,\alpha_t) = -\frac{r_s+(1-s)\mathbf{v}(r_s,s)}{\sqrt{1-\alpha_t}}$$ | $$\boldsymbol{\epsilon}(z_\sigma,\sigma) = r_s+(1-s)\mathbf{v}(r_s,s)$$ | Already given |
+
 </div>
 
 
@@ -1094,3 +1118,5 @@ From the Langevin perspective, diffusion models become conceptually simple: the 
 ## Acknowledgements
 
 This work was supported in part by the General Research Fund 16302823, an Area of Excellence project (AoE/E-601/24-N), and a Theme-based Research Project (T32-615/24-R) from the Research Grants Council of the Hong Kong Special Administrative Region, China. We also acknowledge the funding from the Hong Kong Innovation and Technology Commission (ITCPD/17-9).
+
+
