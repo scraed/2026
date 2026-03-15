@@ -254,7 +254,7 @@ In this article, we systematically organize the theory of diffusion models and p
     </div>
 </div>
 
-This illustrates that the forward and reverse diffusion steps are simply a **split** of a single step of Langevin dynamics.
+This illustrates that the forward and reverse diffusion steps are simply a **split** of a single step of Langevin dynamics. Since Langevin dynamics is an **identity** map on distributions, the forward and reverse diffusion steps are **inverses** of each other at the distribution level.
 
 </div>
 
@@ -268,7 +268,13 @@ $$
 d\mathbf{x}_t = g(t)\, \mathbf{s}(\mathbf{x}_t) dt + \sqrt{2 g(t)}\, d\mathbf{W}_t, 
 $$
 
-At first sight, the extra term $$d\mathbf{W}_t$$ may make this stochastic differential equation (SDE) look much more complicated than an ordinary differential equation (ODE). In fact, it is best to think of it as an ODE with an additional infinitesimal random perturbation at each step. Here the increment $$d\mathbf{W}_t$$ can be informally viewed as $$\sqrt{dt}\,\boldsymbol{\epsilon}$$, where $$\boldsymbol{\epsilon}$$ is a standard Gaussian random noise. The remaining terms are familiar: $$\mathbf{s}(\mathbf{x}) = \nabla_{\mathbf{x}} \log p(\mathbf{x})$$ is the score function of $$p(\mathbf{x})$$, and $$g(t)$$ is an arbitrary positive function rescaling the time $t$. 
+At first sight, the extra term $$d\mathbf{W}_t$$ may make this stochastic differential equation (SDE) look much more complicated than an ordinary differential equation (ODE). In fact, it is best to think of it as an ODE with an additional infinitesimal random perturbation at each step. Informally, one can write
+
+$$
+d\mathbf{W}_t = \sqrt{dt}\,\boldsymbol{\epsilon},
+$$
+
+where $$\boldsymbol{\epsilon}$$ is a standard Gaussian random noise. The remaining terms are familiar: $$\mathbf{s}(\mathbf{x}) = \nabla_{\mathbf{x}} \log p(\mathbf{x})$$ is the score function of $$p(\mathbf{x})$$, and $$g(t)$$ is an arbitrary positive function rescaling the time $t$. 
 
 This dynamics is often used as a Monte Carlo sampler to draw samples from $$p(\mathbf{x})$$, since $$p(\mathbf{x})$$ is its **stationary distribution**—the distribution that $$\mathbf{x}_t$$ converges to and remains at as $$t \to \infty$$, regardless of the initial distribution of $$\mathbf{x}_0$$.
 
@@ -434,8 +440,6 @@ Having analyzed the VP case in detail, we can now apply the same decomposition a
 
 <blockquote class="guiding-question">How can ODE-based and SDE-based diffusion models be unified under a single framework?</blockquote>
 
-Before looking at the table, it is important to note that the Langevin split is **not unique**. Even for the same diffusion model, choosing different Langevin dynamics, in particular different time-scaling functions $$g(\tau)$$, leads to different valid reverse processes. This is exactly why the same VP model can give rise to both an SDE reverse process and an ODE reverse process.
-
 The following table provides a direct answer: **these models are unified by decomposing different Langevin dynamics**. We have decomposed the VP model into both SDE and ODE versions, as well as other parameterizations, relating their Langevin dynamics to the corresponding forward and reverse processes:
 
 <div class="insight-box" markdown="1">
@@ -456,7 +460,7 @@ The following table provides a direct answer: **these models are unified by deco
 </div>
 
 
-A key observation from this table is that we present two distinct splittings for the VP model: the SDE and ODE versions. Both are essentially decompositions of different Langevin dynamics, differing only in their time scaling functions $g(\tau)$. The ODE version corresponds to a splitting where the reverse process contains no stochastic term $dW$, effectively eliminating the Brownian noise component. 
+A key observation from this table is that **the Langevin split is not unique**. For the same VP model, we present two distinct splittings, the SDE and ODE versions, which are decompositions of different Langevin dynamics differing in their time scaling functions $g(\tau)$. **The ODE version corresponds to a splitting where the reverse process contains no stochastic term** $dW$. 
 
 Besides the decomposition of Langevin dynamics, we still have one problem: note that the $\mathbf{s}(\mathbf{x}_{t'}, t)$ term in the reverse process still depends on the forward time $t$, not the reverse time $t'$; we need the relationship between the forward time $t$ and the reverse time $t'$ to close the equation. 
 
