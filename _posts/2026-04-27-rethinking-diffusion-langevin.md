@@ -262,6 +262,48 @@ _styles: >
   html[data-theme="dark"] .post.distill img {
     filter: invert(1) hue-rotate(180deg);
   }
+  /* Dark-mode support for inline HTML/SVG diagrams */
+  html[data-theme="dark"] .post.distill .langevin-diagram-wrapper > div,
+  html[data-theme="dark"] .post.distill .forward-step-diagram-wrapper > div,
+  html[data-theme="dark"] .post.distill .langevin-identity-diagram-wrapper > div {
+    background: var(--global-card-bg-color) !important;
+    border-color: rgba(255, 255, 255, 0.22) !important;
+    box-shadow: 0 6px 18px rgba(0, 0, 0, 0.35) !important;
+    color: var(--global-text-color) !important;
+  }
+  html[data-theme="dark"] .post.distill .langevin-diagram-wrapper text[fill="#2c3e50"],
+  html[data-theme="dark"] .post.distill .langevin-identity-diagram-wrapper text[fill="#2c3e50"] {
+    fill: #cbd5e1 !important;
+  }
+  html[data-theme="dark"] .post.distill .langevin-diagram-wrapper path[stroke="#2c3e50"],
+  html[data-theme="dark"] .post.distill .langevin-identity-diagram-wrapper path[stroke="#2c3e50"] {
+    stroke: #cbd5e1 !important;
+  }
+  html[data-theme="dark"] .post.distill .langevin-diagram-wrapper polygon[fill="#2c3e50"],
+  html[data-theme="dark"] .post.distill .langevin-identity-diagram-wrapper polygon[fill="#2c3e50"] {
+    fill: #cbd5e1 !important;
+  }
+  html[data-theme="dark"] .post.distill .langevin-diagram-wrapper text[fill="#e74c3c"],
+  html[data-theme="dark"] .post.distill .forward-step-diagram-wrapper text[fill="#e74c3c"] {
+    fill: #fb7185 !important;
+  }
+  html[data-theme="dark"] .post.distill .langevin-diagram-wrapper path[stroke="#e74c3c"],
+  html[data-theme="dark"] .post.distill .forward-step-diagram-wrapper path[stroke="#e74c3c"] {
+    stroke: #fb7185 !important;
+  }
+  html[data-theme="dark"] .post.distill .langevin-diagram-wrapper polygon[fill="#e74c3c"],
+  html[data-theme="dark"] .post.distill .forward-step-diagram-wrapper polygon[fill="#e74c3c"] {
+    fill: #fb7185 !important;
+  }
+  html[data-theme="dark"] .post.distill .langevin-diagram-wrapper text[fill="#3498db"] {
+    fill: #7dd3fc !important;
+  }
+  html[data-theme="dark"] .post.distill .langevin-diagram-wrapper path[stroke="#3498db"] {
+    stroke: #7dd3fc !important;
+  }
+  html[data-theme="dark"] .post.distill .langevin-diagram-wrapper polygon[fill="#3498db"] {
+    fill: #7dd3fc !important;
+  }
   .fake-img p {
     font-family: 'Courier New', Courier, monospace;
     color: var(--global-bg-color);
@@ -336,7 +378,44 @@ In this article, we systematically organize the theory of diffusion models and p
 
 <div class="row mt-3">
     <div class="col-md-12 col-lg-10 offset-lg-1 mt-3 mt-md-0">
-        {% include figure.liquid path="assets/img/2026-04-27-rethinking-diffusion-langevin/forward-reverse-langevin.png" class="img-fluid rounded" %}
+        <div class="langevin-diagram-wrapper" style="position: relative; width: 100%; max-width: 880px; aspect-ratio: 600 / 320; margin: 0 auto;">
+            <svg viewBox="0 0 600 320" style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; font-family: system-ui, -apple-system, sans-serif;">
+                <defs>
+                    <marker id="arrow-forward" markerWidth="10" markerHeight="7" refX="9" refY="3.5" orient="auto">
+                        <polygon points="0 0, 10 3.5, 0 7" fill="#e74c3c" />
+                    </marker>
+                    <marker id="arrow-reverse" markerWidth="10" markerHeight="7" refX="9" refY="3.5" orient="auto">
+                        <polygon points="0 0, 10 3.5, 0 7" fill="#3498db" />
+                    </marker>
+                    <marker id="arrow-langevin" markerWidth="10" markerHeight="7" refX="9" refY="3.5" orient="auto">
+                        <polygon points="0 0, 10 3.5, 0 7" fill="#2c3e50" />
+                    </marker>
+                </defs>
+
+                <!-- Arrows -->
+                <path d="M 110 95 C 130 160, 200 210, 225 235" fill="none" stroke="#e74c3c" stroke-width="3" marker-end="url(#arrow-forward)" />
+                <path d="M 375 235 C 400 210, 470 160, 490 95" fill="none" stroke="#3498db" stroke-width="3" marker-end="url(#arrow-reverse)" />
+                <path d="M 180 60 L 415 60" fill="none" stroke="#2c3e50" stroke-width="4" marker-end="url(#arrow-langevin)" />
+
+                <!-- Arrow Labels -->
+                <text x="140" y="190" fill="#e74c3c" font-size="16" font-weight="600" text-anchor="end">Forward Process</text>
+                <text x="460" y="190" fill="#3498db" font-size="16" font-weight="600" text-anchor="start">Reverse Process</text>
+                <text x="300" y="42" fill="#2c3e50" font-size="16" font-weight="600" text-anchor="middle" letter-spacing="0.5">Langevin Dynamics (Identity)</text>
+            </svg>
+
+            <!-- Nodes -->
+            <div style="position: absolute; left: 8.33%; top: 10.9%; width: 20%; height: 15.6%; display: flex; align-items: center; justify-content: center; background: white; border: 2px solid #bdc3c7; border-radius: 12px; box-shadow: 0 4px 12px rgba(0,0,0,0.05); font-size: 1.1rem; z-index: 10;">
+                \( p_t(\mathbf{x}) \)
+            </div>
+
+            <div style="position: absolute; left: 71.66%; top: 10.9%; width: 20%; height: 15.6%; display: flex; align-items: center; justify-content: center; background: white; border: 2px solid #bdc3c7; border-radius: 12px; box-shadow: 0 4px 12px rgba(0,0,0,0.05); font-size: 1.1rem; z-index: 10;">
+                \( p_t(\mathbf{x}) \)
+            </div>
+
+            <div style="position: absolute; left: 38.33%; top: 75%; width: 23.33%; height: 15.6%; display: flex; align-items: center; justify-content: center; background: white; border: 2px solid #bdc3c7; border-radius: 12px; box-shadow: 0 4px 12px rgba(0,0,0,0.05); font-size: 1.1rem; z-index: 10;">
+                \( p_{t+\Delta t}(\mathbf{x}) \)
+            </div>
+        </div>
     </div>
 </div>
 
@@ -389,20 +468,37 @@ Langevin dynamics, while widely used for sampling from complex distributions, be
 
 <div class="row mt-3">
     <div class="col-md-10 offset-md-1 col-lg-8 offset-lg-2 mt-3 mt-md-0">
-        {% include figure.liquid path="assets/img/2026-04-27-rethinking-diffusion-langevin/langevin_id.png" class="img-fluid rounded" %}
+        <div class="langevin-identity-diagram-wrapper" style="position: relative; width: 100%; max-width: 600px; aspect-ratio: 600 / 170; margin: 0 auto;">
+            <svg viewBox="0 0 600 170" style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; font-family: system-ui, -apple-system, sans-serif;">
+                <defs>
+                    <marker id="arrow-langevin-only" markerWidth="10" markerHeight="7" refX="9" refY="3.5" orient="auto">
+                        <polygon points="0 0, 10 3.5, 0 7" fill="#2c3e50" />
+                    </marker>
+                </defs>
+                <path d="M 190 65 L 410 65" fill="none" stroke="#2c3e50" stroke-width="3" marker-end="url(#arrow-langevin-only)" />
+                <text x="300" y="48" fill="#2c3e50" font-size="16" font-weight="700" text-anchor="middle">Langevin Dynamics (Identity)</text>
+            </svg>
+
+            <div style="position: absolute; left: 5.5%; top: 28%; width: 22%; height: 30%; display: flex; align-items: center; justify-content: center; padding: 0 0.45rem; text-align: center; background: white; border: 2px solid #bdc3c7; border-radius: 12px; box-shadow: 0 4px 12px rgba(0,0,0,0.05); font-size: 1rem; z-index: 10;">
+                \( \mathbf{x} \sim p(\mathbf{x}) \)
+            </div>
+            <div style="position: absolute; left: 71.5%; top: 28%; width: 22%; height: 30%; display: flex; align-items: center; justify-content: center; padding: 0 0.45rem; text-align: center; background: white; border: 2px solid #bdc3c7; border-radius: 12px; box-shadow: 0 4px 12px rgba(0,0,0,0.05); font-size: 1rem; z-index: 10;">
+                \( \mathbf{x}' \sim p(\mathbf{x}) \)
+            </div>
+        </div>
     </div>
 </div>
 <div class="caption">
     Langevin dynamics acts as an identity operation on $p(\mathbf{x})$: starting from a sample $\mathbf{x} \sim p(\mathbf{x})$, it produces a new sample $\mathbf{x}'$ from the same distribution.
 </div>
 
-<div class="row mt-3">
-    <div class="col-md-10 offset-md-1 col-lg-8 offset-lg-2 mt-3 mt-md-0">
-        {% include figure.liquid path="assets/img/2026-04-27-rethinking-diffusion-langevin/langevin_gaussian_stationary.gif" class="img-fluid rounded" %}
-    </div>
-</div>
-<div class="caption">
-    Under Langevin dynamics, the distribution remains stationary: the density cloud stay fixed, while individual particles move stochastically within it.
+<div style="margin: 24px 0;">
+<iframe
+  src="{{ 'assets/html/2026-04-27-rethinking-diffusion-langevin/langevin_interactive.html' | relative_url }}"
+  style="width: 100%; border: none; border-radius: 3px;"
+  height="580"
+  loading="lazy">
+</iframe>
 </div>
 
 ## Spliting the Identity into Forward and Reverse Processes
@@ -439,10 +535,13 @@ The table below summarizes these three forward processes of different model type
 
 </div>
 
-<div class="row mt-3">
-    <div class="col-md-10 offset-md-1 col-lg-8 offset-lg-2 mt-3 mt-md-0">
-        {% include figure.liquid path="assets/img/2026-04-27-rethinking-diffusion-langevin/forward_process_trajectories.gif" class="img-fluid rounded" %}
-    </div>
+<div style="margin: 24px 0;">
+<iframe
+  src="{{ 'assets/html/2026-04-27-rethinking-diffusion-langevin/forward_processes_interactive.html' | relative_url }}"
+  style="width: 100%; border: none; border-radius: 3px;"
+  height="580"
+  loading="lazy">
+</iframe>
 </div>
 <div class="caption">
     Forward trajectories of the same starting point under the three model parameterizations.
@@ -467,7 +566,28 @@ No matter which notation we choose, A forward diffusion step with a step size of
 
 <div class="row mt-3">
     <div class="col-md-10 offset-md-1 col-lg-8 offset-lg-2 mt-3 mt-md-0">
-        {% include figure.liquid path="assets/img/2026-04-27-rethinking-diffusion-langevin/forward.png" class="img-fluid rounded" %}
+        <div class="forward-step-diagram-wrapper" style="position: relative; width: 100%; max-width: 760px; aspect-ratio: 760 / 170; margin: 0 auto;">
+            <svg viewBox="0 0 760 170" style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; font-family: system-ui, -apple-system, sans-serif;">
+                <defs>
+                    <marker id="arrow-forward-step" markerWidth="10" markerHeight="7" refX="9" refY="3.5" orient="auto">
+                        <polygon points="0 0, 10 3.5, 0 7" fill="#e74c3c" />
+                    </marker>
+                </defs>
+
+                <path d="M 220 85 L 540 85" fill="none" stroke="#e74c3c" stroke-width="4" marker-end="url(#arrow-forward-step)" />
+
+                <text x="380" y="52" fill="#e74c3c" font-size="22" font-weight="600" text-anchor="middle">Forward</text>
+                <text x="380" y="110" fill="#e74c3c" font-size="20" font-weight="500" text-anchor="middle">(Add noise)</text>
+            </svg>
+
+            <div style="position: absolute; left: 1.5%; top: 24%; width: 23%; height: 50%; display: flex; align-items: center; justify-content: center; padding: 0 0.45rem; text-align: center; background: white; border: 2px solid #bdc3c7; border-radius: 12px; box-shadow: 0 4px 12px rgba(0,0,0,0.05); font-size: 0.82rem; z-index: 10;">
+                \( \mathbf{x}_t \sim p_t(\mathbf{x}) \)
+            </div>
+
+            <div style="position: absolute; left: 75.5%; top: 24%; width: 28%; height: 50%; display: flex; align-items: center; justify-content: center; padding: 0 0.45rem; text-align: center; background: white; border: 2px solid #bdc3c7; border-radius: 12px; box-shadow: 0 4px 12px rgba(0,0,0,0.05); font-size: 0.82rem; z-index: 10;">
+                \( \mathbf{x}_{t+\Delta t} \sim p_{t+\Delta t}(\mathbf{x}) \)
+            </div>
+        </div>
     </div>
 </div>
 
@@ -484,7 +604,44 @@ The concept behind the reverse process is intuitive: since Langevin dynamics act
 
 <div class="row mt-3">
     <div class="col-md-10 offset-md-1 col-lg-8 offset-lg-2 mt-3 mt-md-0">
-        {% include figure.liquid path="assets/img/2026-04-27-rethinking-diffusion-langevin/forward-reverse-langevin.png" class="img-fluid rounded" %}
+        <div class="langevin-diagram-wrapper" style="position: relative; width: 100%; max-width: 600px; aspect-ratio: 600 / 320; margin: 0 auto;">
+            <svg viewBox="0 0 600 320" style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; font-family: system-ui, -apple-system, sans-serif;">
+                <defs>
+                    <marker id="arrow-forward" markerWidth="10" markerHeight="7" refX="9" refY="3.5" orient="auto">
+                        <polygon points="0 0, 10 3.5, 0 7" fill="#e74c3c" />
+                    </marker>
+                    <marker id="arrow-reverse" markerWidth="10" markerHeight="7" refX="9" refY="3.5" orient="auto">
+                        <polygon points="0 0, 10 3.5, 0 7" fill="#3498db" />
+                    </marker>
+                    <marker id="arrow-langevin" markerWidth="10" markerHeight="7" refX="9" refY="3.5" orient="auto">
+                        <polygon points="0 0, 10 3.5, 0 7" fill="#2c3e50" />
+                    </marker>
+                </defs>
+
+                <!-- Arrows -->
+                <path d="M 110 95 C 130 160, 200 210, 240 235" fill="none" stroke="#e74c3c" stroke-width="3" marker-end="url(#arrow-forward)" />
+                <path d="M 360 235 C 400 210, 470 160, 490 95" fill="none" stroke="#3498db" stroke-width="3" marker-end="url(#arrow-reverse)" />
+                <path d="M 165 60 L 430 60" fill="none" stroke="#2c3e50" stroke-width="3" marker-end="url(#arrow-langevin)" />
+
+                <!-- Arrow Labels -->
+                <text x="140" y="190" fill="#e74c3c" font-size="16" font-weight="600" text-anchor="end">Forward Process</text>
+                <text x="460" y="190" fill="#3498db" font-size="16" font-weight="600" text-anchor="start">Reverse Process</text>
+                <text x="300" y="42" fill="#2c3e50" font-size="16" font-weight="600" text-anchor="middle" letter-spacing="0.5">Langevin Dynamics (Identity)</text>
+            </svg>
+
+            <!-- Nodes -->
+            <div style="position: absolute; left: 1.5%; top: 13.5%; width: 22%; height: 16.5%; display: flex; align-items: center; justify-content: center; padding: 0 0.45rem; text-align: center; background: white; border: 2px solid #bdc3c7; border-radius: 12px; box-shadow: 0 4px 12px rgba(0,0,0,0.05); font-size: 0.82rem; z-index: 10;">
+                \( \mathbf{x}_t \sim p_t(\mathbf{x}) \)
+            </div>
+
+            <div style="position: absolute; left: 76.5%; top: 13.5%; width: 22%; height: 16.5%; display: flex; align-items: center; justify-content: center; padding: 0 0.45rem; text-align: center; background: white; border: 2px solid #bdc3c7; border-radius: 12px; box-shadow: 0 4px 12px rgba(0,0,0,0.05); font-size: 0.82rem; z-index: 10;">
+                \( \mathbf{x}_t' \sim p_t(\mathbf{x}) \)
+            </div>
+
+            <div style="position: absolute; left: 26.5%; top: 74.5%; width: 47%; height: 16.5%; display: flex; align-items: center; justify-content: center; padding: 0 0.5rem; text-align: center; background: white; border: 2px solid #bdc3c7; border-radius: 12px; box-shadow: 0 4px 12px rgba(0,0,0,0.05); font-size: 0.82rem; z-index: 10;">
+                \( \mathbf{x}_{t+\Delta t} \sim p_{t+\Delta t}(\mathbf{x}) \)
+            </div>
+        </div>
     </div>
 </div>
 <div class="caption">
@@ -605,13 +762,13 @@ $$
 
 These reverse equations become more intuitive when we visualize how samples move under each parameterization:
 
-<div class="row mt-3">
-    <div class="col-md-10 offset-md-1 col-lg-8 offset-lg-2 mt-3 mt-md-0">
-        {% include figure.liquid path="assets/img/2026-04-27-rethinking-diffusion-langevin/reverse_process_trajectories.gif" class="img-fluid rounded" %}
-    </div>
-</div>
-<div class="caption">
-    Reverse trajectories starting from noisy samples under the four reverse-process parameterizations.
+<div style="margin: 24px 0;">
+<iframe
+  src="{{ 'assets/html/2026-04-27-rethinking-diffusion-langevin/reverse_processes_interactive.html' | relative_url }}"
+  style="width: 100%; border: none; border-radius: 3px;"
+  height="580"
+  loading="lazy">
+</iframe>
 </div>
 
 In this single-data-point example, the reverse trajectories reveal a clear geometric difference between the parameterizations. The VP-SDE and VP-ODE flows bend along a curved path as they return to the target point, whereas the VE-Karras and Rectified flow trajectories move approximately along a straight line toward that point. It is important to emphasize that this **straight-line behavior is a special feature of the one-point setting shown in the example, not the general case**. For a general data distribution, the learned reverse vector fields vary across space, so all of these reverse trajectories are typically curved. Nevertheless, one could still expect the VE-Karras and Rectified flow trajectories to have smaller curvature than the VP trajectories.
