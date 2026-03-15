@@ -2,11 +2,11 @@
 layout: distill
 title: Rethinking the Diffusion Model from a Langevin Perspective
 description:
-  Diffusion models are often introduced from multiple perspectives—such as VAEs, score matching, or flow matching—accompanied by dense and technically demanding mathematics that can be difficult for beginners to grasp. One classic question is "How does the reverse process invert the forward process to generate data from pure noise?" 
+  Diffusion models are often introduced from multiple perspectives—such as VAEs, score matching, or flow matching—accompanied by dense and technically demanding mathematics that can be difficult for beginners to grasp. One classic question is How does the reverse process invert the forward process to generate data from pure noise? 
   This article systematically organizes the diffusion model from a fresh Langevin perspective, offering a simpler, clearer, and more intuitive answer. We also address the following questions
-  1. "How can ODE-based and SDE-based diffusion models be unified under a single framework?" 
-  2. "Why are diffusion models theoretically superior to ordinary VAEs?"
-  3. "Why is flow matching not fundamentally simpler than denoising or score matching, but equivalent under maximum-likelihood?"
+  1. How can ODE-based and SDE-based diffusion models be unified under a single framework? 
+  2. Why are diffusion models theoretically superior to ordinary VAEs?
+  3. Why is flow matching not fundamentally simpler than denoising or score matching, but equivalent under maximum-likelihood?
   We demonstrate that the Langevin Perspective offers clear and straightforward answers to these questions, providing pedagogical value for both learners and experienced researchers seeking deeper intuition.
 date: 2026-04-27
 future: true
@@ -268,7 +268,7 @@ $$
 d\mathbf{x}_t = g(t)\, \mathbf{s}(\mathbf{x}_t) dt + \sqrt{2 g(t)}\, d\mathbf{W}_t, 
 $$
 
-At first sight, the extra term $$d\mathbf{W}_t$$ may make this stochastic differential equation (SDE) look much more complicated than an ordinary differential equation (ODE). In fact, it is best to think of it as an ODE with an additional infinitesimal random perturbation at each step. Here the increment $$d\mathbf{W}_t$$ can be informally viewed as $$\sqrt{dt}\,\boldsymbol{\epsilon}$$, where $$\boldsymbol{\epsilon}$$ is a standard Gaussian random noise. The remaining terms are familiar: $$\mathbf{s}(\mathbf{x}) = \nabla_{\mathbf{x}} \log p(\mathbf{x})$$ is the score function of $$p(\mathbf{x})$$, and $$g(t)$$ is an arbitrary positive function satisfying $$\int_0^\infty g(t)\,dt = \infty$$. 
+At first sight, the extra term $$d\mathbf{W}_t$$ may make this stochastic differential equation (SDE) look much more complicated than an ordinary differential equation (ODE). In fact, it is best to think of it as an ODE with an additional infinitesimal random perturbation at each step. Here the increment $$d\mathbf{W}_t$$ can be informally viewed as $$\sqrt{dt}\,\boldsymbol{\epsilon}$$, where $$\boldsymbol{\epsilon}$$ is a standard Gaussian random noise. The remaining terms are familiar: $$\mathbf{s}(\mathbf{x}) = \nabla_{\mathbf{x}} \log p(\mathbf{x})$$ is the score function of $$p(\mathbf{x})$$, and $$g(t)$$ is an arbitrary positive function rescaling the time $t$. 
 
 This dynamics is often used as a Monte Carlo sampler to draw samples from $$p(\mathbf{x})$$, since $$p(\mathbf{x})$$ is its **stationary distribution**—the distribution that $$\mathbf{x}_t$$ converges to and remains at as $$t \to \infty$$, regardless of the initial distribution of $$\mathbf{x}_0$$.
 
