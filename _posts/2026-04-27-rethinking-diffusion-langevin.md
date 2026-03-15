@@ -753,8 +753,8 @@ We have established that a single reverse step undoes a forward step: advancing 
 Consider this sequence: begin with a data sample $$\mathbf{x}_0$$, propagate it through the forward process to obtain $$\mathbf{x}_T$$, then use $$\mathbf{x}_T$$ as the starting point $$\mathbf{x}_{0'}$$ for the reverse process and evolve it to $$\mathbf{x}_{T'}$$. Part of this forward-reverse cycle is illustrated in the figure below.
 
 <div class="row mt-3">
-    <div class="col-md-10 offset-md-1 col-lg-8 offset-lg-2 mt-3 mt-md-0">
-        {% include figure.liquid path="assets/img/2026-04-27-rethinking-diffusion-langevin/FastestDiffusionTheory_08.jpg" class="img-fluid rounded diffusion-cycle-figure" %}
+    <div class="col-12 mt-3 mt-md-0">
+        {% include figure.liquid path="assets/img/2026-04-27-rethinking-diffusion-langevin/FastestDiffusionTheory_08.jpg" class="img-fluid w-100 rounded diffusion-cycle-figure" %}
     </div>
 </div>
 <div class="caption">
@@ -766,7 +766,7 @@ The green arrows represent consecutive forward process steps that advance the fo
 We examine the relationship between $$\mathbf{x}_{t}$$ in the forward diffusion process and $$\mathbf{x}_{t'=T-t}$$ in the reverse diffusion process. The composition of a forward and a reverse step constitutes a Langevin dynamics step. This allows us to connect $$\mathbf{x}$$ in the forward process with those in the reverse process through Langevin dynamics steps, as illustrated below:
 
 <div class="row mt-3">
-    <div class="col-md-10 offset-md-1 col-lg-8 offset-lg-2 mt-3 mt-md-0">
+    <div class="col-12 mt-3 mt-md-0">
         {% include figure.liquid path="assets/img/2026-04-27-rethinking-diffusion-langevin/FastestDiffusionTheory_09.jpg" class="img-fluid rounded" %}
     </div>
 </div>
