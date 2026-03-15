@@ -72,18 +72,7 @@ ninja.data = [{
               handler: () => {
                 window.location.href = "https://iclr-blog-track.github.io/home/";
               },
-            },{id: "post-effect-of-parallel-environments-and-rollout-steps-in-ppo",
-        
-          title: "Effect of Parallel Environments and Rollout Steps in PPO",
-        
-        description: "This blog post explores batch size in PPO-what happens when we increase the number of parallel environments versus the number of rollout steps, while keeping the total samples per update fixed. We discuss how this affects bias and variance in gradient estimation.",
-        section: "Posts",
-        handler: () => {
-          
-            window.location.href = "/2026/blog/2026/ppo-batch-size/";
-          
-        },
-      },{id: "post-beyond-attention-as-a-graph",
+            },{id: "post-beyond-attention-as-a-graph",
         
           title: "Beyond Attention as a Graph",
         
@@ -411,6 +400,17 @@ ninja.data = [{
         handler: () => {
           
             window.location.href = "/2026/blog/2026/autoregressive-tokenization/";
+          
+        },
+      },{id: "post-effect-of-parallel-environments-and-rollout-steps-in-ppo",
+        
+          title: "Effect of Parallel Environments and Rollout Steps in PPO",
+        
+        description: "This blog post explores batch size in PPO-what happens when we increase the number of parallel environments versus the number of rollout steps, while keeping the total samples per update fixed. We discuss how this affects bias and variance in gradient estimation.",
+        section: "Posts",
+        handler: () => {
+          
+            window.location.href = "/2026/blog/2026/ppo-batch-size/";
           
         },
       },{id: "books-the-godfather",
