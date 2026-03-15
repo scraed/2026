@@ -1,4 +1,4 @@
-﻿---
+---
 layout: distill
 title: Rethinking the Diffusion Model from a Langevin Perspective
 description:
@@ -263,6 +263,26 @@ _styles: >
     filter: invert(1) hue-rotate(180deg);
   }
   /* Dark-mode support for inline HTML/SVG diagrams */
+  .post.distill .diagram-brutalist-node {
+    position: absolute;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 5px 10px;
+    text-align: center;
+    background: var(--global-bg-color);
+    border: 2px solid var(--global-text-color);
+    border-radius: 0;
+    box-shadow: 3px 3px 0 0 var(--global-text-color);
+    color: var(--global-text-color);
+    font-family: 'Space Grotesk', sans-serif;
+    font-size: 1.2rem;
+    font-weight: 600;
+    z-index: 10;
+  }
+  .post.distill .diagram-brutalist-node mjx-container {
+    color: var(--global-text-color) !important;
+  }
   html[data-theme="dark"] .post.distill .langevin-diagram-wrapper > div,
   html[data-theme="dark"] .post.distill .forward-step-diagram-wrapper > div,
   html[data-theme="dark"] .post.distill .langevin-identity-diagram-wrapper > div {
@@ -437,10 +457,10 @@ Langevin dynamics, while widely used for sampling from complex distributions, be
                 <text x="300" y="48" fill="#00B300" font-size="16" font-weight="700" text-anchor="middle">Langevin Dynamics (Identity)</text>
             </svg>
 
-            <div style="position: absolute; left: 5.5%; top: 28%; width: 22%; height: 30%; display: flex; align-items: center; justify-content: center; padding: 5px 10px; text-align: center; background: white; border: 2px solid #000; border-radius: 0; box-shadow: 3px 3px 0 0 #000; font-family: 'Space Grotesk', sans-serif; font-size: 1.2rem; font-weight: 600; z-index: 10;">
+            <div class="diagram-brutalist-node" style="left: 5.5%; top: 28%; width: 22%; height: 30%;">
                 \( \mathbf{x} \sim p(\mathbf{x}) \)
             </div>
-            <div style="position: absolute; left: 71.5%; top: 28%; width: 22%; height: 30%; display: flex; align-items: center; justify-content: center; padding: 5px 10px; text-align: center; background: white; border: 2px solid #000; border-radius: 0; box-shadow: 3px 3px 0 0 #000; font-family: 'Space Grotesk', sans-serif; font-size: 1.2rem; font-weight: 600; z-index: 10;">
+            <div class="diagram-brutalist-node" style="left: 71.5%; top: 28%; width: 22%; height: 30%;">
                 \( \mathbf{x}' \sim p(\mathbf{x}) \)
             </div>
         </div>
@@ -536,11 +556,11 @@ No matter which notation we choose, A forward diffusion step with a step size of
                 <text x="380" y="110" fill="#E65100" font-size="20" font-weight="500" text-anchor="middle">(Add noise)</text>
             </svg>
 
-            <div style="position: absolute; left: 1.5%; top: 24%; width: 25%; height: 50%; display: flex; align-items: center; justify-content: center; padding: 5px 10px; text-align: center; background: white; border: 2px solid #000; border-radius: 0; box-shadow: 3px 3px 0 0 #000; font-family: 'Space Grotesk', sans-serif; font-size: 1.2rem; font-weight: 600; z-index: 10;">
+            <div class="diagram-brutalist-node" style="left: 1.5%; top: 24%; width: 25%; height: 50%;">
                 \( \mathbf{x}_t \sim p_t(\mathbf{x}) \)
             </div>
 
-            <div style="position: absolute; left: 75.5%; top: 24%; width: 40%; height: 50%; display: flex; align-items: center; justify-content: center; padding: 5px 10px; text-align: center; background: white; border: 2px solid #000; border-radius: 0; box-shadow: 3px 3px 0 0 #000; font-family: 'Space Grotesk', sans-serif; font-size: 1.2rem; font-weight: 600; z-index: 10;">
+            <div class="diagram-brutalist-node" style="left: 75.5%; top: 24%; width: 40%; height: 50%;">
                 \( \mathbf{x}_{t+\Delta t} \sim p_{t+\Delta t}(\mathbf{x}) \)
             </div>
         </div>
@@ -586,15 +606,15 @@ The concept behind the reverse process is intuitive: since Langevin dynamics act
             </svg>
 
             <!-- Nodes (brutalist style: sharp corners, solid border, offset shadow) -->
-            <div style="position: absolute; left: 1.5%; top: 13.5%; width: 30%; height: 16.5%; display: flex; align-items: center; justify-content: center; padding: 5px 10px; text-align: center; background: white; border: 2px solid #000; border-radius: 0; box-shadow: 3px 3px 0 0 #000; font-family: 'Space Grotesk', sans-serif; font-size: 1.2rem; font-weight: 600; z-index: 10;">
+            <div class="diagram-brutalist-node" style="left: 1.5%; top: 13.5%; width: 30%; height: 16.5%;">
                 \( \mathbf{x}_t \sim p_t(\mathbf{x}) \)
             </div>
 
-            <div style="position: absolute; left: 68.5%; top: 13.5%; width: 30%; height: 16.5%; display: flex; align-items: center; justify-content: center; padding: 5px 10px; text-align: center; background: white; border: 2px solid #000; border-radius: 0; box-shadow: 3px 3px 0 0 #000; font-family: 'Space Grotesk', sans-serif; font-size: 1.2rem; font-weight: 600; z-index: 10;">
+            <div class="diagram-brutalist-node" style="left: 68.5%; top: 13.5%; width: 30%; height: 16.5%;">
                 \( \mathbf{x}_t' \sim p_t(\mathbf{x}) \)
             </div>
 
-            <div style="position: absolute; left: 26.5%; top: 74.5%; width: 47%; height: 16.5%; display: flex; align-items: center; justify-content: center; padding: 5px 10px; text-align: center; background: white; border: 2px solid #000; border-radius: 0; box-shadow: 3px 3px 0 0 #000; font-family: 'Space Grotesk', sans-serif; font-size: 1.2rem; font-weight: 600; z-index: 10;">
+            <div class="diagram-brutalist-node" style="left: 26.5%; top: 74.5%; width: 47%; height: 16.5%;">
                 \( \mathbf{x}_{t+\Delta t} \sim p_{t+\Delta t}(\mathbf{x}) \)
             </div>
         </div>
