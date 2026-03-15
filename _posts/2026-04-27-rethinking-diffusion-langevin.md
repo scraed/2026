@@ -1,4 +1,4 @@
----
+﻿---
 layout: distill
 title: Rethinking the Diffusion Model from a Langevin Perspective
 description:
@@ -594,11 +594,12 @@ The above analysis applies not only to SDE reverse processes but also to ODE rev
 
 </div>
 
-Here $\mathbf{s}_x(\mathbf{x}, t)$ and $\mathbf{s}_r(\mathbf{r}, s)$ denote **score functions**, meaning gradients of the log-density with respect to their own state variables:
+In this table, $\boldsymbol{\epsilon}$ and $\mathbf{v}$ are just different ways of writing expressions based on the basic score functions. The score functions themselves are $\mathbf{s}_x$, $\mathbf{s}_z$, and $\mathbf{s}_r$, which are the gradients of the log-probability for each variable at its corresponding time or noise level.
+
 $$
-\mathbf{s}_x(\mathbf{x}, t) = \nabla_{\mathbf{x}} \log p_t(\mathbf{x}), \qquad
-\mathbf{s}_z(\mathbf{z}, \sigma) = \nabla_{\mathbf{z}} \log p_\sigma(\mathbf{z}), \qquad
-\mathbf{s}_r(\mathbf{r}, s) = \nabla_{\mathbf{r}} \log p_s(\mathbf{r}).
+\mathbf{s}_x(\mathbf{x}, t) = \nabla_{\mathbf{x}_t} \log p(\mathbf{x}_t), \qquad
+\mathbf{s}_z(\mathbf{z}, \sigma) = \nabla_{\mathbf{z}_\sigma} \log p(\mathbf{z}_\sigma), \qquad
+\mathbf{s}_r(\mathbf{r}, s) = \nabla_{\mathbf{r}_s} \log p(\mathbf{r}_s).
 $$
 
 
@@ -675,13 +676,13 @@ $$
 q_{t'}(\mathbf{x}) = p_{T-t'}(\mathbf{x}) 
 $$
 
-In diffusion models, the terminal time $$T$$ is chosen to be sufficiently large so that the forward process distribution $$p_T(\mathbf{x})$$ converges to a simple Gaussian distribution. This ensures that the reverse process can start from this well-defined Gaussian noise at $$t'=0$$. By then evolving the reverse process through time $$t'$$ from 0 to $$T$$, we obtain samples that follow the original data distribution:
+In diffusion models, the terminal time $$T$$ is chosen to be sufficiently large so that the forward process distribution $$p_T(\mathbf{x})$$ converges to a simple Gaussian distribution. This ensures that the reverse process can start from the same Gaussian distribution $$q_0(\mathbf{x})$$ at $$t'=0$$. By then evolving the reverse process through time $$t'$$ from 0 to $$T$$, we obtain samples that follow the original data distribution:
 
 $$
 q_T(\mathbf{x}) = p_0(\mathbf{x}) \quad \text{(data distribution)}.  
 $$
 
-This exact recovery of the data distribution through a forward–reverse duality brings us to the third question from the abstract:
+This exact recovery of the data distribution $$p_0$$ through a forward–reverse duality brings us to the third question from the abstract:
 
 <blockquote class="guiding-question">Why are diffusion models theoretically superior to ordinary VAEs?</blockquote>
 
@@ -707,9 +708,11 @@ Maximum likelihood training aims to minimize the KL divergence $\mathrm{KL}(p_0 
 Formally, we can express this idea by rewriting the KL at time $t=0$ as an integral over its time derivative:
 
 $$
+\begin{aligned}
 \mathrm{KL}\big(p_0 \Vert q_0\big)
-= \mathrm{KL}\big(p_0 \Vert q_0\big) - \mathrm{KL}\big(p_\infty \Vert q_\infty\big)
-= -\int_0^{\infty}\frac{d}{dt}  \mathrm{KL}\big(p_t \Vert q_t\big)\, dt
+&= \mathrm{KL}\big(p_0 \Vert q_0\big) - \mathrm{KL}\big(p_\infty \Vert q_\infty\big) \\
+&= -\int_0^{\infty}\frac{d}{dt}  \mathrm{KL}\big(p_t \Vert q_t\big)\, dt
+\end{aligned}
 $$
 
 where the second equality uses $\mathrm{KL}\big(p_\infty \Vert q_\infty\big) = 0$ at infinitely large time $t$, since both $p$ and $q$ converge to the same Gaussian noise distribution. 
