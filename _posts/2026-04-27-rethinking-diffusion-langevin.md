@@ -1,4 +1,4 @@
-﻿---
+---
 layout: distill
 title: Rethinking the Diffusion Model from a Langevin Perspective
 description:
@@ -52,15 +52,19 @@ toc:
 _styles: >
   /* Highlight Box for Key Insights */
   .insight-box {
-    background-color: rgba(0, 0, 0, 0.03);
+    background: linear-gradient(135deg, rgba(var(--global-theme-color-rgb), 0.05), rgba(var(--global-theme-color-rgb), 0.01));
     border-left: 4px solid var(--global-theme-color);
-    padding: 1.5rem;
-    margin: 2rem 0;
-    border-radius: 0 8px 8px 0;
-    box-shadow: 0 2px 6px rgba(0,0,0,0.02);
+    padding: 1.5rem 1.75rem;
+    margin: 2.5rem 0;
+    border-radius: 0 12px 12px 0;
+    box-shadow: 0 4px 15px rgba(0,0,0,0.03);
+    font-size: 1.05rem;
+    line-height: 1.6;
+    color: var(--global-text-color);
   }
   .insight-box strong {
     color: var(--global-theme-color);
+    font-weight: 600;
   }
 
   /* Table Styling */
@@ -69,102 +73,153 @@ _styles: >
     max-width: 100%;
     margin: 2.5rem 0;
     border-radius: 12px;
-    box-shadow: 0 4px 20px rgba(0,0,0,0.12);
+    box-shadow: 0 8px 30px rgba(0,0,0,0.06);
     border: 1px solid var(--global-divider-color);
     background: var(--global-card-bg-color);
+    -webkit-overflow-scrolling: touch;
+    overscroll-behavior-x: contain;
+  }
+  /* Custom scrollbar for table wrapper */
+  .table-wrapper::-webkit-scrollbar {
+    height: 6px;
+  }
+  .table-wrapper::-webkit-scrollbar-track {
+    background: transparent;
+    border-radius: 0 0 12px 12px;
+  }
+  .table-wrapper::-webkit-scrollbar-thumb {
+    background: rgba(150, 150, 150, 0.3);
+    border-radius: 3px;
+  }
+  .table-wrapper::-webkit-scrollbar-thumb:hover {
+    background: rgba(150, 150, 150, 0.5);
   }
   .table-caption {
     font-size: 0.85rem;
     font-weight: 600;
     text-transform: uppercase;
-    letter-spacing: 0.08em;
-    color: var(--global-theme-color);
-    margin: 0 0 0.75rem 0;
+    letter-spacing: 0.1em;
+    color: var(--global-text-color-light);
+    margin: 0 0 1rem 0;
     text-align: center;
   }
   table {
     width: 100%;
     border-collapse: collapse;
-    margin: 0; /* Controlled by wrapper */
+    margin: 0;
     font-size: 0.95rem;
-    background: var(--global-card-bg-color);
+    background: transparent;
   }
   th {
-    background-color: rgba(var(--global-theme-color-rgb), 0.1);
-    color: var(--global-theme-color);
-    font-weight: 700;
+    background-color: var(--global-bg-color);
+    color: var(--global-text-color);
+    font-weight: 600;
     padding: 16px 20px;
     text-align: left;
-    border-bottom: 2px solid rgba(var(--global-theme-color-rgb), 0.2);
+    border-bottom: 2px solid var(--global-divider-color);
     font-size: 0.85rem;
     letter-spacing: 0.05em;
+    text-transform: uppercase;
   }
   td {
     padding: 14px 20px;
     border-bottom: 1px solid var(--global-divider-color);
     vertical-align: middle;
     color: var(--global-text-color);
-  }
-  tr:nth-child(even) {
-    background-color: rgba(var(--global-theme-color-rgb), 0.04);
+    line-height: 1.5;
   }
   tr:last-child td {
     border-bottom: none;
   }
   tr:hover td {
-    background-color: rgba(var(--global-theme-color-rgb), 0.10);
-    transition: background-color 0.2s ease;
+    background-color: rgba(var(--global-theme-color-rgb), 0.03);
+    transition: background-color 0.3s ease;
   }
 
   /* Details / Accordion Styling */
   details {
     background-color: var(--global-card-bg-color) !important;
     border: 1px solid var(--global-divider-color);
-    border-radius: 8px;
-    padding: 0; /* Padding moved to children */
-    margin: 1.5rem 0;
-    box-shadow: 0 2px 5px rgba(0,0,0,0.02);
-    transition: all 0.2s ease;
+    border-radius: 10px;
+    padding: 0;
+    margin: 2rem 0;
+    box-shadow: 0 2px 10px rgba(0,0,0,0.02);
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    overflow: hidden;
   }
   details[open] {
-    border-color: var(--global-theme-color);
-    box-shadow: 0 4px 12px rgba(0,0,0,0.05);
+    border-color: rgba(var(--global-theme-color-rgb), 0.4);
+    box-shadow: 0 8px 24px rgba(0,0,0,0.06);
   }
   details > summary {
     cursor: pointer;
-    font-weight: 300;
-    padding: 1rem;
+    font-weight: 500;
+    padding: 1.25rem 3rem 1.25rem 1.5rem;
     list-style: none;
     background-color: transparent;
-    color: var(--global-text-color-light);
+    color: var(--global-text-color);
     border-bottom: 1px solid transparent;
-    transition: background 0.2s, color 0.2s;
-    border-radius: 8px;
+    transition: all 0.2s ease;
+    position: relative;
+  }
+  details > summary::-webkit-details-marker {
+    display: none;
+  }
+  details > summary::after {
+    content: '+';
+    font-size: 1.5rem;
+    font-weight: 300;
+    color: var(--global-text-color-light);
+    transition: transform 0.3s ease, color 0.3s ease;
+    line-height: 1;
+    position: absolute;
+    right: 1.5rem;
+    top: 50%;
+    transform: translateY(-50%);
+  }
+  details[open] > summary::after {
+    transform: translateY(-50%) rotate(45deg);
+    color: var(--global-theme-color);
   }
   details[open] > summary {
     border-bottom: 1px solid var(--global-divider-color);
-    border-radius: 8px 8px 0 0;
-    background-color: rgba(var(--global-theme-color-rgb), 0.05);
+    background-color: rgba(var(--global-theme-color-rgb), 0.03);
     color: var(--global-theme-color);
   }
   details > summary:hover {
-    background-color: rgba(var(--global-theme-color-rgb), 0.06);
+    background-color: rgba(var(--global-theme-color-rgb), 0.03);
   }
-  /* Wrapper for details content to provide padding */
   details > div.details-content {
     padding: 1.5rem;
     background: var(--global-card-bg-color);
-    border-radius: 0 0 8px 8px;
+    line-height: 1.6;
   }
 
   /* Math Block Enhancements */
   .math-block {
-    background: #fcfcfc;
-    border: 1px solid #f0f0f0;
-    border-radius: 8px;
-    padding: 1rem;
-    margin: 1.5rem 0;
+    background: var(--global-bg-color);
+    border: 1px solid var(--global-divider-color);
+    border-radius: 10px;
+    padding: 1.25rem;
+    margin: 2rem 0;
     overflow-x: auto;
+    box-shadow: inset 0 2px 4px rgba(0,0,0,0.02);
+    -webkit-overflow-scrolling: touch;
+    overscroll-behavior-x: contain;
+  }
+  .math-block::-webkit-scrollbar {
+    height: 6px;
+  }
+  .math-block::-webkit-scrollbar-track {
+    background: transparent;
+    border-radius: 0 0 10px 10px;
+  }
+  .math-block::-webkit-scrollbar-thumb {
+    background: rgba(150, 150, 150, 0.3);
+    border-radius: 3px;
+  }
+  .math-block::-webkit-scrollbar-thumb:hover {
+    background: rgba(150, 150, 150, 0.5);
   }
 
   /* Make long display equations horizontally scrollable on mobile */
@@ -174,30 +229,46 @@ _styles: >
     overflow-x: auto;
     overflow-y: hidden;
     -webkit-overflow-scrolling: touch;
+    overscroll-behavior-x: contain;
+    padding-bottom: 8px; /* Room for scrollbar */
+  }
+  mjx-container[jax="CHTML"][display="true"]::-webkit-scrollbar {
+    height: 6px;
+  }
+  mjx-container[jax="CHTML"][display="true"]::-webkit-scrollbar-track {
+    background: transparent;
+  }
+  mjx-container[jax="CHTML"][display="true"]::-webkit-scrollbar-thumb {
+    background: rgba(150, 150, 150, 0.2);
+    border-radius: 3px;
+  }
+  mjx-container[jax="CHTML"][display="true"]::-webkit-scrollbar-thumb:hover {
+    background: rgba(150, 150, 150, 0.4);
   }
   mjx-container[jax="CHTML"][display="true"] > mjx-math {
     min-width: max-content;
   }
 
-  /* Fake Image (kept from original) */
+  /* Fake Image */
   .fake-img {
-    background: #bbb;
+    background: var(--global-divider-color);
     border: 1px solid rgba(0, 0, 0, 0.1);
-    box-shadow: 0 0px 4px rgba(0, 0, 0, 0.1);
-    margin-bottom: 12px;
+    border-radius: 8px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+    margin-bottom: 16px;
+    overflow: hidden;
   }
-
   /* Dark-mode: invert all images in this article for better contrast */
   html[data-theme="dark"] .post.distill img {
     filter: invert(1) hue-rotate(180deg);
   }
   .fake-img p {
-    font-family: monospace;
-    color: white;
-    text-align: left;
-    margin: 12px 0;
+    font-family: 'Courier New', Courier, monospace;
+    color: var(--global-bg-color);
     text-align: center;
-    font-size: 16px;
+    margin: 16px 0;
+    font-size: 14px;
+    font-weight: 600;
   }
 
   /* Mermaid Fixes */
@@ -221,14 +292,29 @@ _styles: >
 
   /* Guiding question quotation styling */
   .post.distill blockquote.guiding-question {
-    margin: 2.5rem auto 2.0rem auto;
-    max-width: 720px;
-    font-style: italic;
-    font-weight: 400;
-    color: var(--global-text-color-light);
-    border-left: 4px solid var(--global-theme-color);
-    padding: 1.0rem 1.5rem;
-    background-color: rgba(0, 0, 0, 0.02);
+    margin: 3.5rem auto 3rem auto;
+    max-width: 760px;
+    font-style: normal;
+    font-weight: 500;
+    font-size: 1.15rem;
+    line-height: 1.7;
+    color: var(--global-text-color);
+    border-left: none;
+    padding: 2rem 2.5rem;
+    background: linear-gradient(135deg, rgba(var(--global-theme-color-rgb), 0.06), rgba(var(--global-theme-color-rgb), 0.02));
+    border-radius: 16px;
+    position: relative;
+    box-shadow: 0 8px 24px rgba(0,0,0,0.04);
+  }
+  .post.distill blockquote.guiding-question::before {
+    content: '"';
+    position: absolute;
+    top: -20px;
+    left: 24px;
+    font-size: 5rem;
+    color: rgba(var(--global-theme-color-rgb), 0.15);
+    font-family: Georgia, serif;
+    line-height: 1;
   }
 ---
 
@@ -527,7 +613,7 @@ These reverse equations become more intuitive when we visualize how samples move
     Reverse trajectories starting from noisy samples under the four reverse-process parameterizations.
 </div>
 
-In this single-data-point example, the reverse trajectories reveal a clear geometric difference between the parameterizations. The VP-SDE and VP-ODE flows bend along a curved path as they return to the target point, whereas the VE-Karras and Rectified flow trajectories move approximately along a straight line toward that point. It is important to emphasize that this straight-line behavior is a special feature of the one-point setting shown in the GIF, not the general case. For a general data distribution, the learned reverse vector fields vary across space, so all of these reverse trajectories are typically curved. Nevertheless, one could still expect the VE-Karras and Rectified flow trajectories to have smaller curvature than the VP trajectories.
+In this single-data-point example, the reverse trajectories reveal a clear geometric difference between the parameterizations. The VP-SDE and VP-ODE flows bend along a curved path as they return to the target point, whereas the VE-Karras and Rectified flow trajectories move approximately along a straight line toward that point. It is important to emphasize that this **straight-line behavior is a special feature of the one-point setting shown in the example, not the general case**. For a general data distribution, the learned reverse vector fields vary across space, so all of these reverse trajectories are typically curved. Nevertheless, one could still expect the VE-Karras and Rectified flow trajectories to have smaller curvature than the VP trajectories.
 
 Despite their different geometric behaviors, these model types are inherently **equivalent** parameterizations. Although VP uses the score $\mathbf{s}_x$, VE-Karras uses the noise prediction $\boldsymbol{\epsilon}$, and Rectified flow uses the velocity field $\mathbf{v}$ as their native outputs, these model types are mathematically equivalent parameterizations. Combined with the previous conversion table for the forward-process variables, we can therefore convert these fields into one another exactly <d-cite key="zheng2025lanpaint"></d-cite>.
 
