@@ -372,55 +372,13 @@ A third valuable viewpoint is the **flow-based perspective** <d-cite key="liu202
 
 In this article, we systematically organize the theory of diffusion models and present a perspective that is both mathematically simple and intuitively clear: the **Langevin perspective**. This approach, relying only on fundamental techniques from stochastic differential equations (SDEs), provides a straightforward derivation of the reverse process and explains why flow matching is not fundamentally simpler than denoising or score matching, but is equivalent to them under maximum likelihood.
 
-<div class="insight-box" markdown="1">
-
-**Central Insight:** The Langevin perspective reveals a fundamental triangular relationship:
-
-<div class="row mt-3">
-    <div class="col-md-12 col-lg-10 offset-lg-1 mt-3 mt-md-0">
-        <div class="langevin-diagram-wrapper" style="position: relative; width: 100%; max-width: 880px; aspect-ratio: 600 / 320; margin: 0 auto;">
-            <svg viewBox="0 0 600 320" style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; font-family: system-ui, -apple-system, sans-serif;">
-                <defs>
-                    <marker id="arrow-forward" markerWidth="10" markerHeight="7" refX="9" refY="3.5" orient="auto">
-                        <polygon points="0 0, 10 3.5, 0 7" fill="#e74c3c" />
-                    </marker>
-                    <marker id="arrow-reverse" markerWidth="10" markerHeight="7" refX="9" refY="3.5" orient="auto">
-                        <polygon points="0 0, 10 3.5, 0 7" fill="#3498db" />
-                    </marker>
-                    <marker id="arrow-langevin" markerWidth="10" markerHeight="7" refX="9" refY="3.5" orient="auto">
-                        <polygon points="0 0, 10 3.5, 0 7" fill="#2c3e50" />
-                    </marker>
-                </defs>
-
-                <!-- Arrows -->
-                <path d="M 110 95 C 130 160, 200 210, 225 235" fill="none" stroke="#e74c3c" stroke-width="3" marker-end="url(#arrow-forward)" />
-                <path d="M 375 235 C 400 210, 470 160, 490 95" fill="none" stroke="#3498db" stroke-width="3" marker-end="url(#arrow-reverse)" />
-                <path d="M 180 60 L 415 60" fill="none" stroke="#2c3e50" stroke-width="4" marker-end="url(#arrow-langevin)" />
-
-                <!-- Arrow Labels -->
-                <text x="140" y="190" fill="#e74c3c" font-size="16" font-weight="600" text-anchor="end">Forward Process</text>
-                <text x="460" y="190" fill="#3498db" font-size="16" font-weight="600" text-anchor="start">Reverse Process</text>
-                <text x="300" y="42" fill="#2c3e50" font-size="16" font-weight="600" text-anchor="middle" letter-spacing="0.5">Langevin Dynamics (Identity)</text>
-            </svg>
-
-            <!-- Nodes -->
-            <div style="position: absolute; left: 8.33%; top: 10.9%; width: 20%; height: 15.6%; display: flex; align-items: center; justify-content: center; background: white; border: 2px solid #bdc3c7; border-radius: 12px; box-shadow: 0 4px 12px rgba(0,0,0,0.05); font-size: 1.1rem; z-index: 10;">
-                \( p_t(\mathbf{x}) \)
-            </div>
-
-            <div style="position: absolute; left: 71.66%; top: 10.9%; width: 20%; height: 15.6%; display: flex; align-items: center; justify-content: center; background: white; border: 2px solid #bdc3c7; border-radius: 12px; box-shadow: 0 4px 12px rgba(0,0,0,0.05); font-size: 1.1rem; z-index: 10;">
-                \( p_t(\mathbf{x}) \)
-            </div>
-
-            <div style="position: absolute; left: 38.33%; top: 75%; width: 23.33%; height: 15.6%; display: flex; align-items: center; justify-content: center; background: white; border: 2px solid #bdc3c7; border-radius: 12px; box-shadow: 0 4px 12px rgba(0,0,0,0.05); font-size: 1.1rem; z-index: 10;">
-                \( p_{t+\Delta t}(\mathbf{x}) \)
-            </div>
-        </div>
-    </div>
-</div>
-
-This illustrates that the forward and reverse diffusion steps are simply a **split** of a single step of Langevin dynamics. Since Langevin dynamics is an **identity** map on distributions, the forward and reverse diffusion steps are **inverses** of each other at the distribution level.
-
+<div style="margin: 24px 0;">
+<iframe
+  src="{{ 'assets/html/2026-04-27-rethinking-diffusion-langevin/langevin_diagram_brutalist.html?v=20260315a' | relative_url }}"
+  style="width: 100%; border: none; border-radius: 3px;"
+  height="580"
+  loading="lazy">
+</iframe>
 </div>
 
 ## Langevin Dynamics as 'Identity' Operation
@@ -472,17 +430,17 @@ Langevin dynamics, while widely used for sampling from complex distributions, be
             <svg viewBox="0 0 600 170" style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; font-family: system-ui, -apple-system, sans-serif;">
                 <defs>
                     <marker id="arrow-langevin-only" markerWidth="10" markerHeight="7" refX="9" refY="3.5" orient="auto">
-                        <polygon points="0 0, 10 3.5, 0 7" fill="#2c3e50" />
+                        <polygon points="0 0, 10 3.5, 0 7" fill="#00B300" />
                     </marker>
                 </defs>
-                <path d="M 190 65 L 410 65" fill="none" stroke="#2c3e50" stroke-width="3" marker-end="url(#arrow-langevin-only)" />
-                <text x="300" y="48" fill="#2c3e50" font-size="16" font-weight="700" text-anchor="middle">Langevin Dynamics (Identity)</text>
+                <path d="M 190 65 L 410 65" fill="none" stroke="#00B300" stroke-width="3" marker-end="url(#arrow-langevin-only)" />
+                <text x="300" y="48" fill="#00B300" font-size="16" font-weight="700" text-anchor="middle">Langevin Dynamics (Identity)</text>
             </svg>
 
-            <div style="position: absolute; left: 5.5%; top: 28%; width: 22%; height: 30%; display: flex; align-items: center; justify-content: center; padding: 0 0.45rem; text-align: center; background: white; border: 2px solid #bdc3c7; border-radius: 12px; box-shadow: 0 4px 12px rgba(0,0,0,0.05); font-size: 1rem; z-index: 10;">
+            <div style="position: absolute; left: 5.5%; top: 28%; width: 22%; height: 30%; display: flex; align-items: center; justify-content: center; padding: 5px 10px; text-align: center; background: white; border: 2px solid #000; border-radius: 0; box-shadow: 3px 3px 0 0 #000; font-family: 'Space Grotesk', sans-serif; font-size: 1.2rem; font-weight: 600; z-index: 10;">
                 \( \mathbf{x} \sim p(\mathbf{x}) \)
             </div>
-            <div style="position: absolute; left: 71.5%; top: 28%; width: 22%; height: 30%; display: flex; align-items: center; justify-content: center; padding: 0 0.45rem; text-align: center; background: white; border: 2px solid #bdc3c7; border-radius: 12px; box-shadow: 0 4px 12px rgba(0,0,0,0.05); font-size: 1rem; z-index: 10;">
+            <div style="position: absolute; left: 71.5%; top: 28%; width: 22%; height: 30%; display: flex; align-items: center; justify-content: center; padding: 5px 10px; text-align: center; background: white; border: 2px solid #000; border-radius: 0; box-shadow: 3px 3px 0 0 #000; font-family: 'Space Grotesk', sans-serif; font-size: 1.2rem; font-weight: 600; z-index: 10;">
                 \( \mathbf{x}' \sim p(\mathbf{x}) \)
             </div>
         </div>
@@ -496,7 +454,7 @@ Langevin dynamics, while widely used for sampling from complex distributions, be
 <iframe
   src="{{ 'assets/html/2026-04-27-rethinking-diffusion-langevin/langevin_interactive.html' | relative_url }}"
   style="width: 100%; border: none; border-radius: 3px;"
-  height="580"
+  height="500"
   loading="lazy">
 </iframe>
 </div>
@@ -535,17 +493,15 @@ The table below summarizes these three forward processes of different model type
 
 </div>
 
-<div style="margin: 24px 0;">
+<div style="margin: 15px 0;">
 <iframe
   src="{{ 'assets/html/2026-04-27-rethinking-diffusion-langevin/forward_processes_interactive.html' | relative_url }}"
   style="width: 100%; border: none; border-radius: 3px;"
-  height="580"
+  height="380"
   loading="lazy">
 </iframe>
 </div>
-<div class="caption">
-    Forward trajectories of the same starting point under the three model parameterizations.
-</div>
+
 
 Each forward process has a characteristic way of mixing data and noise: the VP model uses the Ornstein-Uhlenbeck (OU) process, so samples drift toward the origin while their uncertainty grows; the VE-Karras model adds noise directly to the data without a restoring drift, so the mean stays fixed while the sample cloud expands outward; and the Rectified flow model is a stochastic forward process as well, not a deterministic straight-line interpolation. **Despite their differences, all these SDEs are fundamentally equivalent**; they differ only by how time and state are reparameterized. For clarity, the table below gives a direct conversion between any two parameterizations <d-cite key="zheng2025lanpaint"></d-cite>:
 
@@ -570,21 +526,21 @@ No matter which notation we choose, A forward diffusion step with a step size of
             <svg viewBox="0 0 760 170" style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; font-family: system-ui, -apple-system, sans-serif;">
                 <defs>
                     <marker id="arrow-forward-step" markerWidth="10" markerHeight="7" refX="9" refY="3.5" orient="auto">
-                        <polygon points="0 0, 10 3.5, 0 7" fill="#e74c3c" />
+                        <polygon points="0 0, 10 3.5, 0 7" fill="#E65100" />
                     </marker>
                 </defs>
 
-                <path d="M 220 85 L 540 85" fill="none" stroke="#e74c3c" stroke-width="4" marker-end="url(#arrow-forward-step)" />
+                <path d="M 220 85 L 540 85" fill="none" stroke="#E65100" stroke-width="4" marker-end="url(#arrow-forward-step)" />
 
-                <text x="380" y="52" fill="#e74c3c" font-size="22" font-weight="600" text-anchor="middle">Forward</text>
-                <text x="380" y="110" fill="#e74c3c" font-size="20" font-weight="500" text-anchor="middle">(Add noise)</text>
+                <text x="380" y="52" fill="#E65100" font-size="22" font-weight="600" text-anchor="middle">Forward</text>
+                <text x="380" y="110" fill="#E65100" font-size="20" font-weight="500" text-anchor="middle">(Add noise)</text>
             </svg>
 
-            <div style="position: absolute; left: 1.5%; top: 24%; width: 23%; height: 50%; display: flex; align-items: center; justify-content: center; padding: 0 0.45rem; text-align: center; background: white; border: 2px solid #bdc3c7; border-radius: 12px; box-shadow: 0 4px 12px rgba(0,0,0,0.05); font-size: 0.82rem; z-index: 10;">
+            <div style="position: absolute; left: 1.5%; top: 24%; width: 25%; height: 50%; display: flex; align-items: center; justify-content: center; padding: 5px 10px; text-align: center; background: white; border: 2px solid #000; border-radius: 0; box-shadow: 3px 3px 0 0 #000; font-family: 'Space Grotesk', sans-serif; font-size: 1.2rem; font-weight: 600; z-index: 10;">
                 \( \mathbf{x}_t \sim p_t(\mathbf{x}) \)
             </div>
 
-            <div style="position: absolute; left: 75.5%; top: 24%; width: 28%; height: 50%; display: flex; align-items: center; justify-content: center; padding: 0 0.45rem; text-align: center; background: white; border: 2px solid #bdc3c7; border-radius: 12px; box-shadow: 0 4px 12px rgba(0,0,0,0.05); font-size: 0.82rem; z-index: 10;">
+            <div style="position: absolute; left: 75.5%; top: 24%; width: 40%; height: 50%; display: flex; align-items: center; justify-content: center; padding: 5px 10px; text-align: center; background: white; border: 2px solid #000; border-radius: 0; box-shadow: 3px 3px 0 0 #000; font-family: 'Space Grotesk', sans-serif; font-size: 1.2rem; font-weight: 600; z-index: 10;">
                 \( \mathbf{x}_{t+\Delta t} \sim p_{t+\Delta t}(\mathbf{x}) \)
             </div>
         </div>
@@ -605,40 +561,40 @@ The concept behind the reverse process is intuitive: since Langevin dynamics act
 <div class="row mt-3">
     <div class="col-md-10 offset-md-1 col-lg-8 offset-lg-2 mt-3 mt-md-0">
         <div class="langevin-diagram-wrapper" style="position: relative; width: 100%; max-width: 600px; aspect-ratio: 600 / 320; margin: 0 auto;">
-            <svg viewBox="0 0 600 320" style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; font-family: system-ui, -apple-system, sans-serif;">
+            <svg viewBox="0 0 600 320" style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; font-family: 'Space Grotesk', sans-serif;">
                 <defs>
                     <marker id="arrow-forward" markerWidth="10" markerHeight="7" refX="9" refY="3.5" orient="auto">
-                        <polygon points="0 0, 10 3.5, 0 7" fill="#e74c3c" />
+                        <polygon points="0 0, 10 3.5, 0 7" fill="#E65100" />
                     </marker>
                     <marker id="arrow-reverse" markerWidth="10" markerHeight="7" refX="9" refY="3.5" orient="auto">
-                        <polygon points="0 0, 10 3.5, 0 7" fill="#3498db" />
+                        <polygon points="0 0, 10 3.5, 0 7" fill="#1565C0" />
                     </marker>
                     <marker id="arrow-langevin" markerWidth="10" markerHeight="7" refX="9" refY="3.5" orient="auto">
-                        <polygon points="0 0, 10 3.5, 0 7" fill="#2c3e50" />
+                        <polygon points="0 0, 10 3.5, 0 7" fill="#00B300" />
                     </marker>
                 </defs>
 
                 <!-- Arrows -->
-                <path d="M 110 95 C 130 160, 200 210, 240 235" fill="none" stroke="#e74c3c" stroke-width="3" marker-end="url(#arrow-forward)" />
-                <path d="M 360 235 C 400 210, 470 160, 490 95" fill="none" stroke="#3498db" stroke-width="3" marker-end="url(#arrow-reverse)" />
-                <path d="M 165 60 L 430 60" fill="none" stroke="#2c3e50" stroke-width="3" marker-end="url(#arrow-langevin)" />
+                <path d="M 110 95 C 128 154, 191 198, 214 221" fill="none" stroke="#E65100" stroke-width="3" marker-end="url(#arrow-forward)" />
+                <path d="M 386 221 C 409 198, 472 154, 490 95" fill="none" stroke="#1565C0" stroke-width="3" marker-end="url(#arrow-reverse)" />
+                <path d="M 198 60 L 402 60" fill="none" stroke="#00B300" stroke-width="4" marker-end="url(#arrow-langevin)" />
 
                 <!-- Arrow Labels -->
-                <text x="140" y="190" fill="#e74c3c" font-size="16" font-weight="600" text-anchor="end">Forward Process</text>
-                <text x="460" y="190" fill="#3498db" font-size="16" font-weight="600" text-anchor="start">Reverse Process</text>
-                <text x="300" y="42" fill="#2c3e50" font-size="16" font-weight="600" text-anchor="middle" letter-spacing="0.5">Langevin Dynamics (Identity)</text>
+                <text x="140" y="190" fill="#E65100" font-size="16" font-weight="700" text-anchor="end" letter-spacing="0.05em">Forward Process</text>
+                <text x="460" y="190" fill="#1565C0" font-size="16" font-weight="700" text-anchor="start" letter-spacing="0.05em">Reverse Process</text>
+                <text x="300" y="37" fill="#00B300" font-size="16" font-weight="700" text-anchor="middle" letter-spacing="0.5">Langevin Dynamics (Identity)</text>
             </svg>
 
-            <!-- Nodes -->
-            <div style="position: absolute; left: 1.5%; top: 13.5%; width: 22%; height: 16.5%; display: flex; align-items: center; justify-content: center; padding: 0 0.45rem; text-align: center; background: white; border: 2px solid #bdc3c7; border-radius: 12px; box-shadow: 0 4px 12px rgba(0,0,0,0.05); font-size: 0.82rem; z-index: 10;">
+            <!-- Nodes (brutalist style: sharp corners, solid border, offset shadow) -->
+            <div style="position: absolute; left: 1.5%; top: 13.5%; width: 30%; height: 16.5%; display: flex; align-items: center; justify-content: center; padding: 5px 10px; text-align: center; background: white; border: 2px solid #000; border-radius: 0; box-shadow: 3px 3px 0 0 #000; font-family: 'Space Grotesk', sans-serif; font-size: 1.2rem; font-weight: 600; z-index: 10;">
                 \( \mathbf{x}_t \sim p_t(\mathbf{x}) \)
             </div>
 
-            <div style="position: absolute; left: 76.5%; top: 13.5%; width: 22%; height: 16.5%; display: flex; align-items: center; justify-content: center; padding: 0 0.45rem; text-align: center; background: white; border: 2px solid #bdc3c7; border-radius: 12px; box-shadow: 0 4px 12px rgba(0,0,0,0.05); font-size: 0.82rem; z-index: 10;">
+            <div style="position: absolute; left: 68.5%; top: 13.5%; width: 30%; height: 16.5%; display: flex; align-items: center; justify-content: center; padding: 5px 10px; text-align: center; background: white; border: 2px solid #000; border-radius: 0; box-shadow: 3px 3px 0 0 #000; font-family: 'Space Grotesk', sans-serif; font-size: 1.2rem; font-weight: 600; z-index: 10;">
                 \( \mathbf{x}_t' \sim p_t(\mathbf{x}) \)
             </div>
 
-            <div style="position: absolute; left: 26.5%; top: 74.5%; width: 47%; height: 16.5%; display: flex; align-items: center; justify-content: center; padding: 0 0.5rem; text-align: center; background: white; border: 2px solid #bdc3c7; border-radius: 12px; box-shadow: 0 4px 12px rgba(0,0,0,0.05); font-size: 0.82rem; z-index: 10;">
+            <div style="position: absolute; left: 26.5%; top: 74.5%; width: 47%; height: 16.5%; display: flex; align-items: center; justify-content: center; padding: 5px 10px; text-align: center; background: white; border: 2px solid #000; border-radius: 0; box-shadow: 3px 3px 0 0 #000; font-family: 'Space Grotesk', sans-serif; font-size: 1.2rem; font-weight: 600; z-index: 10;">
                 \( \mathbf{x}_{t+\Delta t} \sim p_{t+\Delta t}(\mathbf{x}) \)
             </div>
         </div>
@@ -647,6 +603,7 @@ The concept behind the reverse process is intuitive: since Langevin dynamics act
 <div class="caption">
     The forward and reverse diffusion processes compose to reproduce Langevin dynamics.
 </div>
+
 
 
 To formalize this, consider the VP case with the following Langevin dynamics for $p_t(\mathbf{x})$ with a time variable $\tau$, distinguished from the forward diffusion time $t$. This dynamics can be decomposed into forward and reverse components as follows:  
