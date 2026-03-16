@@ -547,8 +547,8 @@
       function getPanelLayout() {
         const viewportW = window.innerWidth;
         const compactMobile = viewportW <= 520;
-        const isMobile = viewportW <= 768;
-        const cols = compactMobile ? 1 : (isMobile ? 2 : 3);
+        const isMobile = viewportW <= 900;
+        const cols = isMobile ? 1 : 3;
         const rows = Math.ceil(processes.length / cols);
         const outerPad = isMobile ? 10 : 16;
         const gapX = isMobile ? 8 : 12;
