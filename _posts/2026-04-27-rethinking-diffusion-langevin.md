@@ -110,7 +110,7 @@ _styles: >
     font-size: 0.95rem;
     background: transparent;
   }
-  th {
+  .table-wrapper th {
     background-color: var(--global-bg-color);
     color: var(--global-text-color);
     font-weight: 600;
@@ -119,7 +119,7 @@ _styles: >
     border-bottom: 2px solid var(--global-divider-color);
     font-size: 0.85rem;
     letter-spacing: 0.05em;
-    text-transform: uppercase;
+    text-transform: none;
   }
   td {
     padding: 14px 20px;
@@ -411,7 +411,7 @@ $$
 d\mathbf{x}_t = g(t)\, \mathbf{s}(\mathbf{x}_t) dt + \sqrt{2 g(t)}\, d\mathbf{W}_t, 
 $$
 
-At first sight, the extra term $$d\mathbf{W}_t$$ may make this stochastic differential equation (SDE) look much more complicated than an ordinary differential equation (ODE). In fact, it is best to think of it as an ODE with an additional infinitesimal random perturbation at each step. Informally, one can write
+At first sight, the extra term $$d\mathbf{W}_t$$ may make this SDE look much more complicated than an ordinary differential equation (ODE). In fact, it is best to think of it as an ODE with an additional infinitesimal random perturbation at each step. Informally, one can write
 
 $$
 d\mathbf{W}_t = \sqrt{dt}\,\boldsymbol{\epsilon},
@@ -517,7 +517,7 @@ The table below summarizes these three forward processes of different model type
 <iframe
   src="{{ 'assets/html/2026-04-27-rethinking-diffusion-langevin/forward_processes_interactive.html' | relative_url }}"
   style="width: 100%; border: none; border-radius: 3px;"
-  height="380"
+  height="480"
   loading="lazy">
 </iframe>
 </div>
@@ -576,7 +576,7 @@ No matter which notation we choose, A forward diffusion step with a step size of
 
 The reverse diffusion process is the conjugate of the forward process. While the forward process evolves $p_t(\mathbf{x})$ toward Gaussian noise, the reverse process reverses this evolution, restoring Gaussian noise to $p_t$.
 
-The concept behind the reverse process is intuitive: since Langevin dynamics acts as an identity operation on a distribution—preserving it unchanged—any forward process composed with its corresponding reverse process should similarly yield an Langevin dynamics. Specifically, at any time $t$, combining the forward and reverse processes should reproduce the Langevin dynamics for the distribution $p_t(\mathbf{x})$, as illustrated in the following diagram.
+The concept behind the reverse process is intuitive: **since Langevin dynamics acts as an identity operation on a distribution—preserving it unchanged—any forward process composed with its corresponding reverse process should similarly yield an Langevin dynamics**. Specifically, at any time $t$, combining the forward and reverse processes should reproduce the Langevin dynamics for the distribution $p_t(\mathbf{x})$, as illustrated in the following diagram.
 
 <div class="row mt-3">
     <div class="col-md-10 offset-md-1 col-lg-8 offset-lg-2 mt-3 mt-md-0">
@@ -668,12 +668,12 @@ The following table provides a direct answer: **these models are unified by deco
 
 <div class="table-wrapper" markdown="1">
 
-| **Model Type** | **Reverse Split** | **Forward Split** | **Langevin dynamics** |
+| **Model Type** | **Langevin dynamics** | **Reverse Split** | **Forward Split** |
 | --- | --- | --- | --- |
-| VP-SDE | $$dx = \left[ \frac{1}{2} x + \mathbf{s}_x \right] d\tau + dW_{\tau}$$ | $$d x = - \tfrac{1}{2} x\, d\tau + dW_\tau$$ | $$dx = \mathbf{s}_x\, d\tau + \sqrt{2}\, d W_\tau$$ |
-| VP-ODE | $$dx = \frac{1}{2} \left( x + \mathbf{s}_x \right) d\tau$$ | $$d x = - \tfrac{1}{2} x\, d\tau + dW_\tau$$ | $$dx = \frac{1}{2} \mathbf{s}_x\, d\tau + d W_\tau$$ |
-| VE-Karras | $$dz = \tau\, \mathbf{s}_z\, d\tau $$ | $$dz = \sqrt{2\tau}\, dW_{\tau}$$ | $$dz = \tau\, \mathbf{s}_z\, d\tau + \sqrt{2 \tau}\, d W_\tau$$ |
-| Rectified flow | $$dr = \frac{\tau\, \mathbf{s}_r + r}{1-\tau} d\tau$$ | $$dr = -\frac{r}{1-\tau}\, d\tau + \sqrt{\frac{2\tau}{1-\tau}}\, dW_{\tau}$$ | $$dr = \frac{\tau}{1+\tau} \mathbf{s}_r\, d\tau + \sqrt{\frac{2\tau}{1+\tau}}\, d W_\tau$$ |
+| VP-SDE | $$dx = \mathbf{s}_x\, d\tau + \sqrt{2}\, d W_\tau$$ | $$dx = \left[ \frac{1}{2} x + \mathbf{s}_x \right] d\tau + dW_{\tau}$$ | $$d x = - \tfrac{1}{2} x\, d\tau + dW_\tau$$ |
+| VP-ODE | $$dx = \frac{1}{2} \mathbf{s}_x\, d\tau + d W_\tau$$ | $$dx = \frac{1}{2} \left( x + \mathbf{s}_x \right) d\tau$$ | $$d x = - \tfrac{1}{2} x\, d\tau + dW_\tau$$ |
+| VE-Karras | $$dz = \tau\, \mathbf{s}_z\, d\tau + \sqrt{2 \tau}\, d W_\tau$$ | $$dz = \tau\, \mathbf{s}_z\, d\tau $$ | $$dz = \sqrt{2\tau}\, dW_{\tau}$$ |
+| Rectified flow | $$dr = \frac{\tau}{1+\tau} \mathbf{s}_r\, d\tau + \sqrt{\frac{2\tau}{1+\tau}}\, d W_\tau$$ | $$dr = \frac{\tau\, \mathbf{s}_r + r}{1-\tau} d\tau$$ | $$dr = -\frac{r}{1-\tau}\, d\tau + \sqrt{\frac{2\tau}{1-\tau}}\, dW_{\tau}$$ |
 
 </div>
 
@@ -820,15 +820,15 @@ This exact recovery of the data distribution $$p_0$$ through a forward–reverse
 
 <blockquote class="guiding-question">Why are diffusion models theoretically superior to ordinary VAEs?</blockquote>
 
-The above **duality** means that if we run the reverse process from time $$t' = 0$$ to $$t' = T$$, the final samples follow exactly the same distribution as the original training data $$p_0$$. In other words, the forward and reverse processes form an exact prior–posterior pair: the forward process maps data to noise, and the reverse process maps noise back to data. In practice, training introduces approximation error, but the theoretical target is exact equality. Ordinary VAEs, by contrast, only require the decoder to approximate the encoder’s posterior, with no guarantee of exactness even at the ELBO optimum.
+The above **duality** means that if we run the reverse process from time $$t' = 0$$ to $$t' = T$$, the final samples follow exactly the same distribution as the original training data $$p_0$$. **In other words, the forward and reverse processes form an exact prior–posterior pair**: the forward process maps data to noise, and the reverse process maps noise back to data. In practice, training introduces approximation error, but the theoretical target is exact equality. **Ordinary VAEs, by contrast, only require the decoder to approximate the encoder’s posterior, with no guarantee of exactness even at the ELBO optimum**.
 
 Now we have demonstrated that **reverse diffusion**—the dual of the forward process—can generate image data from noise. However, this requires access to the score function at every timestep $t$. In practice, we approximate this function using a neural network.  In the next section, we will explain how to train such score networks.  
 
 ## Unifying Training of Diffusion Models as Maximal likelihood 
 
-In this section, we derive the training objective directly from the maximum-likelihood framework. By doing so, we reveal the fundamental connection between diffusion model loss and exact maximum likelihood, and show that score matching, denoising, and flow matching are equivalent manifestations of this same objective rather than fundamentally different levels of simplicity.
+In this section, we derive the training objective directly from the maximum-likelihood framework. By doing so, we reveal the fundamental connection between diffusion model loss and exact maximum likelihood, and show that score matching, denoising, and flow matching are **equivalent manifestations** of this same objective rather than fundamentally different levels of simplicity.
 
-Training the reverse diffusion process involves addressing two fundamental questions: (1) What mathematical quantity should we model, and (2) What objective function should guide the training? Here, we start by analyzing the Kullback–Leibler (KL) divergence.
+Training the diffusion model involves addressing two fundamental questions: (1) What mathematical quantity should we model, and (2) What objective function should guide the training? Here, we start by analyzing the Kullback–Leibler (KL) divergence.
 
 Suppose we have two distributions $p(\mathbf{x}, t)$ and $q(\mathbf{x}, t)$ that both evolve under the same forward diffusion process. Think of $p$ as the **true data distribution** pushed forward by the diffusion dynamics, and $q$ as the **model distribution**. At any fixed time $t$, their Kullback–Leibler (KL) divergence is
 
@@ -1323,8 +1323,8 @@ With the maximum-likelihood objective derived above, we can compare the differen
 
 | **Model Type** | **Relation between initial and noisy variable** | **Function modeled by NN** | **$\mathbf{s}_\theta$ in terms of NN** | **$\nabla \log p(x_t \mid x_0)$** | **Loss $L_t$** |
 | --- | --- | --- | --- | --- | --- |
-| Variance-preserving (VP) | $$x_t = \sqrt{\alpha_t}\, x_0 + \sqrt{1-\alpha_t}\, \boldsymbol{\epsilon}$$ | $$\mathbf{s}_{\theta}(x_t, t)$$ | $$\mathbf{s}_{\theta}(x_t, t)$$ | $$-\frac{\boldsymbol{\epsilon}}{\sqrt{1-\alpha_t}}$$ | $$\frac{1}{2}\mathbb{E}_{\mathbf{x}_0 \sim p_0}\mathbb{E}_{\mathbf{x}_t \sim p_t(\cdot \mid \mathbf{x}_0)}\|\| -\frac{\boldsymbol{\epsilon}}{\sqrt{1-\alpha_t}} - \mathbf{s}_{\theta}(x_t, t) \|\|^2$$ |
-| Variance-exploding-Karras (VE-Karras) | $$z_\sigma = z_0 + \sigma\, \boldsymbol{\epsilon}$$ | $$\boldsymbol{\epsilon}_{\theta}(z_\sigma, \sigma)$$ | $$-\frac{\boldsymbol{\epsilon}_{\theta}(z_\sigma, \sigma)}{\sigma}$$ | $$-\frac{\boldsymbol{\epsilon}}{\sigma}$$ | $$\frac{1}{\sigma}\mathbb{E}_{\mathbf{z}_0 \sim p_0}\mathbb{E}_{\mathbf{z}_\sigma \sim p_\sigma(\cdot \mid \mathbf{z}_0)} \|\| \boldsymbol{\epsilon}_{\theta}(z_\sigma, \sigma) - \boldsymbol{\epsilon} \|\|^2$$ |
+| VP| $$x_t = \sqrt{\alpha_t}\, x_0 + \sqrt{1-\alpha_t}\, \boldsymbol{\epsilon}$$ | $$\mathbf{s}_{\theta}(x_t, t)$$ | $$\mathbf{s}_{\theta}(x_t, t)$$ | $$-\frac{\boldsymbol{\epsilon}}{\sqrt{1-\alpha_t}}$$ | $$\frac{1}{2}\mathbb{E}_{\mathbf{x}_0 \sim p_0}\mathbb{E}_{\mathbf{x}_t \sim p_t(\cdot \mid \mathbf{x}_0)}\|\| -\frac{\boldsymbol{\epsilon}}{\sqrt{1-\alpha_t}} - \mathbf{s}_{\theta}(x_t, t) \|\|^2$$ |
+| VE-Karras | $$z_\sigma = z_0 + \sigma\, \boldsymbol{\epsilon}$$ | $$\boldsymbol{\epsilon}_{\theta}(z_\sigma, \sigma)$$ | $$-\frac{\boldsymbol{\epsilon}_{\theta}(z_\sigma, \sigma)}{\sigma}$$ | $$-\frac{\boldsymbol{\epsilon}}{\sigma}$$ | $$\frac{1}{\sigma}\mathbb{E}_{\mathbf{z}_0 \sim p_0}\mathbb{E}_{\mathbf{z}_\sigma \sim p_\sigma(\cdot \mid \mathbf{z}_0)} \|\| \boldsymbol{\epsilon}_{\theta}(z_\sigma, \sigma) - \boldsymbol{\epsilon} \|\|^2$$ |
 | Rectified flow | $$r_s = (1-s)\, r_0 + s\, \boldsymbol{\epsilon}$$ | $$\mathbf{v}_{\theta}(r_s, s)$$ | $$\frac{ -\mathbf{v}_{\theta}(r_s, s) (1-s) - r_s }{s}$$ | $$-\frac{\boldsymbol{\epsilon}}{s}$$ | $$\frac{1-s}{s} \mathbb{E}_{\mathbf{r}_0 \sim p_0}\mathbb{E}_{\mathbf{r}_s \sim p_s(\cdot \mid \mathbf{r}_0)} \|\| \boldsymbol{\epsilon}- r_0 - \mathbf{v}_{\theta}(r_s, s)    \|\|^2$$ |
 
 </div>
