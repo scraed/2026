@@ -110,7 +110,7 @@ _styles: >
     font-size: 0.95rem;
     background: transparent;
   }
-  th {
+  .table-wrapper th {
     background-color: var(--global-bg-color);
     color: var(--global-text-color);
     font-weight: 600;
@@ -119,7 +119,7 @@ _styles: >
     border-bottom: 2px solid var(--global-divider-color);
     font-size: 0.85rem;
     letter-spacing: 0.05em;
-    text-transform: uppercase;
+    text-transform: none;
   }
   td {
     padding: 14px 20px;
