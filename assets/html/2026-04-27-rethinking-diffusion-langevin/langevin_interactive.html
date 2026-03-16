@@ -393,7 +393,7 @@
       - parseFloat(parentStyle.paddingLeft || "0")
       - parseFloat(parentStyle.paddingRight || "0");
     const containerW = Math.floor(innerW || BASE_CANVAS_W);
-    cssW = Math.max(220, Math.floor(containerW * 0.9));
+    cssW = Math.max(220, Math.floor(containerW ));
     const targetH = Math.round(cssW * (BASE_CANVAS_H / BASE_CANVAS_W));
     const isMobile = window.innerWidth <= 768;
     const minH = isMobile ? 210 : 300;
