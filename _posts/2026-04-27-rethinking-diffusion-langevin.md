@@ -716,7 +716,7 @@ The following table provides a direct answer: **these models are unified by deco
 
 A key observation from this table is that **the Langevin split is not unique**. For the same VP model, we present two distinct splittings, the SDE and ODE versions, which are decompositions of different Langevin dynamics differing in their time scaling functions $g(\tau)$. **The ODE version corresponds to a splitting where the reverse process contains no stochastic term** $dW$. 
 
-Besides the decomposition of Langevin dynamics, we still have one problem: note that the $\mathbf{s}(\mathbf{x}_{t'}, t)$ term in the reverse process still depends on the forward time $t$, not the reverse time $t'$; we need the relationship between the forward time $t$ and the reverse time $t'$ to close the equation. 
+Besides the decomposition of Langevin dynamics, we still have one problem: note that the $\mathbf{s}(\mathbf{x}_{t'}, t)$ term in the reverse process still depends on the forward time $t$, not the reverse time $t'$; **we need the relationship between the forward time $t$ and the reverse time $t'$ to close the equation.** 
 
 Note that a single reverse-time step $dt'$ can be understood in two complementary ways:
 
