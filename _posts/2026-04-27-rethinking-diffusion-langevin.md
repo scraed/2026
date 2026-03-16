@@ -40,8 +40,9 @@ toc:
   - name: Langevin Dynamics as 'Identity' Operation
   - name: Spliting the Identity into Forward and Reverse Processes
     subsections:
-      - name: The Forward Diffusion Process for training
-      - name: The Reverse Diffusion Process for Sampling
+      - name: The Forward Diffusion Process for Noising
+      - name: The Reverse Diffusion Process for Denoising
+      - name: Converting Between Different Model Types
   - name: Forward-Reverse Duality
   - name: Unifying Training of Diffusion Models as Maximal likelihood
   - name: Conclusion
@@ -390,7 +391,12 @@ A third valuable viewpoint is the **flow-based perspective** <d-cite key="liu202
 
 
 
-In this article, we systematically organize the theory of diffusion models and present a perspective that is both mathematically simple and intuitively clear: the **Langevin perspective**. This approach, relying only on fundamental techniques from stochastic differential equations (SDEs), provides a straightforward derivation of the reverse process and explains why flow matching is not fundamentally simpler than denoising or score matching, but is equivalent to them under maximum likelihood.
+In this article, we systematically organize the theory of diffusion models and present a perspective that is both mathematically simple and intuitively clear: the **Langevin perspective**. This approach, relying only on basic techniques from stochastic differential equations (SDEs), provides a straightforward derivation of the reverse process and explains why flow matching is not fundamentally simpler than denoising or score matching, but is equivalent to them under maximum likelihood.
+
+Prerequisites:
+- Basic calculus.
+- Basic probability theory.
+- No prior knowledge of stochastic processes is required.
 
 <div style="margin: 24px 0;">
 <iframe
@@ -431,9 +437,9 @@ This dynamics is often used as a Monte Carlo sampler to draw samples from $$p(\m
 1. Set $g(t) = 1$ by rescaling time as $t' = \int_0^t g(\tau)\, d\tau$. Under this change of variables, the dynamics become $$d\mathbf{x}_{t'} = \mathbf{s}(\mathbf{x}_{t'})\, dt' + \sqrt{2}\, d\mathbf{W}_{t'}$$, which is equivalent to the case $g(t') = 1$. Thus, $g(t)$ only sets the time unit and does not affect the stationary distribution.
 
 
-2. Write the dynamics in “energy” form as $$d\mathbf{x}_t = -\nabla E(\mathbf{x})\,dt + \sqrt{2}\,d\mathbf{W}_t$$. The random term $d\mathbf{W}_t$ perturbs the system toward equilibrium, where states with the same energy $E(\mathbf{x})$ should have equal probability. Thus, the stationary distribution is $p(\mathbf{x}) = f(E(\mathbf{x}))$ for some function $f$.
+2. Let's consider the dynamics in “energy” form as $$d\mathbf{x}_t = -\nabla E(\mathbf{x})\,dt + \sqrt{2}\,d\mathbf{W}_t$$. The random term $d\mathbf{W}_t$'s role is to perturbs the system into complete, uniform chaos. The only position information is injected by the energy $E(\mathbf{x})$. Thus, the stationary distribution shall have the form $p(\mathbf{x}) = f(E(\mathbf{x}))$ for some function $f$.
 
-3. Consider $N$ independent copies $\mathbf{x}_1, \dots, \mathbf{x}_N$. Their joint density is the product $f(E(\mathbf{x}_1)) \cdots f(E(\mathbf{x}_N))$. When treating them as a single system, the total energy is additive: $E(\mathbf{x}_1, \dots, \mathbf{x}_N) = \sum E(\mathbf{x}_i)$. Therefore, the joint stationary density must also be $g(\sum E(\mathbf{x}_i))$ for some function $g$. The only function $f$ that turns products into additions is the exponential: $f(E) = e^{-\beta E}$. This yields $p(\mathbf{x}) \propto e^{-\beta E(\mathbf{x})}$.
+3. Consider $N$ independent copies $\mathbf{x}_1, \dots, \mathbf{x}_N$. Their joint density must be the product form $f(E(\mathbf{x}_1)) \cdots f(E(\mathbf{x}_N))$. From another point of view, when treating them as a single system, the total energy is additive: $E(\mathbf{x}_1, \dots, \mathbf{x}_N) = \sum E(\mathbf{x}_i)$. Therefore, the joint stationary density of $N$ independent copies must also be the addition form $g(\sum E(\mathbf{x}_i))$ for some function $g$. The only function $f$ that turns product form into addition form is the exponential: $f(E) = e^{-\beta E}$. This yields $p(\mathbf{x}) \propto e^{-\beta E(\mathbf{x})}$.
 
 4. To find $\beta$, take $E(\mathbf{x}) = \frac{1}{2} \|\mathbf{x}\|^2$, giving the well known Ornstein–Uhlenbeck process  $d\mathbf{x}_t = -\mathbf{x}\,dt + \sqrt{2}\,d\mathbf{W}_t$ <d-cite key="OrnsteinUhlenbeckWikipedia"></d-cite> with known stationary $\mathcal{N}(0, I)$, density $\propto e^{-\frac{1}{2} \|\mathbf{x}\|^2}$. Matching forms gives $\beta = 1$.
 
@@ -515,7 +521,7 @@ Langevin dynamics, while widely used for sampling from complex distributions, be
 
 ## Spliting the Identity into Forward and Reverse Processes
 
-In this section, we show that the forward and reverse processes in diffusion models are splits of a single Langevin dynamics, decomposing the identity operation into a noising phase and a denoising phase.
+
 
 One key reason Langevin dynamics struggles in high-dimensional settings is the challenge of initialization <d-cite key="song2019generative"></d-cite>. The score function required by it is learned from real data and is therefore reliable only near true data points, while being poorly estimated elsewhere. Yet in generative modeling we need to start from locations that may be far from the data manifold. Finding an initialization that is both realistic and close enough to the true data manifold is difficult, making effective generation with Langevin dynamics challenging in practice. In short, Langevin dynamics is well-suited for generating new samples from an existing one, but ill-suited for generating samples entirely from scratch.
 
@@ -523,9 +529,11 @@ An enhancement to Langevin dynamics is the Annealed Langevin dynamics <d-cite ke
 
 Diffusion models take this concept a step further by completely separating the training and inference processes: one process trains the model at different noise levels, while another process samples from noise to generate data.
 
-## The Forward Diffusion Process for training
+In this section, we show that the forward and reverse processes in diffusion models are splits of a single Langevin dynamics, decomposing the identity operation into a noising phase and a denoising phase.
 
-The forward diffusion process in DDPM generates the necessary training data: clean images and their progressively noised counterparts. In continuous time, a very general way to describe such a process is by an Itô SDE of the form
+### The Forward Diffusion Process for Noising
+
+The forward diffusion process in diffusion model generates the necessary training data: clean images and their progressively noised counterparts. In continuous time, a very general way to describe such a process is by an Itô SDE of the form
 
 $$
 d \mathbf{x}_t = f(\mathbf{x}_t, t)\, dt + g(t)\, d\mathbf{W}_t, \label{Forward Process}
@@ -536,6 +544,8 @@ where $$t \in [0,T]$$ is the forward diffusion time, $$\mathbf{x}_t$$ is the noi
 In practice, diffusion models are usually instantiated by choosing specific parameterizations of this SDE. The most common ones are the **variance-preserving (VP)** process, implemented in DDPMs as an Ornstein–Uhlenbeck dynamics that gently pulls samples toward the origin while injecting noise so that the marginal converges to a standard Gaussian; the **variance-exploding (VE)** process, where there is no restoring drift and the noise scale grows with time so that the variance “explodes”; and **flow-matching** formulations, which view generation as following a time-dependent flow that implements an “straight line” interpolation between data and noise under a carefully designed schedule.
 
 The table below summarizes these three forward processes of different model types, as well as their corresponding SDEs expressed in terms of their respective noise-levels. In what follows, we adopt Karras'<d-cite key="Karras2022Elucidating"></d-cite> notation for the VE parameterization .
+
+<p class="table-caption" id="forward-process-variable-conversion-table"><strong>Conversion Between Forward-Process Variable Parameterizations</strong></p>
 
 <div class="table-wrapper" markdown="1">
 
@@ -557,7 +567,9 @@ The table below summarizes these three forward processes of different model type
 </div>
 
 
-Each forward process has a characteristic way of mixing data and noise: the VP model uses the Ornstein-Uhlenbeck (OU) process, so samples drift toward the origin while their uncertainty grows; the VE-Karras model adds noise directly to the data without a restoring drift, so the mean stays fixed while the sample cloud expands outward; and the Rectified flow model is a stochastic forward process as well, not a deterministic straight-line interpolation. **Despite their differences, all these SDEs are fundamentally equivalent**; they differ only by how time and state are reparameterized. For clarity, the table below gives a direct conversion between any two parameterizations <d-cite key="zheng2025lanpaint"></d-cite>:
+Each forward process has a characteristic way of mixing data and noise: the VP model uses the Ornstein-Uhlenbeck (OU) process, so samples drift toward the origin while their uncertainty grows; the VE-Karras model adds noise directly to the data without a restoring drift, so the mean stays fixed while the sample cloud expands outward; and the Rectified flow model is a stochastic forward process as well, not a deterministic straight-line interpolation. 
+
+**Despite their differences, all above SDEs are fundamentally equivalent**; they differ only by how time and state are reparameterized. For clarity, the table below gives a direct conversion between any two parameterizations <d-cite key="zheng2025lanpaint"></d-cite>:
 
 
 <div class="table-wrapper" markdown="1">
@@ -606,7 +618,7 @@ No matter which notation we choose, A forward diffusion step with a step size of
 </div>
 
 
-## The Reverse Diffusion Process for Sampling
+### The Reverse Diffusion Process for Denoising
 
 The reverse diffusion process is the conjugate of the forward process. While the forward process evolves $p_t(\mathbf{x})$ toward Gaussian noise, the reverse process reverses this evolution, restoring Gaussian noise to $p_t$.
 
@@ -784,7 +796,9 @@ These reverse equations become more intuitive when we visualize how samples move
 
 In this single-data-point example, the reverse trajectories reveal a clear geometric difference between the parameterizations. The VP-SDE and VP-ODE flows bend along a curved path as they return to the target point, whereas the VE-Karras and Rectified flow trajectories move approximately along a straight line toward that point. It is important to emphasize that this **straight-line behavior is a special feature of the one-point setting shown in the example, not the general case**. For a general data distribution, the learned reverse vector fields vary across space, so all of these reverse trajectories are typically curved. Nevertheless, one could still expect the VE-Karras and Rectified flow trajectories to have smaller curvature than the VP trajectories.
 
-Despite their different geometric behaviors, these model types are inherently **equivalent** parameterizations. Although VP uses the score $\mathbf{s}_x$, VE-Karras uses the noise prediction $\boldsymbol{\epsilon}$, and Rectified flow uses the velocity field $\mathbf{v}$ as their native outputs, these model types are mathematically equivalent parameterizations. Combined with the previous conversion table for the forward-process variables, we can therefore convert these fields into one another exactly <d-cite key="zheng2025lanpaint"></d-cite>.
+### Converting Between Different Model Types 
+
+Despite their different geometric behaviors, all model types we discussed above are inherently **equivalent** parameterizations. Although VP uses the score $\mathbf{s}_x$, VE-Karras uses the noise prediction $\boldsymbol{\epsilon}$, and Rectified flow uses the velocity field $\mathbf{v}$ as their native outputs, these model types are mathematically equivalent parameterizations. Combined with the [previous conversion table for the forward-process variables](#forward-process-variable-conversion-table), we can therefore convert these fields into one another exactly <d-cite key="zheng2025lanpaint"></d-cite>.
 
 <div class="table-wrapper" markdown="1">
 
@@ -801,7 +815,7 @@ Despite their different geometric behaviors, these model types are inherently **
 
 From this table, we can see directly that the **velocity learned in flow matching is equivalent to the noise prediction and the score under a change of parameterization**. Its main advantage is therefore not that it produces truly straight-line trajectories, but that it is often expected to produce trajectories with smaller curvature.
 
-### Forward-Reverse Duality
+## Forward-Reverse Duality
 We have established that a single reverse step undoes a forward step: advancing the reverse time $$t'$$ by an amount corresponds to decreasing the forward time $$t$$ by the same amount. Now, let's examine what happens when we combine multiple forward and reverse steps to reveal the deeper duality between them. In fact, the forward process transforms a data distribution into noise, while the reverse process, starting from noise, generates samples from the same data distribution.
 
 Consider this sequence: begin with a data sample $$\mathbf{x}_0$$, propagate it through the forward process to obtain $$\mathbf{x}_T$$, then use $$\mathbf{x}_T$$ as the starting point $$\mathbf{x}_{0'}$$ for the reverse process and evolve it to $$\mathbf{x}_{T'}$$. Part of this forward-reverse cycle is illustrated in the figure below.
