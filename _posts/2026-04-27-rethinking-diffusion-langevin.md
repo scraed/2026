@@ -470,14 +470,48 @@ Langevin dynamics, while widely used for sampling from complex distributions, be
     Langevin dynamics acts as an identity operation on $p(\mathbf{x})$: starting from a sample $\mathbf{x} \sim p(\mathbf{x})$, it produces a new sample $\mathbf{x}'$ from the same distribution.
 </div>
 
-<div style="margin: 24px 0;">
+<div style="margin: 24px 0; text-align: center;">
 <iframe
+  id="langevin-interactive-iframe"
   src="{{ 'assets/html/2026-04-27-rethinking-diffusion-langevin/langevin_interactive.html' | relative_url }}"
-  style="width: 100%; border: none; border-radius: 3px;"
-  height="500"
+  style="width: 90%; border: none; border-radius: 3px; overflow: hidden;"
+  height="1"
+  scrolling="no"
   loading="lazy">
 </iframe>
 </div>
+<script>
+  (function () {
+    const iframe = document.getElementById("langevin-interactive-iframe");
+    if (!iframe) return;
+
+    function resizeIframeToContent() {
+      try {
+        const doc = iframe.contentDocument || (iframe.contentWindow && iframe.contentWindow.document);
+        if (!doc) return;
+        const body = doc.body;
+        const html = doc.documentElement;
+        const contentHeight = Math.max(
+          body ? body.scrollHeight : 0,
+          html ? html.scrollHeight : 0
+        );
+        if (contentHeight > 0) {
+          iframe.style.height = contentHeight + "px";
+        }
+      } catch (_) {
+        // Cross-origin access would fail; ignored here because this iframe is same-origin.
+      }
+    }
+
+    iframe.addEventListener("load", function () {
+      resizeIframeToContent();
+      setTimeout(resizeIframeToContent, 120);
+      setTimeout(resizeIframeToContent, 600);
+    });
+
+    window.addEventListener("resize", resizeIframeToContent);
+  })();
+</script>
 
 ## Spliting the Identity into Forward and Reverse Processes
 
@@ -517,7 +551,7 @@ The table below summarizes these three forward processes of different model type
 <iframe
   src="{{ 'assets/html/2026-04-27-rethinking-diffusion-langevin/forward_processes_interactive.html' | relative_url }}"
   style="width: 100%; border: none; border-radius: 3px;"
-  height="480"
+  height="380"
   loading="lazy">
 </iframe>
 </div>
