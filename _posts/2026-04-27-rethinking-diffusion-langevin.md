@@ -441,7 +441,7 @@ This dynamics is often used as a Monte Carlo sampler to draw samples from $$p(\m
 
 3. Consider $N$ independent copies $\mathbf{x}_1, \dots, \mathbf{x}_N$. Their joint density must be the product form $f(E(\mathbf{x}_1)) \cdots f(E(\mathbf{x}_N))$. From another point of view, when treating them as a single system, the total energy is additive: $E(\mathbf{x}_1, \dots, \mathbf{x}_N) = \sum E(\mathbf{x}_i)$. Therefore, the joint stationary density of $N$ independent copies must also be the addition form $g(\sum E(\mathbf{x}_i))$ for some function $g$. The only function $f$ that turns product form into addition form is the exponential: $f(E) = e^{-\beta E}$. This yields $p(\mathbf{x}) \propto e^{-\beta E(\mathbf{x})}$.
 
-4. To find $\beta$, take $E(\mathbf{x}) = \frac{1}{2} \|\mathbf{x}\|^2$, giving the well known Ornstein–Uhlenbeck process  $d\mathbf{x}_t = -\mathbf{x}\,dt + \sqrt{2}\,d\mathbf{W}_t$ <d-cite key="OrnsteinUhlenbeckWikipedia"></d-cite> with known stationary $\mathcal{N}(0, I)$, density $\propto e^{-\frac{1}{2} \|\mathbf{x}\|^2}$. Matching forms gives $\beta = 1$.
+4. To find $\beta$, take $E(\mathbf{x}) = \frac{1}{2} \|\mathbf{x}\|^2$. This gives the well known Ornstein–Uhlenbeck process  $d\mathbf{x}_t = -\mathbf{x}\,dt + \sqrt{2}\,d\mathbf{W}_t$ <d-cite key="OrnsteinUhlenbeckWikipedia"></d-cite> with known stationary $\mathcal{N}(0, I)$, density $\propto e^{-\frac{1}{2} \|\mathbf{x}\|^2}$. Matching forms gives $\beta = 1$.
 
 Thus, the dynamics $$d\mathbf{x}_t = -\nabla E(\mathbf{x})\,dt + \sqrt{2}\,d\mathbf{W}_t$$ has stationary distribution $$\propto e^{-E(\mathbf{x})}$$, and $$d\mathbf{x}_t = \nabla_{\mathbf{x}} \log p(\mathbf{x}) \, dt + \sqrt{2} \, d\mathbf{W}_t$$ has stationary distribution $p(\mathbf{x})$. 
 
