@@ -545,7 +545,6 @@ In practice, diffusion models are usually instantiated by choosing specific para
 
 The table below summarizes these three forward processes of different model types, as well as their corresponding SDEs expressed in terms of their respective noise-levels. In what follows, we adopt Karras'<d-cite key="Karras2022Elucidating"></d-cite> notation for the VE parameterization .
 
-<p class="table-caption" id="forward-process-variable-conversion-table"><strong>Conversion Between Forward-Process Variable Parameterizations</strong></p>
 
 <div class="table-wrapper" markdown="1">
 
@@ -571,7 +570,7 @@ Each forward process has a characteristic way of mixing data and noise: the VP m
 
 **Despite their differences, all above SDEs are fundamentally equivalent**; they differ only by how time and state are reparameterized. For clarity, the table below gives a direct conversion between any two parameterizations <d-cite key="zheng2025lanpaint"></d-cite>:
 
-
+<p class="table-caption" id="forward-process-variable-conversion-table"><strong>Conversion Between Forward-Process Variable Parameterizations</strong></p>
 <div class="table-wrapper" markdown="1">
 
 | **Given parameterization** | **Equivalent VP coordinates** | **Equivalent VE-Karras coordinates** | **Equivalent Rectified-flow coordinates** |
